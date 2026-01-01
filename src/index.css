@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --color-neon-pink: #ff2a6d;
+  --color-neon-cyan: #05d9e8;
+  --color-deep-purple: #240046;
+  --color-void: #120f1d;
+  --color-glass: rgba(255, 255, 255, 0.1);
+
+  --font-orbitron: 'Orbitron', sans-serif;
+  --font-roboto: 'Roboto', sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-void text-white font-roboto overflow-x-hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-orbitron;
+  }
+}
+
+@layer utilities {
+  .text-shadow-neon {
+    text-shadow: 0 0 10px var(--color-neon-cyan), 0 0 20px var(--color-neon-cyan);
+  }
+
+  .box-shadow-neon {
+    box-shadow: 0 0 10px var(--color-neon-pink), 0 0 20px var(--color-neon-pink);
+  }
+
+  .glass-panel {
+    @apply bg-glass backdrop-blur-md border border-white/10;
+  }
+}
