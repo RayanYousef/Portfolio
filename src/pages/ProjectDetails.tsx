@@ -1,15 +1,24 @@
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import ReactPlayer from 'react-player';
+import ReactPlayer from 'react-player/lazy';
 import { Github, ExternalLink, ArrowLeft } from 'lucide-react';
 import projectsData from '../content/projects.json';
 
 const ProjectDetails = () => {
     const { id } = useParams();
+    console.log("Current ID:", id);
+    console.log("Projects Data:", projectsData);
+
     const project = projectsData.projects.find((p: any) => p.id === id);
+    console.log("Found Project:", project);
 
     if (!project) {
-        return <Navigate to="/projects" replace />;
+        return (
+            <div className="min-h-screen pt-32 text-center text-white">
+                <h1 className="text-2xl">Project not found: {id}</h1>
+                <p>Available IDs: {projectsData.projects.map((p: any) => p.id).join(', ')}</p>
+            </div>
+        );
     }
 
     return (
