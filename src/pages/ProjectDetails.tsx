@@ -1,6 +1,6 @@
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import ReactPlayer from 'react-player/lazy';
+import ReactPlayer from 'react-player';
 import { Github, ExternalLink, ArrowLeft } from 'lucide-react';
 import projectsData from '../content/projects.json';
 
