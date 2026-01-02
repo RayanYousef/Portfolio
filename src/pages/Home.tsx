@@ -2,6 +2,13 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Code, Gamepad, Cpu } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import homeContent from '../content/home.json';
+
+const iconMap: Record<string, React.ReactNode> = {
+  gamepad: <Gamepad className="w-10 h-10 text-neon-pink" />,
+  code: <Code className="w-10 h-10 text-neon-cyan" />,
+  cpu: <Cpu className="w-10 h-10 text-purple-500" />,
+};
 
 const Home = () => {
   return (
@@ -20,16 +27,16 @@ const Home = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-neon-cyan font-orbitron tracking-widest text-lg md:text-xl mb-4 uppercase">
-              System Online
+              {homeContent.subtitle}
             </h2>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tight">
-              <span className="block text-white">BUILDING</span>
+              <span className="block text-white">{homeContent.titleLine1}</span>
               <span className="block text-transparent bg-clip-text bg-gradient-to-r from-neon-pink to-neon-cyan animate-gradient-x">
-                DIGITAL WORLDS
+                {homeContent.titleLine2}
               </span>
             </h1>
             <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-300 font-light">
-              Game Developer & Creative Coder crafting immersive experiences and interactive stories.
+              {homeContent.description}
             </p>
           </motion.div>
 
@@ -58,27 +65,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Feature Highlights (Optional "What I do" snapshot) */}
+      {/* Feature Highlights */}
       <section className="py-20 bg-black/20 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: <Gamepad className="w-10 h-10 text-neon-pink" />,
-                title: "Game Design",
-                desc: "Crafting engaging mechanics and loops that keep players hooked.",
-              },
-              {
-                icon: <Code className="w-10 h-10 text-neon-cyan" />,
-                title: "Clean Code",
-                desc: "Writing performant, scalable, and maintainable systems in C# and C++.",
-              },
-              {
-                icon: <Cpu className="w-10 h-10 text-purple-500" />,
-                title: "Optimization",
-                desc: "Squeezing every frame out of the engine for smooth gameplay.",
-              },
-            ].map((feature, index) => (
+            {homeContent.features.map((feature, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
@@ -88,7 +79,7 @@ const Home = () => {
                 className="glass-panel p-8 rounded-xl hover:border-neon-cyan/50 transition-colors duration-300"
               >
                 <div className="mb-4 p-3 bg-white/5 rounded-lg inline-block">
-                  {feature.icon}
+                  {iconMap[feature.icon]}
                 </div>
                 <h3 className="text-xl font-orbitron font-bold mb-2 text-white">{feature.title}</h3>
                 <p className="text-gray-400">{feature.desc}</p>

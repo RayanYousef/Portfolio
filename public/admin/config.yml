@@ -1,0 +1,69 @@
+backend:
+  name: github
+  repo: RayanYousef/Portfolio
+  branch: main
+  base_url: https://api.netlify.com
+  auth_endpoint: auth
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: "home"
+    label: "Home Page"
+    files:
+      - name: "home"
+        label: "Home Content"
+        file: "src/content/home.json"
+        fields:
+          - { label: "Subtitle", name: "subtitle", widget: "string" }
+          - { label: "Title Line 1", name: "titleLine1", widget: "string" }
+          - { label: "Title Line 2", name: "titleLine2", widget: "string" }
+          - { label: "Description", name: "description", widget: "text" }
+          - label: "Features"
+            name: "features"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "desc", widget: "text" }
+              - { label: "Icon", name: "icon", widget: "select", options: ["gamepad", "code", "cpu"] }
+
+  - name: "about"
+    label: "About Page"
+    files:
+      - name: "about"
+        label: "About Content"
+        file: "src/content/about.json"
+        fields:
+          - { label: "Bio Paragraph 1", name: "bio1", widget: "text" }
+          - { label: "Bio Paragraph 2", name: "bio2", widget: "text" }
+          - { label: "Years Experience", name: "yearsExp", widget: "string" }
+          - { label: "Shipped Games", name: "shippedGames", widget: "string" }
+          - { label: "Coffee Consumed", name: "coffeeConsumed", widget: "string" }
+          - label: "Skills"
+            name: "skills"
+            widget: "list"
+            fields:
+              - { label: "Category Name", name: "name", widget: "string" }
+              - { label: "Icon", name: "icon", widget: "select", options: ["layers", "terminal", "cpu", "database"] }
+              - { label: "Items", name: "items", widget: "list", field: { label: "Skill", name: "skill", widget: "string" } }
+
+  - name: "projects"
+    label: "Projects"
+    files:
+      - name: "projects"
+        label: "Projects List"
+        file: "src/content/projects.json"
+        fields:
+          - { label: "Page Title", name: "pageTitle", widget: "string" }
+          - { label: "Page Description", name: "pageDescription", widget: "text" }
+          - label: "Projects"
+            name: "projects"
+            widget: "list"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "description", widget: "text" }
+              - { label: "Image URL", name: "image", widget: "string" }
+              - { label: "Tags", name: "tags", widget: "list", field: { label: "Tag", name: "tag", widget: "string" } }
+              - { label: "Demo Link", name: "demoLink", widget: "string", required: false }
+              - { label: "GitHub Link", name: "githubLink", widget: "string", required: false }

@@ -1,0 +1,46 @@
+{
+    "bio1": "Hi, I'm a passionate Game Developer with a knack for creating immersive digital experiences. My journey began with modding classic games, which eventually led me to dive deep into engine architecture and gameplay programming.",
+    "bio2": "I specialize in gameplay mechanics, AI systems, and graphics programming. When I'm not coding, you can find me analyzing level design in retro platformers or experimenting with procedural generation algorithms.",
+    "yearsExp": "5+",
+    "shippedGames": "12+",
+    "coffeeConsumed": "∞",
+    "skills": [
+        {
+            "name": "Game Engines",
+            "icon": "layers",
+            "items": [
+                "Unity",
+                "Unreal Engine 5",
+                "Godot"
+            ]
+        },
+        {
+            "name": "Languages",
+            "icon": "terminal",
+            "items": [
+                "C#",
+                "C++",
+                "TypeScript",
+                "Python"
+            ]
+        },
+        {
+            "name": "Graphics",
+            "icon": "cpu",
+            "items": [
+                "HLSL/GLSL",
+                "Blender",
+                "Photoshop"
+            ]
+        },
+        {
+            "name": "Backend",
+            "icon": "database",
+            "items": [
+                "Node.js",
+                "Firebase",
+                "PlayFab"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,78 @@
+{
+    "pageTitle": "PROJECT_DATABASE",
+    "pageDescription": "A collection of my recent game development projects, prototypes, and experiments.",
+    "projects": [
+        {
+            "title": "Neon Racer 2077",
+            "description": "A high-speed endless runner set in a cyberpunk city. Features procedural generation and dynamic lighting.",
+            "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "tags": [
+                "Unity",
+                "C#",
+                "HDRP"
+            ],
+            "demoLink": "#",
+            "githubLink": "#"
+        },
+        {
+            "title": "Void Explorer",
+            "description": "Space exploration RPG with resource management and tactical combat.",
+            "image": "https://images.unsplash.com/photo-1614728853913-1e32005e3020?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "tags": [
+                "Unreal Engine 5",
+                "Blueprints",
+                "C++"
+            ],
+            "demoLink": "#",
+            "githubLink": "#"
+        },
+        {
+            "title": "Pixel Quest",
+            "description": "A retro-style 2D platformer with metroidvania elements and challenging boss fights.",
+            "image": "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "tags": [
+                "Godot",
+                "GDScript",
+                "Pixel Art"
+            ],
+            "demoLink": "#",
+            "githubLink": "#"
+        },
+        {
+            "title": "Cyber Defense",
+            "description": "Tower defense game where you protect the mainframe from viral attacks.",
+            "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "tags": [
+                "React",
+                "WebGL",
+                "Three.js"
+            ],
+            "demoLink": "#",
+            "githubLink": "#"
+        },
+        {
+            "title": "Echoes of the Past",
+            "description": "Narrative-driven puzzle game exploring memory and time.",
+            "image": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "tags": [
+                "Unity",
+                "C#",
+                "Dialogue System"
+            ],
+            "demoLink": "#",
+            "githubLink": "#"
+        },
+        {
+            "title": "Mecha Arena",
+            "description": "Multiplayer turn-based strategy game featuring customizable mechs.",
+            "image": "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "tags": [
+                "Unity",
+                "Mirror",
+                "Multiplayer"
+            ],
+            "demoLink": "#",
+            "githubLink": "#"
+        }
+    ]
+}
