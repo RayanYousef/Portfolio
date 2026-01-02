@@ -5,6 +5,7 @@ import projectsContent from '../content/projects.json';
 
 const Projects = () => {
   const projects = projectsContent.projects.map((project) => ({
+    id: project.id,
     title: project.title,
     description: project.description,
     image: project.image,

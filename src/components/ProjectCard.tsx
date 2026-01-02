@@ -2,7 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Github } from 'lucide-react';
 
+import { Link } from 'react-router-dom';
+
 interface ProjectCardProps {
+  id: string; // Added id prop
   title: string;
   description: string;
   image: string;
@@ -14,7 +17,7 @@ interface ProjectCardProps {
   delay: number;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ title, description, image, tags, links, delay }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ id, title, description, image, tags, links, delay }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -24,12 +27,14 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ title, description, image, ta
       className="group glass-panel rounded-xl overflow-hidden hover:border-neon-pink/50 transition-all duration-300 flex flex-col h-full"
     >
       <div className="relative h-48 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-void to-transparent z-10 opacity-60"></div>
-        <img
-          src={image}
-          alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-        />
+        <Link to={`/projects/${id}`}>
+          <div className="absolute inset-0 bg-gradient-to-t from-void to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity"></div>
+          <img
+            src={image}
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        </Link>
         <div className="absolute top-4 right-4 z-20 flex gap-2">
           {links.github && (
             <a
@@ -55,9 +60,11 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ title, description, image, ta
       </div>
 
       <div className="p-6 flex-grow flex flex-col">
-        <h3 className="text-2xl font-orbitron font-bold text-white mb-2 group-hover:text-neon-pink transition-colors">
-          {title}
-        </h3>
+        <Link to={`/projects/${id}`} className="block">
+          <h3 className="text-2xl font-orbitron font-bold text-white mb-2 group-hover:text-neon-pink transition-colors">
+            {title}
+          </h3>
+        </Link>
         <p className="text-gray-400 mb-4 flex-grow">
           {description}
         </p>
