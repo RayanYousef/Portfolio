@@ -17,6 +17,8 @@ const ProjectDetails = () => {
         );
     }
 
+    const videoUrl = (project as any).videoUrl;
+
     return (
         <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             <Link
@@ -56,12 +58,12 @@ const ProjectDetails = () => {
 
                 {/* Video / Main Display */}
                 <div className="glass-panel p-2 rounded-2xl overflow-hidden mb-12 aspect-video bg-black/40">
-                    {(project as any).videoUrl ? (
+                    {videoUrl ? (
                         <div className="w-full h-full relative">
                             {/* Check if it's a Google Drive URL */}
-                            {(project as any).videoUrl.includes('drive.google.com') ? (
+                            {videoUrl.includes('drive.google.com') ? (
                                 <iframe
-                                    src={(project as any).videoUrl}
+                                    src={videoUrl}
                                     width="100%"
                                     height="100%"
                                     className="w-full h-full"
@@ -69,14 +71,15 @@ const ProjectDetails = () => {
                                     title={project.title}
                                 ></iframe>
                             ) : (
-                                // @ts-ignore
                                 <ReactPlayer
-                                    url={(project as any).videoUrl}
-                                    width="100%"
-                                    height="100%"
-                                    controls
-                                    playing
-                                    muted
+                                    {...({
+                                        url: videoUrl,
+                                        width: "100%",
+                                        height: "100%",
+                                        controls: true,
+                                        playing: true,
+                                        muted: true,
+                                    } as any)}
                                 />
                             )}
                         </div>
