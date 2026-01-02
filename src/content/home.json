@@ -1,23 +1,23 @@
 {
-    "subtitle": "System Online",
-    "titleLine1": "BUILDING",
-    "titleLine2": "DIGITAL WORLDS",
-    "description": "Game Developer & Creative Coder crafting immersive experiences and interactive stories.",
-    "features": [
-        {
-            "title": "Game Design",
-            "desc": "Crafting engaging mechanics and loops that keep players hooked.",
-            "icon": "gamepad"
-        },
-        {
-            "title": "Clean Code",
-            "desc": "Writing performant, scalable, and maintainable systems in C# and C++.",
-            "icon": "code"
-        },
-        {
-            "title": "Optimization",
-            "desc": "Squeezing every frame out of the engine for smooth gameplay.",
-            "icon": "cpu"
-        }
-    ]
+  "subtitle": "Rayan Online",
+  "titleLine1": "BUILDING",
+  "titleLine2": "DIGITAL WORLDS",
+  "description": "Game Developer & Creative Coder crafting immersive experiences and interactive stories.",
+  "features": [
+    {
+      "title": "Game Design",
+      "desc": "Crafting engaging mechanics and loops that keep players hooked.",
+      "icon": "gamepad"
+    },
+    {
+      "title": "Clean Code",
+      "desc": "Writing performant, scalable, and maintainable systems in C# and C++.",
+      "icon": "code"
+    },
+    {
+      "title": "Optimization",
+      "desc": "Squeezing every frame out of the engine for smooth gameplay.",
+      "icon": "cpu"
+    }
+  ]
 }
