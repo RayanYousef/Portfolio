@@ -1,7 +1,7 @@
 
 import { motion } from 'framer-motion';
 import { Terminal, Database, Cpu, Layers } from 'lucide-react';
-import aboutContent from '../content/about.json';
+import aboutContent from '@content/about.json';
 
 const iconMap: Record<string, React.ReactNode> = {
   layers: <Layers className="w-6 h-6 text-neon-pink" />,

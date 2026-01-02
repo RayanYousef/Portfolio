@@ -2,22 +2,23 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ReactPlayer from 'react-player';
 import { Github, ExternalLink, ArrowLeft } from 'lucide-react';
-import projectsData from '../content/projects.json';
+import projectsData from '@content/projects.json';
+import type { Project } from '../types/index';
 
 const ProjectDetails = () => {
-    const { id } = useParams();
-    const project = projectsData.projects.find((p: any) => p.id === id);
+    const { id } = useParams<{ id: string }>();
+    const project = projectsData.projects.find((p) => p.id === id) as Project | undefined;
 
     if (!project) {
         return (
             <div className="min-h-screen pt-32 text-center text-white">
                 <h1 className="text-2xl">Project not found: {id}</h1>
-                <p>Available IDs: {projectsData.projects.map((p: any) => p.id).join(', ')}</p>
+                <p>Available IDs: {projectsData.projects.map((p) => p.id).join(', ')}</p>
             </div>
         );
     }
 
-    const videoUrl = (project as any).videoUrl;
+    const videoUrl = project.videoUrl;
 
     return (
         <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -79,7 +80,7 @@ const ProjectDetails = () => {
                                         controls: true,
                                         playing: true,
                                         muted: true,
-                                    } as any)}
+                                    })}
                                 />
                             )}
                         </div>

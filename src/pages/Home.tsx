@@ -2,7 +2,7 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Code, Gamepad, Cpu } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import homeContent from '../content/home.json';
+import homeContent from '@content/home.json';
 
 const iconMap: Record<string, React.ReactNode> = {
   gamepad: <Gamepad className="w-10 h-10 text-neon-pink" />,

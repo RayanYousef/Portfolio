@@ -1,23 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Github } from 'lucide-react';
-
 import { Link } from 'react-router-dom';
+import type { Project } from '../types/index';
 
 interface ProjectCardProps {
-  id: string; // Added id prop
-  title: string;
-  description: string;
-  image: string;
-  tags: string[];
-  links: {
-    demo?: string;
-    github?: string;
-  };
+  project: Project;
   delay: number;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ id, title, description, image, tags, links, delay }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, delay }) => {
+  const { id, title, description, image, tags, demoLink, githubLink } = project;
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -36,9 +29,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ id, title, description, image
           />
         </Link>
         <div className="absolute top-4 right-4 z-20 flex gap-2">
-          {links.github && (
+          {githubLink && (
             <a
-              href={links.github}
+              href={githubLink}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 bg-void/80 backdrop-blur-md rounded-full text-white hover:text-neon-cyan transition-colors"
@@ -46,9 +39,9 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ id, title, description, image
               <Github className="w-5 h-5" />
             </a>
           )}
-          {links.demo && (
+          {demoLink && (
             <a
-              href={links.demo}
+              href={demoLink}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 bg-void/80 backdrop-blur-md rounded-full text-white hover:text-neon-pink transition-colors"
