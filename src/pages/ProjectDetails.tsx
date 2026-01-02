@@ -1,4 +1,4 @@
-import { useParams, Navigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ReactPlayer from 'react-player';
 import { Github, ExternalLink, ArrowLeft } from 'lucide-react';
@@ -6,11 +6,7 @@ import projectsData from '../content/projects.json';
 
 const ProjectDetails = () => {
     const { id } = useParams();
-    console.log("Current ID:", id);
-    console.log("Projects Data:", projectsData);
-
     const project = projectsData.projects.find((p: any) => p.id === id);
-    console.log("Found Project:", project);
 
     if (!project) {
         return (
@@ -65,7 +61,7 @@ const ProjectDetails = () => {
                             {/* Check if it's a Google Drive URL */}
                             {(project as any).videoUrl.includes('drive.google.com') ? (
                                 <iframe
-                                    src={(project as any).videoUrl.replace('/view', '/preview').replace('/edit', '/preview')}
+                                    src={(project as any).videoUrl}
                                     width="100%"
                                     height="100%"
                                     className="w-full h-full"
@@ -73,13 +69,14 @@ const ProjectDetails = () => {
                                     title={project.title}
                                 ></iframe>
                             ) : (
+                                // @ts-ignore
                                 <ReactPlayer
                                     url={(project as any).videoUrl}
                                     width="100%"
                                     height="100%"
-                                    controls={true}
-                                    playing={true}
-                                    muted={true}
+                                    controls
+                                    playing
+                                    muted
                                 />
                             )}
                         </div>
