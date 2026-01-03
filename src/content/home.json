@@ -2,22 +2,22 @@
   "subtitle": "Rayan Online",
   "titleLine1": "BUILDING",
   "titleLine2": "DIGITAL WORLDS",
-  "description": "Game Developer & Creative Coder crafting immersive experiences and interactive stories.",
+  "description": "Game Developer fascinated by AI in games and educational games, crafting immersive experiences and interactive stories.",
   "features": [
     {
-      "title": "Game Design",
-      "desc": "Crafting engaging mechanics and loops that keep players hooked.",
-      "icon": "gamepad"
-    },
-    {
-      "title": "Clean Code",
-      "desc": "Writing performant, scalable, and maintainable systems in C# and C++.",
-      "icon": "code"
-    },
-    {
-      "title": "Optimization",
-      "desc": "Squeezing every frame out of the engine for smooth gameplay.",
+      "title": "AI Integration",
+      "desc": "Integrating Gemini, GPT, Whisper, and speech technologies into games.",
       "icon": "cpu"
+    },
+    {
+      "title": "Multiplayer Systems",
+      "desc": "Building real-time multiplayer with UGS, Netcode, Relay, and Photon.",
+      "icon": "wifi"
+    },
+    {
+      "title": "Custom Tools",
+      "desc": "Creating Unity tools like MVVM frameworks, minimaps, and editor extensions.",
+      "icon": "tool"
     }
   ]
 }

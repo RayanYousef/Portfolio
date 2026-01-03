@@ -1,7 +1,8 @@
+
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Menu, X, Gamepad2 } from 'lucide-react';
+import { Menu, X, Gamepad2, Github, Linkedin } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,6 +13,7 @@ const Navbar = () => {
     { name: 'Projects', path: '/projects' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
+    { name: 'Resume', path: '/resume' },
   ];
 
   return (
@@ -28,16 +30,15 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+            <div className="ml-10 flex items-center space-x-8">
               {navLinks.map((link) => (
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`relative px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 ${
-                    location.pathname === link.path
-                      ? 'text-neon-cyan'
-                      : 'text-gray-300 hover:text-white hover:text-shadow-neon'
-                  }`}
+                  className={`relative px-3 py-2 rounded-md text-sm font-medium transition-colors duration-300 ${location.pathname === link.path
+                    ? 'text-neon-cyan'
+                    : 'text-gray-300 hover:text-white hover:text-shadow-neon'
+                    }`}
                 >
                   {link.name}
                   {location.pathname === link.path && (
@@ -48,6 +49,15 @@ const Navbar = () => {
                   )}
                 </Link>
               ))}
+
+              <div className="flex items-center gap-4 ml-4 border-l border-white/10 pl-4">
+                <a href="https://github.com/RayanYousef" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                  <Github className="w-5 h-5" />
+                </a>
+                <a href="https://linkedin.com/in/rayan-yousef" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </div>
             </div>
           </div>
 
@@ -75,15 +85,22 @@ const Navbar = () => {
                 key={link.name}
                 to={link.path}
                 onClick={() => setIsOpen(false)}
-                className={`block px-3 py-2 rounded-md text-base font-medium ${
-                  location.pathname === link.path
-                    ? 'text-neon-cyan bg-white/5'
-                    : 'text-gray-300 hover:text-white hover:bg-white/10'
-                }`}
+                className={`block px-3 py-2 rounded-md text-base font-medium ${location.pathname === link.path
+                  ? 'text-neon-cyan bg-white/5'
+                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  }`}
               >
                 {link.name}
               </Link>
             ))}
+            <div className="flex gap-4 px-3 py-2">
+              <a href="https://github.com/RayanYousef" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
+                <Github className="w-6 h-6" />
+              </a>
+              <a href="https://linkedin.com/in/rayan-yousef" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white">
+                <Linkedin className="w-6 h-6" />
+              </a>
+            </div>
           </div>
         </motion.div>
       )}

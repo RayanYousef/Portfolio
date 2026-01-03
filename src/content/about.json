@@ -1,8 +1,8 @@
 {
-    "bio1": "Hi, I'm a passionate Game Developer with a knack for creating immersive digital experiences. My journey began with modding classic games, which eventually led me to dive deep into engine architecture and gameplay programming.",
-    "bio2": "I specialize in gameplay mechanics, AI systems, and graphics programming. When I'm not coding, you can find me analyzing level design in retro platformers or experimenting with procedural generation algorithms.",
-    "yearsExp": "5+",
-    "shippedGames": "12+",
+    "bio1": "I'm Rayan Yousef, an addicted game programmer with a strong interest in game development. Currently, I'm fascinated by the possibilities of AI in games and educational games, exploring how it can create engaging and innovative experiences.",
+    "bio2": "My learning adventure began in 2017 when I discovered the joy of creating games as a hobby. In 2022, I joined the ITI (Information Technology Institute) to further develop my skills and turn my passion into a full-time career. In my Unity learning journey, I've crafted engaging projects showcasing proficiency in AI, UI design, VFX, networking, custom tools, and more.",
+    "yearsExp": "7+",
+    "shippedGames": "16+",
     "coffeeConsumed": "∞",
     "skills": [
         {
@@ -10,8 +10,11 @@
             "icon": "layers",
             "items": [
                 "Unity",
-                "Unreal Engine 5",
-                "Godot"
+                "Unreal Engine",
+                "Phaser",
+                "Box2D",
+                "SFML",
+                "OpenGL"
             ]
         },
         {
@@ -20,26 +23,49 @@
             "items": [
                 "C#",
                 "C++",
-                "TypeScript",
-                "Python"
+                "JavaScript",
+                "HTML",
+                "CSS"
             ]
         },
         {
-            "name": "Graphics",
+            "name": "Networking",
+            "icon": "wifi",
+            "items": [
+                "Photon/PUN",
+                "UGS",
+                "Relay",
+                "Lobby",
+                "Netcode"
+            ]
+        },
+        {
+            "name": "AI Integration",
             "icon": "cpu",
             "items": [
-                "HLSL/GLSL",
-                "Blender",
-                "Photoshop"
+                "Gemini",
+                "GPT",
+                "Whisper",
+                "Speechmatics",
+                "Google TTS",
+                "Google STT"
             ]
         },
         {
-            "name": "Backend",
-            "icon": "database",
+            "name": "XR Technologies",
+            "icon": "glasses",
             "items": [
-                "Node.js",
-                "Firebase",
-                "PlayFab"
+                "AR",
+                "VR"
+            ]
+        },
+        {
+            "name": "Principles",
+            "icon": "book",
+            "items": [
+                "SOLID",
+                "Design Patterns",
+                "OOP"
             ]
         }
     ]

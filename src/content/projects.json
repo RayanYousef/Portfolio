@@ -1,85 +1,265 @@
 {
     "pageTitle": "PROJECT_DATABASE",
-    "pageDescription": "A collection of my recent game development projects, prototypes, and experiments.",
+    "pageDescription": "A collection of my game development projects, tools, and experiments showcasing my journey in Unity, AI integration, and multiplayer systems.",
     "projects": [
         {
-            "id": "neon-racer-2077",
-            "title": "Neon Racer 2077",
-            "description": "A high-speed endless runner set in a cyberpunk city. Features procedural generation and dynamic lighting.",
-            "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "id": "neural-dominion",
+            "title": "Neural Dominion",
+            "description": "Cyberpunk 4X strategy game where players control gangs in a neon-lit city. Engage in crime, manage resources, and use cybernetic enhancements. As Game Programmer, I developed Combat, Inventory, Stat, Skill, Store, AI, Audio, Character, Minimap, and Tutorial systems. Contributed to base architecture, optimizing performance and scalability.",
+            "image": "/images/projects/neural-dominion.jpg",
+            "tags": [
+                "C#",
+                "Unity",
+                "Steam"
+            ],
+            "githubLink": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Neural-Dominion",
+            "category": "Recent Projects",
+            "readmeContent": "<div align=\"center\"><h1>Neural Dominion</h1></div>\n\n**Project Type:** _PC_  \n**Genre:** _4X Strategy_, _Cyberpunk_, _Sci-fi_                                    \n**Development Period:** _2024 – Ongoing_                                           \n**Web Page:** [_Steam_](https://store.steampowered.com/app/2493210/Neural_Dominion/)\n\n## 📜 Project Summary\nNeural Dominion is a cyberpunk 4X strategy game where players control gangs in a neon-lit city. Engage in crime, manage resources, and use cybernetic enhancements to outsmart opponents in a blend of turn-based and real-time combat. The game combines city management, research, and tactical warfare in a gritty, high-tech world.                     \n[Game Article](https://www.pcgamesn.com/neural-dominion/cyberpunk-4x-strategy-game).\n\n## 🎮 Key Features\n- **Gang Control**: Manage one of five unique cyberpunk gangs, each with different strengths.\n- **Resource Management**: Balance crime, economy, and technology to expand influence.\n- **Tactical Combat**: Combine turn-based and real-time mechanics for dynamic battles.\n- **Cybernetic Enhancements**: Upgrade gang members with advanced cyberware to gain combat advantages.\n- **City Domination**: Strategically control districts, exploit local resources, and build your empire.\n\n## 🛠️ Technologies Used\n- **Game Engine:** Unity.\n- **Programming Languages:** C#.\n\n## 🌍 Platform\n- To be released on Steam.\n\n## 👨‍💻 Role and Contributions\n- **Role:**  \n  - Game Programmer.\n\n- **Contributions:**  \n  - Developed major game systems from scratch, including Combat, Inventory, Stat, Skill, Store, AI, Audio, Character, Minimap, and Tutorial systems.\n  - Contributed to the project’s base architecture, optimizing performance and scalability.\n  - Worked on refining and enhancing existing systems, ensuring smooth integration across gameplay mechanics.\n\n## 📸 Visuals \n<div align=\"center\">\n  <h3>Video</h3>\n\n<a href=\"https://video.akamai.steamstatic.com/store_trailers/257044218/movie480_vp9.webm?t=1723045120\" target=\"_blank\">\n    <img src=\"Images/4.png\" alt=\"Watch Gameplay Video\" height =\"300\" />\n</a>\n\n  <h3>Screenshots</h3>\n\n<img src=\"Images/0.png\" alt=\"Description of Image\" height=\"200\" style=\"display: inline-block;\"/>\n<img src=\"Images/1.png\" alt=\"Description of Image\" height=\"200\" style=\"display: inline-block;\"/>\n<img src=\"Images/2.png\" alt=\"Description of Image\" height=\"200\" style=\"display: inline-block;\"/>\n<img src=\"Images/3.png\" alt=\"Description of Image\" height=\"200\" style=\"display: inline-block;\"/>\n\n</div>\n\n"
+        },
+        {
+            "id": "tap-tap-fighters",
+            "title": "Tap Tap Fighters",
+            "description": "Multiplayer tap-to-win game where players compete in real-time battles with power-ups and leaderboards. Integrated Unity Gaming Services with Relay, Lobby, and Netcode. Implemented interactive buffs system and designed in-game tutorial system.",
+            "image": "/images/projects/tap-tap-fighters.png",
+            "tags": [
+                "C#",
+                "Unity",
+                "UGS",
+                "Relay",
+                "Lobby",
+                "Netcode"
+            ],
+            "demoLink": "https://play.google.com/store/apps/details?id=com.GamesBond.TapTapFighters",
+            "githubLink": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Tap-Tap-Fighters",
+            "category": "Recent Projects",
+            "readmeContent": "<div align=\"center\"><h1>Tap Tap Fighters</h1></div>\n\n**Project Type:** Mobile                                        \n**Genre:** Casual  \n**Development Period:** 2024 (Completed within the year)\n\n## 📜 Project Summary\nIt's difficult times and super powers took the world by storm. \nMany are good but some are as evil as ever. \nChoose your side and rise up the rankings to be the ultimate superhero and take control.\nTap your way through the enemy's defense to win in a heated battle\n\n## 🎮 Key Features\n- **Tap to Win**: Compete in real-time by tapping the screen as fast as possible to rack up points.\n- **Power-Up Buffs**: Buffs appear randomly, giving players the chance to freeze opponents or enhance their score.\n- **Leaderboard**: Compete globally and climb the leaderboard to show who’s the fastest.\n- **Simple Gameplay**: Easy-to-learn mechanics ensure quick, fun sessions for all players.\n- **Fast-Paced Action**: The faster you tap, the higher your score and chances of winning!\n\n## 🛠️ Technologies Used\n- **Game Engine:** Unity.\n- **Programming Languages:** C#.\n- **Tools:** \n\n  - Unity Gaming Services (UGS).\n    - Relay.\n    - Lobby.\n    - Netcode.\n  \n\n\n## 🌍 Platforms Released\n- iOS, Android.\n\n## 👨‍💻 Role and Contributions\n- **Role**:  \n  - Game Programmer.\n\n- **Contributions**:  \n  - Developed AI systems to enhance gameplay dynamics.  \n  - Integrated Unity Gaming Services, including networking with Relay, Lobby, and Netcode for real-time multiplayer functionality.  \n  - Implemented interactive buffs that appear during gameplay, requiring players to click them to gain power-ups, adding an extra layer of strategy.  \n  - Designed and implemented an in-game tutorial system to guide players through core mechanics and features.\n\n\n## 📸 Visuals \n<div align=\"center\">\n  <h3>Video</h3>\n\n<a href=\"https://youtu.be/w-NjqWDMcak\" target=\"_blank\">\n    <img src=\"Images/Video.png\" alt=\"Watch Gameplay Video\" height =\"300\" />\n</a>\n\n  <h3>Screenshots</h3>\n\n<img src=\"Images/0.png\" alt=\"Description of Image\" height=\"200\" style=\"display: inline-block;\"/>\n<img src=\"Images/1.png\" alt=\"Description of Image\" height=\"200\" style=\"display: inline-block;\"/>\n<img src=\"Images/2.png\" alt=\"Description of Image\" height=\"200\" style=\"display: inline-block;\"/>\n<img src=\"Images/3.png\" alt=\"Description of Image\" height=\"200\" style=\"display: inline-block;\"/>\n\n</div>\n\n## 🔗 Download/Play Link\n[Play the game here](https://play.google.com/store/apps/details?id=com.GamesBond.TapTapFighters&hl=en)\n"
+        },
+        {
+            "id": "network-ninja",
+            "title": "Network Ninja",
+            "description": "Serious game for EG-Cert raising awareness about cyber security. Action hack-and-slash with password security education. As Programming Team Lead, I oversaw programming and team collaboration, designed code architecture, and scripted main character behaviors: movement, camera, damage, animations, ultimate mode.",
+            "image": "/images/projects/network-ninja.png",
             "videoUrl": "https://drive.google.com/file/d/19PhogJuXqhvriExU712UZ8bufOTLkO0j/preview",
             "tags": [
-                "Unity",
                 "C#",
-                "HDRP"
-            ],
-            "demoLink": "#",
-            "githubLink": "#"
-        },
-        {
-            "id": "void-explorer",
-            "title": "Void Explorer",
-            "description": "Space exploration RPG with resource management and tactical combat.",
-            "image": "https://images.unsplash.com/photo-1614728853913-1e32005e3020?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-            "tags": [
-                "Unreal Engine 5",
-                "Blueprints",
-                "C++"
-            ],
-            "demoLink": "#",
-            "githubLink": "#"
-        },
-        {
-            "id": "pixel-quest",
-            "title": "Pixel Quest",
-            "description": "A retro-style 2D platformer with metroidvania elements and challenging boss fights.",
-            "image": "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-            "tags": [
-                "Godot",
-                "GDScript",
-                "Pixel Art"
-            ],
-            "demoLink": "#",
-            "githubLink": "#"
-        },
-        {
-            "id": "cyber-defense",
-            "title": "Cyber Defense",
-            "description": "Tower defense game where you protect the mainframe from viral attacks.",
-            "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-            "tags": [
-                "React",
-                "WebGL",
-                "Three.js"
-            ],
-            "demoLink": "#",
-            "githubLink": "#"
-        },
-        {
-            "id": "echoes-of-the-past",
-            "title": "Echoes of the Past",
-            "description": "Narrative-driven puzzle game exploring memory and time.",
-            "image": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-            "tags": [
                 "Unity",
+                "Cyber Security",
+                "Serious Game"
+            ],
+            "githubLink": "https://github.com/RayanYousef/NetworkNinja_Showcase",
+            "category": "Recent Projects",
+            "readmeContent": "\n# Network Ninja (Unity)\n![alt text](https://raw.githubusercontent.com/RayanYousef/NetworkNinja_Showcase/main/Screenshot_2.png)\n<br/>\n\n## Network Ninja is a serious game developed for EG-Cert (Egyptian Computer Emergency Readiness Team) with the primary objective of raising awareness about crucial aspects of cyber security.\n\n\nNetwork Ninja is an exciting action hack-and-slash game designed to engage players while raising awareness about password security. It combines thrilling gameplay with valuable educational content to ensure players stay captivated while learning important cybersecurity principles. \n\n\n**My Roles in the Project:**\n- Programming Team Lead: Oversaw programming aspects and promoted effective collaboration within the team.\n- Code Architecture: Designed a solid foundation for the game's codebase, enabling seamless interaction and communication among scripts and components.\n- Designed and scripted the main character behaviors: movement behavior, camera behavior, damage behavior, animations behavior, ultimate mode behavior, and everything related to the main character in the game.\n\n\n**Features:**\n\n- Password security awareness: A strong emphasis is placed on raising awareness among players regarding the creation of robust passwords, the avoidance of password sharing, and the risks associated with using the same password across multiple sites. These crucial aspects have been implemented as core features in the game.\n\n- Diverse player abilities and Ultimate mode: Players are provided with a range of skills that can be utilized to navigate the game world effectively. Furthermore, Ultimate mode, characterized by slow motion, can be activated as the ultimate gauge is filled, offering players an exhilarating experience.\n\n- Fluid movement mechanics: Basic movement mechanics, such as jumping and dashing, have been incorporated into the game, allowing for seamless and agile traversal through the immersive environments. (jump has been implemented for future plans, it doesn't have any use in this version).\n\n- Varied adversaries: A wide array of opponents, including normal enemies, mini bosses, and formidable boss characters. (more enemies may be implemented in the future).\n\n\n\n\n<br/>\nGameplay Video Link: \nhttps://drive.google.com/file/d/19PhogJuXqhvriExU712UZ8bufOTLkO0j/preview\n\n\n\n"
+        },
+        {
+            "id": "mvvm-unity",
+            "title": "MVVM System for Unity",
+            "description": "MVVM framework providing base classes and interfaces for model-view-viewmodel architecture in Unity. No required dependencies, Git-based installation via Package Manager. Offers base classes for convenience or interfaces for control.",
+            "image": "/images/projects/mvvm-unity.jpg",
+            "tags": [
                 "C#",
-                "Dialogue System"
+                "Unity",
+                "Design Pattern",
+                "Architecture"
             ],
-            "demoLink": "#",
-            "githubLink": "#"
+            "githubLink": "https://github.com/RayanYousef/MVVM-Unity",
+            "category": "Tools",
+            "readmeContent": "﻿\n\n<h1 align=\"center\">MVVM For Unity</h1>\n\n<div align=\"center\">\n<img src=\"https://drive.google.com/uc?export=view&id=1CqKV46T1OPKX7DQ6_XTbcNkiSwPpcfW4\"  height =\"500\" />\n</div>\n\nThis framework provides a structured Model-View-ViewModel (MVVM) system for Unity, designed to separate your app’s data (Model), user interface (View), and business logic (ViewModel).\n\nModel holds the data and notifies the ViewModel of any changes.\nViewModel acts as an intermediary, exposing data and logic for the View without knowing any UI details.\nView binds to the ViewModel, ensuring the UI reflects the data from the Model in real-time.\n\n> **Limitations:** This system currently supports **One-Way Binding** only, meaning data flows from the Model to the View but cannot flow back from the View to the Model. Future updates will add Two-Way Binding for greater interactivity.\n\n## Dependencies\nNo required dependencies\n\n## Installation\n\nAdd this package to your Unity project as a Git-based package:\n\n```bash\nhttps://github.com/RayanYousef/MVVM-Unity.git\n```\n\nOpen Unity and go to **Window > Package Manager**, select **+ > Add package from git URL…**, and paste the link above.\n\n\n## Usage Guide\n\nThis MVVM framework provides base classes and interfaces to streamline setting up a model-view-viewmodel architecture in Unity. You can either:\n- Extend the provided base classes for convenience.\n- Or, if you need more control, implement the interfaces directly.\n\n### Step 1: Implementing Model, ViewModel, and View Classes\n\nThis MVVM framework provides flexibility in setting up `Model`, `ViewModel`, and `View` components. You can either:\n\n- **Extend the provided base classes** (`ViewModelBase` and `ViewBase<TViewModel>`) for a quick setup with built-in functionality.\n- **Or, implement the interfaces** (`IModel`, `IViewModel`, and `IView`) directly if you need more customization.\n\n> If you implement the interfaces, ensure correct implementation of the required interfaces to maintain seamless communication between the components.\n\n### Example: Setting Up a Simple Model\n\nTo illustrate, here’s a basic `StatsModel` example:\n\n```csharp\nusing System;\nusing UnityEngine;\n\nnamespace AdorableAssets.MVVM\n{\n    [Serializable]\n    public class StatsModel : IModel\n    {\n        public PropertyUpdatedEvent OnPropertyUpdated { get; set; }\n        private int _health;\n        \n        public int Health\n        {\n            get => _health;\n            set\n            {\n                if (_health != value)\n                {\n                    _health = value;\n                    OnPropertyUpdated?.Invoke(\"Health\", _health);\n                }\n            }\n        }\n    }\n}\n```\n\nThis simple `StatsModel` example:\n- Declares a `Health` property.\n- Raises the `OnPropertyUpdated` event when `Health` changes, ensuring updates can be reflected in the view.\n\n### Step 2: Creating a ViewModel\n\nTo use this model, create a `ViewModel` by extending `ViewModelBase`:\n\n```csharp\npublic class StatsViewModel : ViewModelBase<StatsModel>\n{\n    // Optionally, add ViewModel-specific methods here\n}\n```\n\n\n### Step 3: Setting Up a View\n\nTo display data in Unity, create a `View` class by extending `ViewBase<TViewModel>`.\n\n#### 1. Binding UI Components to Model Properties\n\n```csharp\npublic class PlayerHealthView : ViewBase<StatsViewModel>\n{\n    protected override void RegisterBindings()\n    {\n        BindingManager\n            .ForComponent<Image>(\"HealthBarImage\", healthBarImage => healthBarImage.fillAmount)\n            .ToProperties(\"Health\")\n            .OneWay();\n    }\n}\n```\n\n> In the Unity Editor, assign the **Image** component (or the GameObject containing the **Image** component) to the corresponding field. You can then bind it by using the **component name** and **type** with `ForComponent<Type>(\"Component Name\", ...)`. \n<div align=\"center\">\n<img src=\"https://drive.google.com/uc?export=view&id=1ohSnanA3sMA5oKkoyEjXkh_doIpLarEf\"  height =\"350\" style=\"display: inline-block;\"/>\n</div>\n\n#### 2. Binding Multiple Components to the Same View\n\nIn some cases, you might want to bind multiple components to the same View. Below is an example where multiple UI elements from the same GameObject are bound to different properties of the `StatsViewModel`. This allows you to manage several visual elements at once with a single `View` class.\n\n#### HealthBar Class\n\nFirst, let’s define the `HealthBar` class which holds references to the `Image` and `Text` components:\n\n```csharp\nusing UnityEngine;\nusing UnityEngine.UI;\n\nnamespace AdorableAssets.MVVM\n{\n    public class HealthBar : MonoBehaviour\n    {\n        [SerializeField] private Image _healthBarFillImage;\n        [SerializeField] private Text _healthValueText;\n\n        public Image HealthBarFillImage  => _healthBarFillImage;\n        public Text HealthValueText  => _healthValueText; \n    }\n}\n```\n\n> The `HealthBar` class contains serialized fields for the `Image` and `Text` components that will be linked in the Unity Editor. These fields are used in the `View` class to set up bindings between the UI and the model properties.\n\n#### PlayerHealthView Class\n\nNow, let’s set up the `PlayerHealthView` class to bind multiple components (such as the health bar fill, color, and text) to different properties of the `StatsViewModel`.\n\n```csharp\npublic class PlayerHealthView : ViewBase<StatsViewModel>\n{\n    [SerializeField] private HealthBar _healthBar;\n\n    protected override void RegisterBindings()\n    {\n        // Binding health percentage to the fill amount of the HealthBar\n        BindingManager\n            .ForComponent<HealthBar>(\"PlayerHealthBar\", healthBar => healthBar.HealthBarFillImage.fillAmount)\n            .ToProperties(EnumStatTypes.HealthPercentage.ToString())\n            .OneWay();\n\n        // Binding health percentage to the color of the HealthBar's fill image\n        BindingManager\n            .ForComponent<HealthBar>(\"PlayerHealthBar\", healthBar => healthBar.HealthBarFillImage.color)\n            .ToProperties(EnumStatTypes.HealthPercentage.ToString())\n            .UsingExpression(value =>\n            {\n                Color colorToReturn = Color.Lerp(Color.red, Color.green, (float)value);\n                return colorToReturn;\n            })\n            .OneWay();\n\n        // Binding health percentage to the color of the Health Value Text\n        BindingManager\n            .ForComponent<HealthBar>(\"PlayerHealthBar\", healthBar => healthBar.HealthValueText.color)\n            .ToProperties(EnumStatTypes.HealthPercentage.ToString())\n            .UsingExpression(value =>\n            {\n                Color colorToReturn = Color.Lerp(Color.black, Color.white, (float)value);\n                return colorToReturn;\n            })\n            .OneWay();\n\n        // Binding health and max health to the Health Value Text\n        BindingManager\n            .ForComponent<HealthBar>(\"PlayerHealthBar\", healthBar => healthBar.HealthValueText.text)\n            .ToProperties(EnumStatTypes.Health.ToString(), EnumStatTypes.MaxHealth.ToString())\n            .UsingExpression(value =>\n            {\n                string valueToReturn =\n                ViewModel.Health\n                + \"/\"\n                + ViewModel.MaxHealth;\n                return valueToReturn;\n            })\n            .OneWay();\n    }\n}\n```\n\n> In this example, multiple UI components from the same `HealthBar` GameObject are bound to properties from the `ViewModel`:\n> - The `HealthBarFillImage.fillAmount` is bound to the `HealthPercentage` property.\n> - The `HealthBarFillImage.color` and `HealthValueText.color` change based on the health percentage.\n> - The `HealthValueText.text` is bound to the player's health and max health.\n\n**This example is included within the asset**, and you can refer to it to see how multiple components can be bound to the same View. The `HealthBar` and `PlayerHealthView` classes are provided to help you understand how to work with bindings and UI components effectively."
         },
         {
-            "id": "mecha-arena",
-            "title": "Mecha Arena",
-            "description": "Multiplayer turn-based strategy game featuring customizable mechs.",
-            "image": "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "id": "camera-free-minimap",
+            "title": "Camera Free Minimap",
+            "description": "Free Unity tool for creating minimaps without an extra camera, saving performance. Supports procedurally generated maps. Features single camera usage, easy setup, and two variants available.",
+            "image": "/images/projects/camera-free-minimap.png",
+            "videoUrl": "https://www.youtube.com/watch?v=BTr-0mluRkU",
             "tags": [
+                "C#",
                 "Unity",
-                "Mirror",
+                "Tool"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Camera-Free-Minimap",
+            "category": "Tools",
+            "readmeContent": "# Camera Free Minimap (Unity Asset)\n![alt text](https://github.com/RayanYousef/Camera-Free-Minimap/blob/main/Misc/Camera%20Free%20Minimap%20.png?raw=true)\n<br/>\n## Demo Video:\nhttps://www.youtube.com/watch?v=BTr-0mluRkU\n<br/>\n\n## Description\n\"Camera Free Minimap\" is a free Unity tool that makes creating minimaps a breeze. It eliminates the need for an extra camera, saving your game's performance. Setting up and using \"Camera Free Minimap\" is incredibly straightforward.<br/>\n**It Supports Procedurally Generated Maps.**\n\n## KEY FEATURE:\n### Single Camera Usage: \nThe Camera Free Minimap asset allows you to create a \nminimap without the need for a second camera. This feature is essential for \nimproving performance in your Unity projects, as it eliminates the overhead \nassociated with rendering a secondary camera view.\n### Ease of Setup: \nSetting up the Camera Free Minimap is straightforward and user friendly. You can quickly integrate it into your project, making it accessible for \ndevelopers of all skill levels.\nIn-Depth Script Comments: The included scripts are well-documented with \ndetailed comments. This makes it easier for developers to understand and \ncustomize the minimap behavior according to their project requirements.\n### Two Variants: \nThis asset provides two distinct minimap variants:\n<br/>• Follow Target Minimap:<br/> You can create a dynamic minimap that follows a \nspecific object that you specify. This is valuable for games where you want \nthe minimap to focus on a moving character or object.\n<br/>• Static Minimap:<br/> Alternatively, you can use the static minimap version for \ngames that don't require dynamic minimap tracking. This mode offers a \nfixed overview of the game world.\n\n## HOW DOES IT WORK?\nCamera Free Minimap simplifies the process of creating a minimap for your Unity \nproject. To understand how it operates, let's break it down into key steps:\n### World Size Determination: \nCamera Free Minimap requires knowledge of your \ngame world's dimensions. This means it needs to know the minimum and \nmaximum X and Z coordinates of your world.\n### Utilizing the \"World Map\" Prefab: \nThe asset relies on a specific prefab called \n\"World Map,\" which can be found in the prefab folders. This prefab plays a crucial \nrole in generating the minimap.\n### Establishing a Connection with the Minimap Image: \nThe \"World Map\" prefab \nneeds a reference to your minimap image. The minimap image typically resides \nwithin the Canvas hierarchy. This connection is vital for the minimap generation \nprocess.\n### Mapping the Minimap Image to \"World Map\": \nOnce linked, the \"World Map\" \nextracts the sprite from your minimap image. It attaches this sprite to itself using \na Sprite Renderer component.\n### Projection of the Minimap in the World: \nAs a result of this action, your minimap \nimage becomes a visual representation projected into the game world.\n### Alignment with the Game World: \nTo ensure the minimap matches your game's \nenvironment, you need to align the \"World Map\" with your world's structures and \nlayout. This alignment ensures that the minimap reflects the in-game world \ncorrectly.\n### Calculating World Dimensions: \nThe \"World Map\" now possesses the ability to \ncalculate the size of your world along the X and Z axes. This information becomes \nessential for determining the position of various elements within the minimap.\n### Calculating Minimap Dimensions: \nUsing the corners of any UI elements you can determine its dimensions, with that we can calculate the dimensions of the minimap in the UI.<br/>\nKnowing the world dimensions and the minimap dimensions the minimap now you can determine the position of the UI elements on the minimap!\n\n## Documentation Link:\nhttps://drive.google.com/file/d/1cMswtkUeIzoFR40DU381zZGATX-FvOhJ/view?usp=drive_link\n\n## Your Feedback is Appreciated\nI'm eager to continue working on and enhancing this asset, and I would greatly appreciate your feedback.<br/>\nFeel free to reach out to me through:<br/>\nEmail: RayanYoussef1993@gmail.com <br/>\nDiscord: rayan_1431\n\n\n\n\n## Feel free to utilize the asset and customize the code to perfectly align with your specific requirements.\n"
+        },
+        {
+            "id": "palm-unity",
+            "title": "PaLM Unity Integration",
+            "description": "Integration of Google's PaLM with Unity for advanced language generation capabilities. User-friendly configuration with exposed settings: safetySettings, stopSequences, temperature, candidateCount, maxOutputTokens, topP, topK. Detailed documentation included.",
+            "image": "/images/projects/palm-unity.png",
+            "videoUrl": "https://drive.google.com/file/d/1S2ixr3f9Zy840Ygx4VWwsKfLWk6GO8AR/view",
+            "tags": [
+                "C#",
+                "Unity",
+                "PaLM",
+                "Google API",
+                "AI"
+            ],
+            "githubLink": "https://github.com/RayanYousef/PaLM-Unity",
+            "category": "Tools",
+            "readmeContent": "# PaLM (Unity)\n### Description:\nThis repository facilitates the integration of Google's PaLM with Unity.<br/>\nPaLM empowers your Unity projects with advanced language generation capabilities.<br/> \nTo get started, simply obtain an API key from Google's Generative AI Developers. (https://developers.generativeai.google/)\n\n### Key Features:\n\n****User-Friendly Configuration:**** <br/> I've exposed essential settings for customization, including safetySettings, stopSequences, temperature, candidateCount, maxOutputTokens, topP, and topK.<br/><br/>\n****Detailed Documentation:**** <br/> Each setting is comprehensively explained, ensuring you understand their purpose and how to leverage them effectively in your Unity project.\n\n<br/>Video: https://drive.google.com/file/d/1S2ixr3f9Zy840Ygx4VWwsKfLWk6GO8AR/view?usp=drive_link <br/> <br/>\n![alt text](https://github.com/RayanYousef/PaLM-Unity-/blob/main/Misc/APIKey.jpg?raw=true)\n"
+        },
+        {
+            "id": "language-ai-assistant",
+            "title": "Language AI Assistant",
+            "description": "Interactive English learning tool with AI character featuring facial expressions and body language. Detects grammar mistakes and provides corrections. Features speech analysis for grammar correction and multi-language support.",
+            "image": "/images/projects/language-ai-assistant.png",
+            "tags": [
+                "C#",
+                "Unity",
+                "Gemini",
+                "Google TTS",
+                "Speechmatics"
+            ],
+            "githubLink": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Language-AI-Assistant",
+            "category": "My Learning Voyage",
+            "subcategory": "AI",
+            "readmeContent": "<div align=\"center\"><h1>Language AI Assistant</h1></div>\n\n**Project Type:** Educational Tool  \n**Genre:** AI-Enhanced Language Learning  \n**Development Period:** Ongoing.\n\n## 📜 Project Summary\nThis innovative tool integrates Unity with AI to create an interactive English learning experience. By incorporating facial expressions and body language into a character, the project aims to make learning more engaging. The current version features a character capable of smiling and expressing anger, with plans to expand to a wider range of emotions and gestures in the future. The AI listens to the user’s speech, detects grammar mistakes, and provides corrections and explanations to improve fluency and accuracy.\n\n## 👽 Ongoing Improvements\nWe are actively working to enhance the interactivity of the tool by adding a broader range of facial expressions and more nuanced body language to the AI character. This will create a richer, more immersive experience, allowing users to connect more deeply with the learning process.\n\n## 🎮 Key Features\n- **Interactive AI Character:** Character with facial expressions and body language to enhance user engagement.\n- **Speech Analysis:** AI detects grammar mistakes and guides users to fix one error at a time.\n- **Multi-Language Support:** Supports several languages for broader accessibility.\n\n## 🛠️ Technologies Used\n- **AI Framework:** Gemini (response generation).  \n- **Text-to-Speech:** Google Text-to-Speech (voice generation).  \n- **Speech-to-Text:** Speechmatics (speech transcription).  \n\n## 👨‍💻 Role and Contributions\n- **Role:**\n  - Programmer.\n- **Contributions:**\n  - Implemented the AI systems for speech analysis and grammar correction.\n\n## 📸 Visuals \n<div align=\"center\">\n  <h3>Video</h3>\n\n<a href=\"https://drive.google.com/file/d/1EX29oJkwQjqmMcQKpQahshJxf7HPRU4O/view?usp=sharing\" target=\"_blank\">\n    <img src=\"Images/Video.png\" alt=\"Watch Gameplay Video\" height =\"300\" />\n</a>\n\n</div>\n\nSpecial thanks to Aya Omar for her collaboration in bringing this project to life. 🌟\n-------------------------\n"
+        },
+        {
+            "id": "techquest",
+            "title": "TechQuest",
+            "description": "3-day hackathon project integrating AI into gaming. Uses AI companion to teach through puzzles. Features AI Companion with language model integration, educational gameplay with puzzles, and diverse exploration with artifact collection. Won First Place at lablab.ai Hackathon.",
+            "image": "/images/projects/techquest.png",
+            "tags": [
+                "C#",
+                "Unity",
+                "PALM",
+                "Whisper",
+                "DeepVoice",
+                "Hackathon Winner"
+            ],
+            "githubLink": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Gaming-Hackathon",
+            "category": "My Learning Voyage",
+            "subcategory": "AI",
+            "readmeContent": "<div align=\"center\"><h1>TechQuest</h1></div>\n\n[Linkedin Post](https://www.linkedin.com/feed/update/urn:li:activity:7126317778608734208/?originTrackingId=l7OMgxLNQ%2BawWp4Qv7BvtA%3D%3D)\n\n**Project Type:** PC, Web  \n**Genre:** Adventure, Educational  \n**Development Period:** 3 days (Hackathon Duration)\n\n## 📜 Project Summary\nThis was a small, three-day project designed to integrate AI into gaming. The game uses AI to teach players through puzzles, and they are accompanied by a companion. This companion can attack and defend on command, and also assists in solving puzzles, for example, by translating English text or explaining its grammar.\n\n## 🎮 Key Features\n- **AI Companion:** Collaborate with advanced language models to progress through the narrative and solve challenges.\n- **Educational Gameplay:** Seamlessly integrated puzzles and challenges designed to educate players on science and technology.\n- **Diverse Exploration:** Traverse through various environments while collecting artifacts and unlocking lost technologies.\n\n## 🛠️ Technologies Used\n- **Game Engine:** Unity  \n- **Programming Languages:** C#  \n- **Tools:** PALM (Google LLM), Whisper (Open AI Speech To Text Model), DeepVoice AI (Text to Speech AI)\n\n\n## 👨‍💻 Role and Contributions\n- **Role:**\n  - Game Programmer.\n- **Contributions:**\n  - Developed AI-driven companion mechanics using advanced language models.\n\n## 📸 Visuals \n<div align=\"center\">\n  <h3>Video</h3>\n\n<a href=\"https://drive.google.com/file/d/1N3gQKOZuxLo_ExvaL7pECztFndbUHP4H/view?usp=sharing\" target=\"_blank\">\n    <img src=\"Images/Video.png\" alt=\"Watch Gameplay Video\" height =\"300\" />\n</a>\n</div>\n\n## 🏆 Awards and Recognition\n- **First Place:** Hackathon organised by lablab.ai.  \n\nThank you, lablab.ai, for the opportunity, and my incredible teammates Toka Belal, Mostafa Zewail, Aya Omar, and Radwa Ahmed for making this a winning experience! 🎉\n-------------------------\n"
+        },
+        {
+            "id": "music-visualizer",
+            "title": "Realtime Music Visualizer",
+            "description": "Music visualizer using Unity's VFX graph with real-time visual effects synchronized to Windows audio output. Captures realtime system audio with visual effects based on instruments played.",
+            "image": "/images/projects/music-visualizer.png",
+            "videoUrl": "https://drive.google.com/file/d/1gcrPFgqsEeNohVdX5DPgqgTshFLV28PQ/view",
+            "tags": [
+                "C#",
+                "Unity",
+                "VFX Graph"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_Music_Visualizer",
+            "category": "Tools",
+            "readmeContent": "\n# Realtime Music Visualizer (Unity)\n![alt text](https://raw.githubusercontent.com/RayanYousef/Unity_Music_Visualizer/main/Music%20Visualizer.png)\n<br/>\nA music visualizer was created using Unity's VFX graph to apply real-time visual effects on the screen, synchronized with the audio output of the Windows operating system.\n\n\n**Features:**\n- It was made using VFX Graph.\n- It captures the realtime sound and music from the audio output from the system sound and apply visual effects based on the instrument that is being played in the music.\n<br/>\nVideo Link: \nhttps://drive.google.com/file/d/1gcrPFgqsEeNohVdX5DPgqgTshFLV28PQ/view?usp=share_link\n"
+        },
+        {
+            "id": "tank-war",
+            "title": "Tank War",
+            "description": "Multiplayer tank battle game with three tank types: healer, DPS, and shield. Features team-based strategy developed with Photon Engine for networking.",
+            "image": "/images/projects/tank-war.png",
+            "videoUrl": "https://drive.google.com/file/d/1qrLcVnfWxddE6j3LPVUaEAhn9NQVGND6/view",
+            "tags": [
+                "C#",
+                "Unity",
+                "Photon PUN",
                 "Multiplayer"
             ],
-            "demoLink": "#",
-            "githubLink": "#"
+            "githubLink": "https://github.com/RayanYousef/Unity_NetworkPun_TankWar",
+            "category": "My Learning Voyage",
+            "subcategory": "Others",
+            "readmeContent": "# Network Tank War (Unity, Photon)\n![alt text](https://raw.githubusercontent.com/RayanYousef/NetworkPun_TankWar/main/Network_TankWar.png)\n<br/>\n\nTank Wars is a multiplayer game where tanks are controlled by players who engage in battles against each other. The game features three different types of tanks, each with unique abilities, including the healer, DPS, and shield tanks. Two versions of the game were created, one utilizing Mirror and the other utilizing Photon.\n\n**Features:**\n\n-   Tank Wars is a multiplayer game that allows players to control tanks and engage in battles against each other.\n-   The game features three different types of tanks, each with unique abilities: healer, DPS, and shield tanks.\n-   The healer tank can heal other tanks and the DPS tank deals high damage to opponents.\n-   The game was developed using the Photon Engine.\n-   Players can team up with others and form their own strategy to win battles.\n-   The graphics and sound effects are designed to create an immersive and engaging experience for the players.\n<br/>\nVideo Link: \nhttps://drive.google.com/file/d/1qrLcVnfWxddE6j3LPVUaEAhn9NQVGND6/view?usp=share_link\n"
+        },
+        {
+            "id": "2d-platformer",
+            "title": "2D Platformer",
+            "description": "2D platformer with character movement, dashing, jumping, and ranged spell-casting enemies. Features music lerp feature for dynamic audio transitions.",
+            "image": "/images/projects/2d-platformer.png",
+            "videoUrl": "https://drive.google.com/file/d/1-U4PO3lp_38PiNOqABkvpn4C6SAJhraC/view",
+            "tags": [
+                "C#",
+                "Unity URP"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_2D_Platformer",
+            "category": "My Learning Voyage",
+            "subcategory": "Others",
+            "readmeContent": "\n# 2D Platformer (Unity)\n![alt text](https://raw.githubusercontent.com/RayanYousef/Unity_2D_Platformer/main/2d%20Platformer.png)\n<br/>\n\nA 2D platformer game was created with features including character movement, dashing, and jumping within the levels. The player encounters ranged spell-casting enemies, adding a challenging element to the game. The game was developed using Unity URP and includes a music lerp feature.\n\n**Features:**\n-   2D platformer game with challenging levels and enemies\n-   Character movement, dashing, and jumping mechanics\n-   Ranged spell-casting enemies\n-   Developed using Unity URP\n-   Music lerp feature to enhance the gaming experience\n<br/>\nVideo Link: \nhttps://drive.google.com/file/d/1-U4PO3lp_38PiNOqABkvpn4C6SAJhraC/view?usp=share_link\n\n"
+        },
+        {
+            "id": "rubik-cube",
+            "title": "Rubik Cube",
+            "description": "Rubik's Cube game with shuffle, undo/redo using Command Pattern, and auto-solve features. Implements smooth cube animation with elegant design pattern implementation.",
+            "image": "/images/projects/rubik-cube.png",
+            "videoUrl": "https://drive.google.com/file/d/1nXNywGSYutLHClWVq6UvCQKfllQ8Ei63/view",
+            "tags": [
+                "C#",
+                "Unity",
+                "Command Pattern"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_Rubik_Cube",
+            "category": "My Learning Voyage",
+            "subcategory": "Others",
+            "readmeContent": "# Rubik Cube (Unity)\n![alt text](https://raw.githubusercontent.com/RayanYousef/Rubik_Cube/main/Rubik_Cube.png)\n<br/>\n\nThis game was developed using Unity and features a randomly shuffled Rubik's Cube when shuffle button pressed. The player must use the buttons provided, including undo and redo buttons to solve the cube. There is also a solve button that automatically solves the cube.\n\n**Features:**\n* Shuffle button that automatically shuffles the cube at the beginning of the game.\n* Undo and Redo buttons that allow players to backtrack their moves in solving the cube.\n* The functionality of Undo and Redo buttons were implemented using the Command Design Pattern.\n* Solve button that automatically solves the cube.\n* Smooth and realistic cube animation and rotation.\n<br/>\nVideo Link: \nhttps://drive.google.com/file/d/1nXNywGSYutLHClWVq6UvCQKfllQ8Ei63/view?usp=sharing\n"
+        },
+        {
+            "id": "ai-battle",
+            "title": "AI Battle",
+            "description": "AI learning project using Finite State Machines and Nav Mesh Agents for enemy behavior. Features enemy pathfinding with NavMesh and 2X speed button for faster simulation.",
+            "image": "/images/projects/ai-battle.png",
+            "videoUrl": "https://drive.google.com/file/d/1q0w_bmmjW5J7qPXGVNZd8u2ZCAP37Sfj/view",
+            "tags": [
+                "C#",
+                "Unity",
+                "FSM",
+                "NavMesh",
+                "AI"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_AI_Project",
+            "category": "My Learning Voyage",
+            "subcategory": "Others",
+            "readmeContent": "\n# AI Battle (Unity)\n![alt text](https://raw.githubusercontent.com/RayanYousef/Unity_AI_Project/main/AI.png)\n<br/>\n\nThis project is a Unity-based game that showcases my learning journey in AI using Finite State Machines and Nav Mesh Agents. The game features an enemy NPC that can chase the player using pathfinding, and the enemy NPC's behavior is controlled using a Finite State Machine.\n\n**Features:**\n\n-   Implementation of AI using Finite State Machines and Nav Mesh Agents.\n-   Enemy NPC that can chase the player using pathfinding and attacks the player when in range.\n-   The enemy NPC's behavior is controlled using a Finite State Machine.\n-   2X button that increases the speed of the game by 2x.\n<br/>\nVideo Link: \nhttps://drive.google.com/file/d/1q0w_bmmjW5J7qPXGVNZd8u2ZCAP37Sfj/view?usp=share_link\n\n"
+        },
+        {
+            "id": "custom-editor",
+            "title": "Custom Editor",
+            "description": "Custom editor window using UI Toolkit with object instantiation, scaling, and deletion. Demonstrates Unity's UI Toolkit for extending the editor.",
+            "image": "/images/projects/custom-editor.png",
+            "videoUrl": "https://drive.google.com/file/d/1143-WC3cel0hFxB0hzL6-KWT4mhKhctO/view",
+            "tags": [
+                "C#",
+                "Unity",
+                "UI Toolkit",
+                "Editor Tool"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_Custom_Editor",
+            "category": "Tools",
+            "readmeContent": "\n# Custom Editor (Unity)\n![alt text](https://raw.githubusercontent.com/RayanYousef/Unity_Custom_Editor/main/Custom_Editor.png)\n<br/>\n\nA custom editor window created using the new UI Toolkit in Unity. The window contains three functions: instantiation of objects in editor mode, scaling of objects, and deletion of objects.\n\n**Features:**\n-   Created using the new UI Toolkit in Unity.\n-   Provides an easy-to-use interface for performing various editor functions.\n-   Includes three functions:\n    -   Instantiation of objects in editor mode.\n    -   Scaling of objects.\n    -   Deletion of objects.\n*  Enables the user to perform these functions quickly and efficiently.\n<br/>\nVideo Link: \nhttps://drive.google.com/file/d/1143-WC3cel0hFxB0hzL6-KWT4mhKhctO/view?usp=share_link\n"
+        },
+        {
+            "id": "space-shooter",
+            "title": "Space Shooter",
+            "description": "Space shooter game built with Phaser and JavaScript. A web-based arcade game demonstrating Phaser framework capabilities.",
+            "image": "/images/projects/space-shooter.png",
+            "tags": [
+                "JavaScript",
+                "Phaser",
+                "Web Game"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_2D_Space_Shooter",
+            "category": "My Learning Voyage",
+            "subcategory": "Others",
+            "readmeContent": "\n# 2D Space Shooter Browser Game (Phaser)\n![alt text](https://raw.githubusercontent.com/RayanYousef/Unity_2D_Space_Shooter/main/Space%20War.png)\n<br/>\n\nA 2D space shooter game was created where the player must avoid incoming meteors and fire back to defend their spaceship. In addition, the game includes power-ups that enhance the ship's attack and movement speed. The game was developed using Phaser and JavaScript.\n\n**Features:**\n-   2D space shooter game with the objective of avoiding incoming meteors and defending the player's spaceship.\n-   Includes power-ups to enhance the ship's attack and movement speed.\n-   Developed using Phaser and JavaScript.\n<br/>\nVideo Link: \nhttps://drive.google.com/file/d/1zGQ2NOun4076zS4gXNIjHiq6s9WGfzbK/view?usp=share_link\n\n"
+        },
+        {
+            "id": "fps-game",
+            "title": "FPS Game",
+            "description": "First-person shooter with sound effects, music lerp for combat mode, ragdoll physics, minimap with player/enemy locations, and object pooling for performance.",
+            "image": "/images/projects/fps-game.png",
+            "videoUrl": "https://drive.google.com/file/d/1ezN7sUelOMCiZeDa-bJhAyBWiWGbD74q/view",
+            "tags": [
+                "C#",
+                "Unity",
+                "Object Pooling",
+                "FPS"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_FPS",
+            "category": "My Learning Voyage",
+            "subcategory": "Others",
+            "readmeContent": "\n# FPS Game Features Test (Unity)\n![alt text](https://raw.githubusercontent.com/RayanYousef/FPS/main/FPS.png)\n<br/>\n\nA first-person shooter game with sound effects and a music lerp function, I made it as part of a training program. While it is not a fully functioning game, it allowed me to develop my skills in game development and gain experience in FPS game making.\n\n**Features:**\n\n-   Music lerp function, it changes to combat mode when enemy is close to the player and switches back again when the player is away of the enemy.\n-   Contains a ragdoll that you can shoot for dynamic physics effect.\n-   Includes a mini-map displaying player and enemy locations and distances\n-   Object-Pooling\n<br/>\nVideo Link: \nhttps://drive.google.com/file/d/1ezN7sUelOMCiZeDa-bJhAyBWiWGbD74q/view?usp=share_link\n"
         }
     ]
 }

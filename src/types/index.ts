@@ -8,6 +8,11 @@ export interface Project {
     tags: string[];
     demoLink?: string;
     githubLink?: string;
+    category?: string;      // New: 'Recent Projects', 'Tools', 'My Learning Voyage'
+    subcategory?: string;   // New: 'AI', 'Others'
+    readmeContent?: string; // New: Fetched Markdown content
+    role?: string;          // Added during manual update, good to type explicit
+    downloadUrl?: string;   // For downloadable assets like PDFs
 }
 
 export interface ProjectsContent {
