@@ -5,13 +5,15 @@
         {
             "id": "neural-dominion",
             "title": "Neural Dominion",
-            "description": "A C# and Unity game released on Steam.",
+            "description": "A cyberpunk 4X strategy game where players control gangs in a neon-lit city. Engage in crime, manage resources, and use cybernetic enhancements to outsmart opponents in a blend of turn-based and real-time combat.",
+            "readme": "## Project Summary\n\nNeural Dominion is a cyberpunk 4X strategy game where players control gangs in a neon-lit city. Engage in crime, manage resources, and use cybernetic enhancements to outsmart opponents in a blend of turn-based and real-time combat. The game combines city management, research, and tactical warfare in a gritty, high-tech world.\n\n### Key Features\n\n*   **Gang Control:** Manage one of five unique cyberpunk gangs, each with different strengths.\n*   **Resource Management:** Balance crime, economy, and technology to expand influence.\n*   **Tactical Combat:** Combine turn-based and real-time mechanics for dynamic battles.\n*   **Cybernetic Enhancements:** Upgrade gang members with advanced cyberware to gain combat advantages.\n*   **City Domination:** Strategically control districts, exploit local resources, and build your empire.\n\n### Technologies Used\n\n*   **Game Engine:** Unity\n*   **Languages:** C#\n\n### Role and Contributions\n\n*   **Game Programmer**\n    *   Developed major game systems from scratch, including Combat, Inventory, Stat, Skill, Store, AI, Audio, Character, Minimap, and Tutorial systems.\n    *   Contributed to the project's base architecture, optimizing performance and scalability.\n    *   Refined and enhanced existing systems for smooth integration.",
             "image": "/assets/projects/neural_dominion.jpg",
-            "videoUrl": "",
+            "videoUrl": "https://video.akamai.steamstatic.com/store_trailers/257044218/movie480_vp9.webm?t=1723045120",
             "tags": [
                 "C#",
                 "Unity",
-                "Steam"
+                "Steam",
+                "Strategy"
             ],
             "githubLink": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Neural-Dominion?tab=readme-ov-file",
             "category": "Recent Projects"
@@ -19,9 +21,10 @@
         {
             "id": "tap-tap-fighters",
             "title": "Tap Tap Fighters",
-            "description": "Mobile game for Google Play & App Store using Unity Gaming Services.",
+            "description": "It's difficult times and super powers took the world by storm. Choose your side and rise up the rankings to be the ultimate superhero in this fast-paced mobile game.",
+            "readme": "## Project Summary\n\nIt's difficult times and super powers took the world by storm. Many are good but some are as evil as ever. Choose your side and rise up the rankings to be the ultimate superhero and take control. Tap your way through the enemy's defense to win in a heated battle.\n\n### Key Features\n\n*   **Tap to Win:** Compete in real-time by tapping the screen as fast as possible to rack up points.\n*   **Power-Up Buffs:** Buffs appear randomly, giving players the chance to freeze opponents or enhance their score.\n*   **Leaderboard:** Compete globally and climb the leaderboard.\n*   **Fast-Paced Action:** The faster you tap, the higher your score!\n\n### Technologies Used\n\n*   **Game Engine:** Unity\n*   **Languages:** C#\n*   **Tools:** Unity Gaming Services (Relay, Lobby, Netcode)\n\n### Role and Contributions\n\n*   **Game Programmer**\n    *   Developed AI systems to enhance gameplay dynamics.\n    *   Integrated Unity Gaming Services for real-time multiplayer.\n    *   Implemented interactive buffs and in-game tutorial system.",
             "image": "/assets/projects/tap_tap_fighters.png",
-            "videoUrl": "",
+            "videoUrl": "https://www.youtube.com/watch?v=w-NjqWDMcak",
             "tags": [
                 "C#",
                 "Unity",
@@ -35,12 +38,14 @@
         {
             "id": "network-ninja",
             "title": "Network Ninja",
-            "description": "A networked multiplayer game built with C# and Unity.",
+            "description": "An exciting action hack-and-slash game designed to engage players while raising awareness about password security for EG-Cert.",
+            "readme": "## Network Ninja (Unity)\n\nNetwork Ninja is a serious game developed for EG-Cert (Egyptian Computer Emergency Readiness Team) with the primary objective of raising awareness about crucial aspects of cyber security.\n\nIt combines thrilling gameplay with valuable educational content to ensure players stay captivated while learning important cybersecurity principles.\n\n### Features\n\n*   **Password security awareness:** Emphasis on creating robust passwords and avoiding password sharing.\n*   **Diverse player abilities:** Jump, dash, and use Ultimate mode (slow motion).\n*   **Varied adversaries:** Normal enemies, mini bosses, and formidable boss characters.\n\n### My Roles\n\n*   **Programming Team Lead:** Oversaw programming aspects and promoted collaboration.\n*   **Code Architecture:** Designed a solid foundation for the game's codebase.\n*   **Character Behaviors:** Scripted movement, camera, damage, animations, and ultimate mode behavior.",
             "image": "/assets/projects/network_ninja.png",
-            "videoUrl": "",
+            "videoUrl": "https://drive.google.com/file/d/19PhogJuXqhvriExU712UZ8bufOTLkO0j/preview",
             "tags": [
                 "C#",
-                "Unity"
+                "Unity",
+                "Serious Game"
             ],
             "githubLink": "https://github.com/RayanYousef/NetworkNinja_Showcase",
             "category": "Recent Projects"
@@ -75,10 +80,11 @@
         },
         {
             "id": "palm-ai",
-            "title": "PaLM (AI)",
-            "description": "Integration of Google's PaLM LLM into Unity via API.",
+            "title": "PaLM (Unity)",
+            "description": "Integration of Google's PaLM LLM into Unity via API, empowering projects with advanced language generation.",
+            "readme": "## PaLM (Unity)\n\nThis repository facilitates the integration of Google's PaLM with Unity. PaLM empowers your Unity projects with advanced language generation capabilities.\n\n### Key Features\n\n*   **User-Friendly Configuration:** Exposed essential settings for customization (safetySettings, stopSequences, temperature, candidateCount, etc.).\n*   **Detailed Documentation:** Comprehensive explanation of settings for effective leverage in Unity projects.",
             "image": "/assets/projects/palm_ai.png",
-            "videoUrl": "",
+            "videoUrl": "https://drive.google.com/file/d/1S2ixr3f9Zy840Ygx4VWwsKfLWk6GO8AR/view?usp=drive_link",
             "tags": [
                 "C#",
                 "Unity",
@@ -91,9 +97,10 @@
         {
             "id": "language-ai-assistant",
             "title": "Language AI Assistant",
-            "description": "Voice-enabled AI assistant using Speechmatics STT, Gemini LLM, and Google TTS.",
+            "description": "Interactive AI-enhanced language learning tool integrating Unity with AI for facial expressions and speech analysis.",
+            "readme": "## Project Summary\n\nThis innovative tool integrates Unity with AI to create an interactive English learning experience. By incorporating facial expressions and body language into a character, the project aims to make learning more engaging. The AI listens to the user's speech, detects grammar mistakes, and provides corrections and explanations.\n\n### Key Features\n\n*   **Interactive AI Character:** Character with facial expressions and body language.\n*   **Speech Analysis:** AI detects grammar mistakes and guides users.\n*   **Multi-Language Support:** Supports several languages.\n\n### Technologies Used\n\n*   **AI Framework:** Gemini (response generation)\n*   **Text-to-Speech:** Google TTS\n*   **Speech-to-Text:** Speechmatics",
             "image": "/assets/projects/language_ai_assistant.png",
-            "videoUrl": "",
+            "videoUrl": "https://drive.google.com/file/d/1EX29oJkwQjqmMcQKpQahshJxf7HPRU4O/view?usp=sharing",
             "tags": [
                 "C#",
                 "Unity",
@@ -107,9 +114,10 @@
         {
             "id": "techquest",
             "title": "TechQuest",
-            "description": "Hackathon project using Whisper STT, PaLM LLM, and DeepVoice TTS.",
+            "description": "Hackathon winning project using AI to teach players through puzzles, accompanied by an AI companion.",
+            "readme": "## TechQuest\n\n**Award:** First Place at lablab.ai Hackathon\n\nThis was a small, three-day project designed to integrate AI into gaming. The game uses AI to teach players through puzzles, and they are accompanied by a companion who can attack, defend, and assist in solving puzzles (translating text, explaining grammar).\n\n### Key Features\n\n*   **AI Companion:** Collaborate with advanced language models to progress and solve challenges.\n*   **Educational Gameplay:** Puzzles designed to educate players on science and technology.\n*   **Diverse Exploration:** Traverse environments while collecting artifacts.\n\n### Technologies Used\n\n*   **Tools:** PaLM (Google LLM), Whisper (OpenAI STT), DeepVoice AI (TTS)",
             "image": "/assets/projects/techquest.png",
-            "videoUrl": "",
+            "videoUrl": "https://drive.google.com/file/d/1N3gQKOZuxLo_ExvaL7pECztFndbUHP4H/view?usp=sharing",
             "tags": [
                 "C#",
                 "Unity",
