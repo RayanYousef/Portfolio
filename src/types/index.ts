@@ -8,6 +8,7 @@ export interface Project {
     tags: string[];
     demoLink?: string;
     githubLink?: string;
+    category?: string;
 }
 
 export interface ProjectsContent {
