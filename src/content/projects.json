@@ -1,85 +1,240 @@
 {
     "pageTitle": "PROJECT_DATABASE",
-    "pageDescription": "A collection of my recent game development projects, prototypes, and experiments.",
+    "pageDescription": "A comprehensive archive of my game development journey, tools, and experiments.",
     "projects": [
         {
-            "id": "neon-racer-2077",
-            "title": "Neon Racer 2077",
-            "description": "A high-speed endless runner set in a cyberpunk city. Features procedural generation and dynamic lighting.",
-            "image": "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "id": "neural-dominion",
+            "title": "Neural Dominion",
+            "description": "A cyberpunk 4X strategy game where players control gangs in a neon-lit city. Engage in crime, manage resources, and use cybernetic enhancements to outsmart opponents in a blend of turn-based and real-time combat.",
+            "readme": "## Project Summary\n\nNeural Dominion is a cyberpunk 4X strategy game where players control gangs in a neon-lit city. Engage in crime, manage resources, and use cybernetic enhancements to outsmart opponents in a blend of turn-based and real-time combat. The game combines city management, research, and tactical warfare in a gritty, high-tech world.\n\n### Key Features\n\n*   **Gang Control:** Manage one of five unique cyberpunk gangs, each with different strengths.\n*   **Resource Management:** Balance crime, economy, and technology to expand influence.\n*   **Tactical Combat:** Combine turn-based and real-time mechanics for dynamic battles.\n*   **Cybernetic Enhancements:** Upgrade gang members with advanced cyberware to gain combat advantages.\n*   **City Domination:** Strategically control districts, exploit local resources, and build your empire.\n\n### Technologies Used\n\n*   **Game Engine:** Unity\n*   **Languages:** C#\n\n### Role and Contributions\n\n*   **Game Programmer**\n    *   Developed major game systems from scratch, including Combat, Inventory, Stat, Skill, Store, AI, Audio, Character, Minimap, and Tutorial systems.\n    *   Contributed to the project's base architecture, optimizing performance and scalability.\n    *   Refined and enhanced existing systems for smooth integration.",
+            "image": "/assets/projects/neural_dominion.jpg",
+            "videoUrl": "https://video.akamai.steamstatic.com/store_trailers/257044218/movie480_vp9.webm?t=1723045120",
+            "tags": [
+                "C#",
+                "Unity",
+                "Steam",
+                "Strategy"
+            ],
+            "githubLink": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Neural-Dominion?tab=readme-ov-file",
+            "category": "Recent Projects"
+        },
+        {
+            "id": "tap-tap-fighters",
+            "title": "Tap Tap Fighters",
+            "description": "It's difficult times and super powers took the world by storm. Choose your side and rise up the rankings to be the ultimate superhero in this fast-paced mobile game.",
+            "readme": "## Project Summary\n\nIt's difficult times and super powers took the world by storm. Many are good but some are as evil as ever. Choose your side and rise up the rankings to be the ultimate superhero and take control. Tap your way through the enemy's defense to win in a heated battle.\n\n### Key Features\n\n*   **Tap to Win:** Compete in real-time by tapping the screen as fast as possible to rack up points.\n*   **Power-Up Buffs:** Buffs appear randomly, giving players the chance to freeze opponents or enhance their score.\n*   **Leaderboard:** Compete globally and climb the leaderboard.\n*   **Fast-Paced Action:** The faster you tap, the higher your score!\n\n### Technologies Used\n\n*   **Game Engine:** Unity\n*   **Languages:** C#\n*   **Tools:** Unity Gaming Services (Relay, Lobby, Netcode)\n\n### Role and Contributions\n\n*   **Game Programmer**\n    *   Developed AI systems to enhance gameplay dynamics.\n    *   Integrated Unity Gaming Services for real-time multiplayer.\n    *   Implemented interactive buffs and in-game tutorial system.",
+            "image": "/assets/projects/tap_tap_fighters.png",
+            "videoUrl": "https://www.youtube.com/watch?v=w-NjqWDMcak",
+            "tags": [
+                "C#",
+                "Unity",
+                "Google Play",
+                "App Store",
+                "UGS"
+            ],
+            "githubLink": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Tap-Tap-Fighters",
+            "category": "Recent Projects"
+        },
+        {
+            "id": "network-ninja",
+            "title": "Network Ninja",
+            "description": "An exciting action hack-and-slash game designed to engage players while raising awareness about password security for EG-Cert.",
+            "readme": "## Network Ninja (Unity)\n\nNetwork Ninja is a serious game developed for EG-Cert (Egyptian Computer Emergency Readiness Team) with the primary objective of raising awareness about crucial aspects of cyber security.\n\nIt combines thrilling gameplay with valuable educational content to ensure players stay captivated while learning important cybersecurity principles.\n\n### Features\n\n*   **Password security awareness:** Emphasis on creating robust passwords and avoiding password sharing.\n*   **Diverse player abilities:** Jump, dash, and use Ultimate mode (slow motion).\n*   **Varied adversaries:** Normal enemies, mini bosses, and formidable boss characters.\n\n### My Roles\n\n*   **Programming Team Lead:** Oversaw programming aspects and promoted collaboration.\n*   **Code Architecture:** Designed a solid foundation for the game's codebase.\n*   **Character Behaviors:** Scripted movement, camera, damage, animations, and ultimate mode behavior.",
+            "image": "/assets/projects/network_ninja.png",
             "videoUrl": "https://drive.google.com/file/d/19PhogJuXqhvriExU712UZ8bufOTLkO0j/preview",
             "tags": [
-                "Unity",
                 "C#",
-                "HDRP"
-            ],
-            "demoLink": "#",
-            "githubLink": "#"
-        },
-        {
-            "id": "void-explorer",
-            "title": "Void Explorer",
-            "description": "Space exploration RPG with resource management and tactical combat.",
-            "image": "https://images.unsplash.com/photo-1614728853913-1e32005e3020?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-            "tags": [
-                "Unreal Engine 5",
-                "Blueprints",
-                "C++"
-            ],
-            "demoLink": "#",
-            "githubLink": "#"
-        },
-        {
-            "id": "pixel-quest",
-            "title": "Pixel Quest",
-            "description": "A retro-style 2D platformer with metroidvania elements and challenging boss fights.",
-            "image": "https://images.unsplash.com/photo-1551103782-8ab07afd45c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-            "tags": [
-                "Godot",
-                "GDScript",
-                "Pixel Art"
-            ],
-            "demoLink": "#",
-            "githubLink": "#"
-        },
-        {
-            "id": "cyber-defense",
-            "title": "Cyber Defense",
-            "description": "Tower defense game where you protect the mainframe from viral attacks.",
-            "image": "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-            "tags": [
-                "React",
-                "WebGL",
-                "Three.js"
-            ],
-            "demoLink": "#",
-            "githubLink": "#"
-        },
-        {
-            "id": "echoes-of-the-past",
-            "title": "Echoes of the Past",
-            "description": "Narrative-driven puzzle game exploring memory and time.",
-            "image": "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-            "tags": [
                 "Unity",
+                "Serious Game"
+            ],
+            "githubLink": "https://github.com/RayanYousef/NetworkNinja_Showcase",
+            "category": "Recent Projects"
+        },
+        {
+            "id": "mvvm-system",
+            "title": "MVVM System for Unity",
+            "description": "Implementation of the Model-View-ViewModel architectural pattern for Unity.",
+            "image": "/assets/projects/mvvm_system.jpg",
+            "videoUrl": "",
+            "tags": [
                 "C#",
-                "Dialogue System"
+                "Unity",
+                "Design Pattern",
+                "Architecture"
             ],
-            "demoLink": "#",
-            "githubLink": "#"
+            "githubLink": "https://github.com/RayanYousef/MVVM-Unity?tab=readme-ov-file",
+            "category": "Tools"
         },
         {
-            "id": "mecha-arena",
-            "title": "Mecha Arena",
-            "description": "Multiplayer turn-based strategy game featuring customizable mechs.",
-            "image": "https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            "id": "camera-free-minimap",
+            "title": "Camera Free Minimap",
+            "description": "Efficient minimap solution for Unity that doesn't require a second camera.",
+            "image": "/assets/projects/camera_free_minimap.png",
+            "videoUrl": "",
+            "tags": [
+                "C#",
+                "Unity"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Camera-Free-Minimap?tab=readme-ov-file",
+            "category": "Tools"
+        },
+        {
+            "id": "palm-ai",
+            "title": "PaLM (Unity)",
+            "description": "Integration of Google's PaLM LLM into Unity via API, empowering projects with advanced language generation.",
+            "readme": "## PaLM (Unity)\n\nThis repository facilitates the integration of Google's PaLM with Unity. PaLM empowers your Unity projects with advanced language generation capabilities.\n\n### Key Features\n\n*   **User-Friendly Configuration:** Exposed essential settings for customization (safetySettings, stopSequences, temperature, candidateCount, etc.).\n*   **Detailed Documentation:** Comprehensive explanation of settings for effective leverage in Unity projects.",
+            "image": "/assets/projects/palm_ai.png",
+            "videoUrl": "https://drive.google.com/file/d/1S2ixr3f9Zy840Ygx4VWwsKfLWk6GO8AR/view?usp=drive_link",
+            "tags": [
+                "C#",
+                "Unity",
+                "PaLM",
+                "Google API"
+            ],
+            "githubLink": "https://github.com/RayanYousef/PaLM-Unity/tree/main",
+            "category": "Tools"
+        },
+        {
+            "id": "language-ai-assistant",
+            "title": "Language AI Assistant",
+            "description": "Interactive AI-enhanced language learning tool integrating Unity with AI for facial expressions and speech analysis.",
+            "readme": "## Project Summary\n\nThis innovative tool integrates Unity with AI to create an interactive English learning experience. By incorporating facial expressions and body language into a character, the project aims to make learning more engaging. The AI listens to the user's speech, detects grammar mistakes, and provides corrections and explanations.\n\n### Key Features\n\n*   **Interactive AI Character:** Character with facial expressions and body language.\n*   **Speech Analysis:** AI detects grammar mistakes and guides users.\n*   **Multi-Language Support:** Supports several languages.\n\n### Technologies Used\n\n*   **AI Framework:** Gemini (response generation)\n*   **Text-to-Speech:** Google TTS\n*   **Speech-to-Text:** Speechmatics",
+            "image": "/assets/projects/language_ai_assistant.png",
+            "videoUrl": "https://drive.google.com/file/d/1EX29oJkwQjqmMcQKpQahshJxf7HPRU4O/view?usp=sharing",
+            "tags": [
+                "C#",
+                "Unity",
+                "Speechmatics",
+                "Gemini",
+                "Google TTS"
+            ],
+            "githubLink": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Language-AI-Assistant",
+            "category": "AI"
+        },
+        {
+            "id": "techquest",
+            "title": "TechQuest",
+            "description": "Hackathon winning project using AI to teach players through puzzles, accompanied by an AI companion.",
+            "readme": "## TechQuest\n\n**Award:** First Place at lablab.ai Hackathon\n\nThis was a small, three-day project designed to integrate AI into gaming. The game uses AI to teach players through puzzles, and they are accompanied by a companion who can attack, defend, and assist in solving puzzles (translating text, explaining grammar).\n\n### Key Features\n\n*   **AI Companion:** Collaborate with advanced language models to progress and solve challenges.\n*   **Educational Gameplay:** Puzzles designed to educate players on science and technology.\n*   **Diverse Exploration:** Traverse environments while collecting artifacts.\n\n### Technologies Used\n\n*   **Tools:** PaLM (Google LLM), Whisper (OpenAI STT), DeepVoice AI (TTS)",
+            "image": "/assets/projects/techquest.png",
+            "videoUrl": "https://drive.google.com/file/d/1N3gQKOZuxLo_ExvaL7pECztFndbUHP4H/view?usp=sharing",
+            "tags": [
+                "C#",
+                "Unity",
+                "Whisper",
+                "PaLM",
+                "DeepVoice"
+            ],
+            "githubLink": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Gaming-Hackathon",
+            "category": "AI"
+        },
+        {
+            "id": "music-visualizer",
+            "title": "Realtime Music Visualizer",
+            "description": "Interactive music visualization in Unity.",
+            "image": "/assets/projects/music_visualizer.png",
+            "videoUrl": "",
+            "tags": [
+                "C#",
+                "Unity"
+            ],
+            "githubLink": "http://github.com/RayanYousef/Unity_Music_Visualizer",
+            "category": "Others"
+        },
+        {
+            "id": "tank-war",
+            "title": "Tank War",
+            "description": "Multiplayer tank battle game using Photon PUN.",
+            "image": "/assets/projects/tank_war.png",
+            "videoUrl": "",
+            "tags": [
+                "C#",
+                "Unity",
+                "Photon (PUN)"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_NetworkPun_TankWar",
+            "category": "Others"
+        },
+        {
+            "id": "2d-platformer",
+            "title": "2D Platformer Game",
+            "description": "Classic 2D platformer mechanics in Unity.",
+            "image": "/assets/projects/2d_platformer.png",
+            "videoUrl": "",
+            "tags": [
+                "C#",
+                "Unity"
+            ],
+            "githubLink": "http://github.com/RayanYousef/Unity_2D_Platformer",
+            "category": "Others"
+        },
+        {
+            "id": "rubik-cube",
+            "title": "Rubik Cube",
+            "description": "3D Rubik's Cube simulation implementing various design patterns.",
+            "image": "/assets/projects/rubik_cube.png",
+            "videoUrl": "",
+            "tags": [
+                "C#",
+                "Unity",
+                "Design Patterns"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_Rubik_Cube",
+            "category": "Others"
+        },
+        {
+            "id": "ai-game",
+            "title": "AI Game",
+            "description": "Unity game showcasing AI behavior systems.",
+            "image": "/assets/projects/ai_game.png",
+            "videoUrl": "",
+            "tags": [
+                "C#",
+                "Unity",
+                "AI"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_AI_Project/tree/main",
+            "category": "Others"
+        },
+        {
+            "id": "custom-editor",
+            "title": "Custom Editor",
+            "description": "Unity Custom Editor tools using UI Toolkit.",
+            "image": "/assets/projects/custom_editor.png",
+            "videoUrl": "",
+            "tags": [
+                "C#",
+                "Unity",
+                "UI Toolkit"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_Custom_Editor",
+            "category": "Others"
+        },
+        {
+            "id": "space-shooter",
+            "title": "Space Shooter",
+            "description": "Browser-based space shooter built with Phaser and JavaScript.",
+            "image": "/assets/projects/space_shooter.png",
+            "videoUrl": "",
+            "tags": [
+                "Phaser",
+                "JavaScript"
+            ],
+            "githubLink": "https://github.com/RayanYousef/Unity_2D_Space_Shooter",
+            "category": "Others"
+        },
+        {
+            "id": "fps-game",
+            "title": "FPS Game",
+            "description": "First Person Shooter mechanics and design patterns in Unity.",
+            "image": "/assets/projects/fps_game.png",
+            "videoUrl": "",
             "tags": [
                 "Unity",
-                "Mirror",
-                "Multiplayer"
+                "C#"
             ],
-            "demoLink": "#",
-            "githubLink": "#"
+            "githubLink": "https://github.com/RayanYousef/Unity_FPS",
+            "category": "Others"
         }
     ]
 }

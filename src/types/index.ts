@@ -5,9 +5,11 @@ export interface Project {
     description: string;
     image: string;
     videoUrl?: string;
+    readme?: string;
     tags: string[];
     demoLink?: string;
     githubLink?: string;
+    category?: string;
 }
 
 export interface ProjectsContent {

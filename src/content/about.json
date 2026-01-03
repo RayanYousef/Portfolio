@@ -1,17 +1,20 @@
 {
-    "bio1": "Hi, I'm a passionate Game Developer with a knack for creating immersive digital experiences. My journey began with modding classic games, which eventually led me to dive deep into engine architecture and gameplay programming.",
-    "bio2": "I specialize in gameplay mechanics, AI systems, and graphics programming. When I'm not coding, you can find me analyzing level design in retro platformers or experimenting with procedural generation algorithms.",
+    "bio1": "I'm Rayan Yousef, an addicted game programmer with a strong interest in game development. Currently, I'm fascinated by the possibilities of AI in games and educational games, exploring how it can create engaging and innovative experiences.",
+    "bio2": "My learning adventure began in 2017 when I discovered the joy of creating games as a hobby. In 2022, I joined the ITI (Information Technology Institute) to further develop my skills and turn my passion into a full-time career.",
     "yearsExp": "5+",
-    "shippedGames": "12+",
+    "shippedGames": "15+",
     "coffeeConsumed": "∞",
     "skills": [
         {
-            "name": "Game Engines",
+            "name": "Game Engines & Graphics",
             "icon": "layers",
             "items": [
                 "Unity",
-                "Unreal Engine 5",
-                "Godot"
+                "Unreal Engine (Beginner)",
+                "Phaser",
+                "OpenGL",
+                "SFML",
+                "Box2D"
             ]
         },
         {
@@ -20,26 +23,30 @@
             "items": [
                 "C#",
                 "C++",
-                "TypeScript",
-                "Python"
+                "JavaScript",
+                "HTML",
+                "CSS"
             ]
         },
         {
-            "name": "Graphics",
+            "name": "Concepts & AI",
             "icon": "cpu",
             "items": [
-                "HLSL/GLSL",
-                "Blender",
-                "Photoshop"
+                "OOP & Design Patterns",
+                "SOLID Principles",
+                "AI for Games",
+                "LLM Integration"
             ]
         },
         {
-            "name": "Backend",
+            "name": "Backend & Tools",
             "icon": "database",
             "items": [
-                "Node.js",
-                "Firebase",
-                "PlayFab"
+                "Git",
+                "Photon/PUN",
+                "Unity Gaming Services",
+                "XR (AR/VR)",
+                "API Integration"
             ]
         }
     ]
