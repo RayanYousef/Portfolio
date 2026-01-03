@@ -6,15 +6,13 @@
     "coffeeConsumed": "∞",
     "skills": [
         {
-            "name": "Game Engines",
-            "icon": "layers",
+            "name": "Principles",
+            "icon": "book",
             "items": [
-                "Unity",
-                "Unreal Engine",
-                "Phaser",
-                "Box2D",
-                "SFML",
-                "OpenGL"
+                "SOLID Principles",
+                "Design Patterns",
+                "OOP",
+                "Git Version Control"
             ]
         },
         {
@@ -29,11 +27,31 @@
             ]
         },
         {
+            "name": "Game Engines",
+            "icon": "layers",
+            "items": [
+                "Unity",
+                "Unreal Engine (Beginner)",
+                "Phaser",
+                "Box2D",
+                "SFML",
+                "OpenGL"
+            ]
+        },
+        {
+            "name": "XR Technologies",
+            "icon": "glasses",
+            "items": [
+                "AR",
+                "VR (Beginner)"
+            ]
+        },
+        {
             "name": "Networking",
             "icon": "wifi",
             "items": [
                 "Photon/PUN",
-                "UGS",
+                "Unity Gaming Services (UGS)",
                 "Relay",
                 "Lobby",
                 "Netcode"
@@ -43,29 +61,13 @@
             "name": "AI Integration",
             "icon": "cpu",
             "items": [
+                "AI for Games",
                 "Gemini",
                 "GPT",
                 "Whisper",
                 "Speechmatics",
                 "Google TTS",
                 "Google STT"
-            ]
-        },
-        {
-            "name": "XR Technologies",
-            "icon": "glasses",
-            "items": [
-                "AR",
-                "VR"
-            ]
-        },
-        {
-            "name": "Principles",
-            "icon": "book",
-            "items": [
-                "SOLID",
-                "Design Patterns",
-                "OOP"
             ]
         }
     ]

@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ReactPlayer from 'react-player';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import { Github, ExternalLink, ArrowLeft } from 'lucide-react';
 import projectsData from '@content/projects.json';
 import type { Project } from '../types/index';
@@ -20,6 +21,36 @@ const ProjectDetails = () => {
     }
 
     const videoUrl = project.videoUrl;
+
+    // Helper to process markdown content
+    let processedContent = project.readmeContent || project.description;
+
+    // Fix relative image paths if githubLink is available
+    if (project.githubLink && project.readmeContent) {
+        // Extract repo info from githubLink
+        // Expected formats:
+        // https://github.com/Username/Repo/tree/Branch
+        // https://github.com/Username/Repo
+
+        let rawBaseUrl = '';
+        const ghUrl = project.githubLink;
+
+        if (ghUrl.includes('/tree/')) {
+            // e.g. .../My-Learning-Voyage/tree/Neural-Dominion
+            rawBaseUrl = ghUrl.replace('github.com', 'raw.githubusercontent.com').replace('/tree/', '/');
+        } else {
+            // e.g. .../MVVM-Unity -> defaults to main usually, but let's assume main
+            rawBaseUrl = ghUrl.replace('github.com', 'raw.githubusercontent.com') + '/main';
+        }
+
+        // Replace src="Images/..." with src="rawBaseUrl/Images/..."
+        // Handling both double and single quotes
+        processedContent = processedContent.replace(/src="Images\//g, `src="${rawBaseUrl}/Images/`);
+        processedContent = processedContent.replace(/src='Images\//g, `src='${rawBaseUrl}/Images/`);
+
+        // Also handle standard markdown images ![alt](Images/...)
+        processedContent = processedContent.replace(/\]\(Images\//g, `](${rawBaseUrl}/Images/`);
+    }
 
     return (
         <div className="min-h-screen py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
@@ -129,12 +160,15 @@ const ProjectDetails = () => {
                     </h1>
                     <div className="h-1 w-20 bg-neon-cyan mb-8"></div>
 
-                    <div className="prose prose-invert prose-lg max-w-none prose-headings:text-white prose-a:text-neon-cyan hover:prose-a:text-white prose-strong:text-white">
-                        {project.readmeContent ? (
-                            <ReactMarkdown>{project.readmeContent}</ReactMarkdown>
-                        ) : (
-                            <p className="text-gray-300">{project.description}</p>
-                        )}
+                    <div className="prose prose-invert prose-lg max-w-none prose-headings:font-orbitron prose-headings:text-white prose-h1:text-neon-pink prose-h2:text-neon-cyan prose-a:text-neon-cyan hover:prose-a:text-white prose-strong:text-white prose-img:rounded-xl prose-img:border prose-img:border-white/10">
+                        <ReactMarkdown
+                            rehypePlugins={[rehypeRaw]}
+                            components={{
+                                img: ({ node, ...props }) => <img {...props} style={{ maxWidth: '100%', height: 'auto' }} />
+                            }}
+                        >
+                            {processedContent}
+                        </ReactMarkdown>
                     </div>
                 </div>
             </motion.div>

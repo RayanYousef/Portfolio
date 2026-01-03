@@ -1,6 +1,6 @@
 
 import { motion } from 'framer-motion';
-import { Mail, MapPin, Send, Github, Linkedin, Twitter } from 'lucide-react';
+import { Mail, MapPin, Send, Github, Linkedin } from 'lucide-react';
 
 const Contact = () => {
   return (
@@ -29,8 +29,8 @@ const Contact = () => {
               </div>
               <div>
                 <p className="text-sm text-gray-500 uppercase tracking-wider">Email</p>
-                <a href="mailto:hello@example.com" className="text-xl text-white font-orbitron hover:text-neon-cyan transition-colors">
-                  hello@example.com
+                <a href="mailto:rayanyoussef1993@gmail.com" className="text-xl text-white font-orbitron hover:text-neon-cyan transition-colors">
+                  rayanyoussef1993@gmail.com
                 </a>
               </div>
             </div>
@@ -42,21 +42,18 @@ const Contact = () => {
               <div>
                 <p className="text-sm text-gray-500 uppercase tracking-wider">Base</p>
                 <p className="text-xl text-white font-orbitron">
-                  Tokyo, Japan
+                  Egypt
                 </p>
               </div>
             </div>
           </div>
 
           <div className="mt-12 flex gap-6">
-            <a href="#" className="p-3 glass-panel rounded-lg hover:bg-white/10 hover:text-neon-cyan transition-all">
+            <a href="https://github.com/RayanYousef" target="_blank" rel="noopener noreferrer" className="p-3 glass-panel rounded-lg hover:bg-white/10 hover:text-neon-cyan transition-all">
               <Github className="w-6 h-6" />
             </a>
-            <a href="#" className="p-3 glass-panel rounded-lg hover:bg-white/10 hover:text-neon-pink transition-all">
+            <a href="https://linkedin.com/in/rayan-yousef" target="_blank" rel="noopener noreferrer" className="p-3 glass-panel rounded-lg hover:bg-white/10 hover:text-neon-pink transition-all">
               <Linkedin className="w-6 h-6" />
-            </a>
-            <a href="#" className="p-3 glass-panel rounded-lg hover:bg-white/10 hover:text-purple-400 transition-all">
-              <Twitter className="w-6 h-6" />
             </a>
           </div>
         </motion.div>
@@ -71,7 +68,7 @@ const Contact = () => {
           <form className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium text-gray-400">Player Name</label>
+                <label htmlFor="name" className="text-sm font-medium text-gray-400">Name</label>
                 <input
                   type="text"
                   id="name"

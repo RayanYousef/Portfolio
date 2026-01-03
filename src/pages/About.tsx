@@ -21,7 +21,7 @@ const About = () => {
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-4xl md:text-5xl font-black mb-6">
-            <span className="text-white">PLAYER</span>
+            <span className="text-white">RAYAN</span>
             <span className="text-neon-cyan">_PROFILE</span>
           </h1>
 

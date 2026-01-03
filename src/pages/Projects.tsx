@@ -8,10 +8,7 @@ const Projects = () => {
 
   const recentProjects = projects.filter(p => !p.category || p.category === 'Recent Projects');
   const toolsProjects = projects.filter(p => p.category === 'Tools');
-  const learningProjects = projects.filter(p => p.category === 'My Learning Voyage');
 
-  const learningAI = learningProjects.filter(p => p.subcategory === 'AI');
-  const learningOthers = learningProjects.filter(p => p.subcategory === 'Others');
 
   const container = {
     hidden: { opacity: 0 },
@@ -73,41 +70,7 @@ const Projects = () => {
       <Section title="Recent Projects" items={recentProjects} />
       <Section title="Tools & Systems" items={toolsProjects} />
 
-      <div className="mb-20">
-        <h2 className="text-3xl font-orbitron font-bold mb-8 text-white border-b border-white/10 pb-4">
-          My Learning Voyage
-        </h2>
 
-        <h3 className="text-xl text-neon-cyan mb-6">AI Experiments</h3>
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
-        >
-          {learningAI.map((project) => (
-            <motion.div key={project.id} variants={item}>
-              <ProjectCard project={project} delay={0} />
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <h3 className="text-xl text-neon-cyan mb-6">Other Projects</h3>
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {learningOthers.map((project) => (
-            <motion.div key={project.id} variants={item}>
-              <ProjectCard project={project} delay={0} />
-            </motion.div>
-          ))}
-        </motion.div>
-      </div>
 
     </div>
   );

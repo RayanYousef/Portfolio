@@ -8,6 +8,8 @@ import Contact from './pages/Contact';
 import ProjectDetails from './pages/ProjectDetails';
 import Resume from './pages/Resume';
 
+import LearningVoyage from './pages/LearningVoyage';
+
 function App() {
   return (
     <Router>
@@ -15,6 +17,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="projects" element={<Projects />} />
+          <Route path="learning-voyage" element={<LearningVoyage />} />
           <Route path="projects/:id" element={<ProjectDetails />} />
           <Route path="about" element={<About />} />
           <Route path="resume" element={<Resume />} />
