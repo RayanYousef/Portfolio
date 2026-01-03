@@ -1,0 +1,366 @@
+{
+    "sourceUrl": "https://rayan-yousef.webnode.page/",
+    "extractedDate": "2026-01-03",
+    "about": {
+        "name": "Rayan Yousef",
+        "title": "Game Developer",
+        "bio": "I'm Rayan Yousef, an addicted game programmer with a strong interest in game development. Currently, I'm fascinated by the possibilities of AI in games and educational games, exploring how it can create engaging and innovative experiences.",
+        "startedYear": 2017,
+        "itiYear": 2022,
+        "skills": {
+            "principles": [
+                "SOLID",
+                "Design Patterns",
+                "OOP"
+            ],
+            "languages": [
+                "C#",
+                "C++",
+                "JavaScript",
+                "HTML",
+                "CSS"
+            ],
+            "engines": [
+                "Unity",
+                "Unreal Engine",
+                "Phaser",
+                "Box2D",
+                "SFML",
+                "OpenGL"
+            ],
+            "xr": [
+                "AR",
+                "VR"
+            ],
+            "networking": [
+                "Photon/PUN",
+                "UGS",
+                "Relay",
+                "Lobby",
+                "Netcode"
+            ],
+            "ai": [
+                "Gemini",
+                "GPT",
+                "Whisper",
+                "Speechmatics",
+                "Google TTS",
+                "Google STT"
+            ]
+        }
+    },
+    "resume": {
+        "pdfUrl": "https://2153536778.cbaul-cdnwnd.com/c3148566242774f538976bbdc0d2a1b7/200000088-c44cec44cf/Rayan%20Yousef-Game%20Programmer%20-%20General.pdf"
+    },
+    "featuredProjects": [
+        {
+            "name": "Neural Dominion",
+            "summary": "Cyberpunk 4X strategy game where players control gangs in a neon-lit city. Engage in crime, manage resources, and use cybernetic enhancements.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "Steam"
+            ],
+            "features": [
+                "Gang Control: Manage one of five unique cyberpunk gangs",
+                "Resource Management: Balance crime, economy, and technology",
+                "Tactical Combat: Turn-based and real-time mechanics",
+                "Cybernetic Enhancements: Upgrade gang members with cyberware",
+                "City Domination: Control districts and build your empire"
+            ],
+            "role": "Game Programmer",
+            "contributions": [
+                "Developed Combat, Inventory, Stat, Skill, Store, AI, Audio, Character, Minimap, Tutorial systems",
+                "Contributed to base architecture, optimizing performance and scalability",
+                "Refined and enhanced existing systems"
+            ],
+            "platform": "Steam (upcoming)",
+            "githubUrl": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Neural-Dominion",
+            "videoUrl": null
+        },
+        {
+            "name": "Tap Tap Fighters",
+            "summary": "Multiplayer tap-to-win game where players compete in real-time battles with power-ups and leaderboards.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "UGS",
+                "Relay",
+                "Lobby",
+                "Netcode"
+            ],
+            "features": [
+                "Tap to Win: Real-time tapping competition",
+                "Power-Up Buffs: Random buffs to freeze opponents or enhance score",
+                "Leaderboard: Global competition",
+                "Simple Gameplay: Easy-to-learn mechanics"
+            ],
+            "role": "Game Programmer",
+            "contributions": [
+                "Developed AI systems for gameplay dynamics",
+                "Integrated Unity Gaming Services with Relay, Lobby, Netcode",
+                "Implemented interactive buffs system",
+                "Designed in-game tutorial system"
+            ],
+            "platform": "iOS, Android",
+            "githubUrl": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Tap-Tap-Fighters",
+            "playUrl": "https://play.google.com/store/apps/details?id=com.GamesBond.TapTapFighters",
+            "videoUrl": null
+        },
+        {
+            "name": "Network Ninja",
+            "summary": "Serious game for EG-Cert raising awareness about cyber security. Action hack-and-slash with password security education.",
+            "technologies": [
+                "C#",
+                "Unity"
+            ],
+            "features": [
+                "Password security awareness",
+                "Diverse player abilities and Ultimate mode",
+                "Fluid movement mechanics",
+                "Varied adversaries: normal enemies, mini bosses, bosses"
+            ],
+            "role": "Programming Team Lead",
+            "contributions": [
+                "Oversaw programming and team collaboration",
+                "Designed code architecture",
+                "Scripted main character behaviors: movement, camera, damage, animations, ultimate mode"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/NetworkNinja_Showcase",
+            "videoUrl": "https://drive.google.com/file/d/19PhogJuXqhvriExU712UZ8bufOTLkO0j/preview",
+            "videoType": "gdrive"
+        },
+        {
+            "name": "MVVM System for Unity",
+            "summary": "MVVM framework providing base classes and interfaces for model-view-viewmodel architecture in Unity.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "Design Pattern",
+                "Architecture"
+            ],
+            "features": [
+                "No required dependencies",
+                "Git-based installation via Package Manager",
+                "Base classes for convenience or interfaces for control"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/MVVM-Unity",
+            "videoUrl": null
+        },
+        {
+            "name": "Camera Free Minimap",
+            "summary": "Free Unity tool for creating minimaps without an extra camera, saving performance. Supports procedurally generated maps.",
+            "technologies": [
+                "C#",
+                "Unity"
+            ],
+            "features": [
+                "Single Camera Usage",
+                "Easy setup",
+                "Two variants available",
+                "Supports procedural maps"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/Camera-Free-Minimap",
+            "videoUrl": "https://www.youtube.com/watch?v=BTr-0mluRkU",
+            "videoType": "youtube"
+        },
+        {
+            "name": "PaLM Unity Integration",
+            "summary": "Integration of Google's PaLM with Unity for advanced language generation capabilities.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "PaLM",
+                "Google API"
+            ],
+            "features": [
+                "User-friendly configuration",
+                "Exposed settings: safetySettings, stopSequences, temperature, candidateCount, maxOutputTokens, topP, topK",
+                "Detailed documentation"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/PaLM-Unity",
+            "videoUrl": "https://drive.google.com/file/d/1S2ixr3f9Zy840Ygx4VWwsKfLWk6GO8AR/view",
+            "videoType": "gdrive"
+        }
+    ],
+    "learningProjects": [
+        {
+            "name": "Language AI Assistant",
+            "summary": "Interactive English learning tool with AI character featuring facial expressions and body language. Detects grammar mistakes and provides corrections.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "Gemini",
+                "Google TTS",
+                "Speechmatics"
+            ],
+            "features": [
+                "Interactive AI Character with expressions",
+                "Speech Analysis for grammar correction",
+                "Multi-Language Support"
+            ],
+            "role": "Programmer",
+            "contributions": [
+                "Implemented AI systems for speech analysis and grammar correction"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Language-AI-Assistant",
+            "videoUrl": null
+        },
+        {
+            "name": "TechQuest",
+            "summary": "3-day hackathon project integrating AI into gaming. Uses AI companion to teach through puzzles.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "PALM",
+                "Whisper",
+                "DeepVoice"
+            ],
+            "features": [
+                "AI Companion with language model integration",
+                "Educational gameplay with puzzles",
+                "Diverse exploration with artifact collection"
+            ],
+            "role": "Game Programmer",
+            "contributions": [
+                "Developed AI-driven companion mechanics"
+            ],
+            "awards": [
+                "First Place - lablab.ai Hackathon"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/My-Learning-Voyage/tree/Gaming-Hackathon",
+            "videoUrl": null
+        },
+        {
+            "name": "Realtime Music Visualizer",
+            "summary": "Music visualizer using Unity's VFX graph with real-time visual effects synchronized to Windows audio output.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "VFX Graph"
+            ],
+            "features": [
+                "VFX Graph implementation",
+                "Captures realtime system audio",
+                "Visual effects based on instruments played"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/Unity_Music_Visualizer",
+            "videoUrl": "https://drive.google.com/file/d/1gcrPFgqsEeNohVdX5DPgqgTshFLV28PQ/view",
+            "videoType": "gdrive"
+        },
+        {
+            "name": "Tank War",
+            "summary": "Multiplayer tank battle game with three tank types: healer, DPS, and shield.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "Photon PUN"
+            ],
+            "features": [
+                "Three tank types with unique abilities",
+                "Team-based strategy",
+                "Developed with Photon Engine"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/Unity_NetworkPun_TankWar",
+            "videoUrl": "https://drive.google.com/file/d/1qrLcVnfWxddE6j3LPVUaEAhn9NQVGND6/view",
+            "videoType": "gdrive"
+        },
+        {
+            "name": "2D Platformer",
+            "summary": "2D platformer with character movement, dashing, jumping, and ranged spell-casting enemies.",
+            "technologies": [
+                "C#",
+                "Unity URP"
+            ],
+            "features": [
+                "Character movement, dashing, jumping",
+                "Ranged spell-casting enemies",
+                "Music lerp feature"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/Unity_2D_Platformer",
+            "videoUrl": "https://drive.google.com/file/d/1-U4PO3lp_38PiNOqABkvpn4C6SAJhraC/view",
+            "videoType": "gdrive"
+        },
+        {
+            "name": "Rubik Cube",
+            "summary": "Rubik's Cube game with shuffle, undo/redo (Command Pattern), and auto-solve features.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "Command Design Pattern"
+            ],
+            "features": [
+                "Shuffle button",
+                "Undo/Redo with Command Pattern",
+                "Auto-solve button",
+                "Smooth cube animation"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/Unity_Rubik_Cube",
+            "videoUrl": "https://drive.google.com/file/d/1nXNywGSYutLHClWVq6UvCQKfllQ8Ei63/view",
+            "videoType": "gdrive"
+        },
+        {
+            "name": "AI Battle",
+            "summary": "AI learning project using Finite State Machines and Nav Mesh Agents for enemy behavior.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "FSM",
+                "NavMesh"
+            ],
+            "features": [
+                "Finite State Machine AI",
+                "Enemy pathfinding with NavMesh",
+                "2X speed button"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/Unity_AI_Project",
+            "videoUrl": "https://drive.google.com/file/d/1q0w_bmmjW5J7qPXGVNZd8u2ZCAP37Sfj/view",
+            "videoType": "gdrive"
+        },
+        {
+            "name": "Custom Editor",
+            "summary": "Custom editor window using UI Toolkit with object instantiation, scaling, and deletion.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "UI Toolkit"
+            ],
+            "features": [
+                "UI Toolkit implementation",
+                "Object instantiation in editor",
+                "Object scaling and deletion"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/Unity_Custom_Editor",
+            "videoUrl": "https://drive.google.com/file/d/1143-WC3cel0hFxB0hzL6-KWT4mhKhctO/view",
+            "videoType": "gdrive"
+        },
+        {
+            "name": "Space Shooter",
+            "summary": "Space shooter game built with Phaser and JavaScript.",
+            "technologies": [
+                "JavaScript",
+                "Phaser"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/Unity_2D_Space_Shooter",
+            "videoUrl": null
+        },
+        {
+            "name": "FPS Game",
+            "summary": "First-person shooter with sound effects, music lerp, ragdoll physics, minimap, and object pooling.",
+            "technologies": [
+                "C#",
+                "Unity",
+                "Object Pooling"
+            ],
+            "features": [
+                "Music lerp for combat mode",
+                "Ragdoll physics",
+                "Minimap with player/enemy locations",
+                "Object Pooling"
+            ],
+            "githubUrl": "https://github.com/RayanYousef/Unity_FPS",
+            "videoUrl": "https://drive.google.com/file/d/1ezN7sUelOMCiZeDa-bJhAyBWiWGbD74q/view",
+            "videoType": "gdrive"
+        }
+    ]
+}
