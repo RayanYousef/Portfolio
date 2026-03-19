@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ui="UnityEngine.UIElements"
+    xmlns:uie="UnityEditor.UIElements"
+>
+  <ui:Style src="project://database/Assets/_Portfolio/ChatbotUI/UI/ChatTheme.uss" />
+  <ui:Style src="project://database/Assets/_Portfolio/ChatbotUI/UI/ChatWindow.uss" />
+  <ui:VisualElement class="chat-window-root">
+      <ui:ScrollView name="chat-scroll-view" class="chat-scroll-view" mode="Vertical" />
+      <ui:VisualElement class="chat-input-area">
+          <ui:TextField name="chat-input-field" class="chat-input-field" multiline="true" />
+          <ui:Button name="chat-send-button" class="chat-send-button" text="Send" />
+      </ui:VisualElement>
+  </ui:VisualElement>
+</ui:UXML>

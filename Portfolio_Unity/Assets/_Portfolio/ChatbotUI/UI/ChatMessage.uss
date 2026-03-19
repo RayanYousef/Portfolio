@@ -1,0 +1,65 @@
+.chat-message-wrapper {
+    flex-direction: row;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    align-items: flex-end;
+    width: 100%;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.chat-avatar {
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    border-radius: var(--avatar-radius);
+    flex-shrink: 0;
+}
+
+.chat-bubble {
+    max-width: 80%;
+    padding: var(--spacing-medium) 24px;
+    border-radius: var(--border-radius-bubble);
+}
+
+.chat-message-text {
+    color: var(--text-color-message);
+    white-space: normal;
+    font-size: var(--font-size-main);
+    margin: 0;
+    padding: 0;
+    flex-shrink: 1;
+}
+
+/* User Message specific alignment (user on right) */
+.message-user {
+    align-self: flex-end;
+    justify-content: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message-user .chat-bubble {
+    background-color: var(--accent-color); /* Accent color */
+    border-bottom-right-radius: 2px;
+    margin-right: 8px;
+}
+
+.message-user .chat-avatar {
+    background-color: var(--accent-color); /* Match bubble color */
+}
+
+/* Bot Message specific alignment (bot on left) */
+.message-bot {
+    align-self: flex-start;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+.message-bot .chat-bubble {
+    background-color: var(--bot-bg-color);
+    border-bottom-left-radius: 2px;
+    margin-left: 8px;
+}
+
+.message-bot .chat-avatar {
+    background-color: var(--bot-avatar-color);
+}

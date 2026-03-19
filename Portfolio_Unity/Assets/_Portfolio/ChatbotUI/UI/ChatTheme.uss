@@ -1,0 +1,27 @@
+:root {
+    /* General Settings */
+    --bg-color: #1e1e1e;
+    --panel-bg: #2d2d2d;
+    --accent-color: #007acc;
+    --accent-color-hover: #0098ff;
+    --accent-color-active: #005a9e;
+    --text-color: #d4d4d4;
+    --text-color-message: #ffffff;
+    
+    /* Bot Settings */
+    --bot-bg-color: #444444;
+    --bot-avatar-color: #21a366;
+
+    /* Dimensions & Spacing */
+    --border-radius: 8px;
+    --border-radius-bubble: 24px;
+    --avatar-size: 64px;
+    --avatar-radius: 32px;
+    
+    --spacing-small: 12px;
+    --spacing-medium: 16px;
+    --spacing-large: 20px;
+    
+    /* Typography */
+    --font-size-main: 28px;
+}

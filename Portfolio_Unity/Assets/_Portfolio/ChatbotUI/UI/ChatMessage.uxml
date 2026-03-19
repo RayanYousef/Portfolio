@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ui:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ui="UnityEngine.UIElements"
+    xmlns:uie="UnityEditor.UIElements"
+>
+  <ui:Style src="project://database/Assets/_Portfolio/ChatbotUI/UI/ChatTheme.uss" />
+  <ui:Style src="project://database/Assets/_Portfolio/ChatbotUI/UI/ChatMessage.uss" />
+  <ui:VisualElement class="chat-message-wrapper">
+      <ui:VisualElement name="chat-avatar" class="chat-avatar" />
+      <ui:VisualElement class="chat-bubble">
+          <ui:Label name="chat-message-text" class="chat-message-text" text="..." />
+      </ui:VisualElement>
+  </ui:VisualElement>
+</ui:UXML>

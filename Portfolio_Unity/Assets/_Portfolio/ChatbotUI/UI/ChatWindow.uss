@@ -1,0 +1,67 @@
+.chat-window-root {
+    flex-grow: 1;
+    flex-direction: column;
+    background-color: var(--bg-color);
+    padding: var(--spacing-medium);
+}
+
+.chat-scroll-view {
+    flex-grow: 1;
+    background-color: var(--panel-bg);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-medium);
+    padding: var(--spacing-small);
+}
+
+/* Hide the vertical scrollbar */
+.chat-scroll-view #unity-content-and-vertical-scroll-container > .unity-scroller--vertical {
+    display: none;
+}
+
+.chat-input-area {
+    flex-direction: row;
+    height: 100px;
+    background-color: var(--panel-bg);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-small);
+    align-items: stretch;
+}
+
+.chat-input-field {
+    flex-grow: 1;
+    margin-right: var(--spacing-small);
+}
+
+.chat-input-field > .unity-text-field__input {
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-small);
+    border-width: 0;
+    color: var(--text-color);
+    white-space: normal;
+    font-size: var(--font-size-main);
+}
+
+/* Hard override for Unity TextElements inside the Text Field */
+.chat-input-field .unity-text-element {
+    font-size: var(--font-size-main);
+}
+
+.chat-send-button {
+    width: 140px;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: var(--border-radius);
+    border-width: 0;
+    -unity-font-style: bold;
+    font-size: var(--font-size-main);
+    margin: 0;
+}
+
+.chat-send-button:hover {
+    background-color: var(--accent-color-hover);
+}
+
+.chat-send-button:active {
+    background-color: var(--accent-color-active);
+}
