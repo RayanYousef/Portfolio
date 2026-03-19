@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:Box style="flex-direction: row;">
+        <ui:Toggle binding-path="enabled"/>
+        <ui:TextField binding-path="name" readonly="false" style="flex-grow: 1;"/>
+    </ui:Box>
+</ui:UXML>
