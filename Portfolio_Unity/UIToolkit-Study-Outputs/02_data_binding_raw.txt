@@ -1,0 +1,475 @@
+Raw files for Data Binding
+
+--- bind-with-binding-path/Editor/SimpleBindingExample.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEditor.UIElements;
+using UnityEngine.UIElements;
+
+namespace UIToolkitExamples
+{
+    public class SimpleBindingExample : EditorWindow
+    {
+        TextField m_ObjectNameBinding;
+
+        [MenuItem("Window/UIToolkitExamples/Simple Binding Example")]
+        public static void ShowDefaultWindow()
+        {
+            var wnd = GetWindow<SimpleBindingExample>();
+            wnd.titleContent = new GUIContent("Simple Binding");
+        }
+
+        public void CreateGUI()
+        {
+            m_ObjectNameBinding = new TextField("Object Name Binding");
+            // Note: the "name" property of a GameObject is actually named "m_Name" in serialization.
+            m_ObjectNameBinding.bindingPath = "m_Name";
+            rootVisualElement.Add(m_ObjectNameBinding);
+            OnSelectionChange();
+        }
+
+        public void OnSelectionChange()
+        {
+            GameObject selectedObject = Selection.activeObject as GameObject;
+            if (selectedObject != null)
+            {
+                // Create the SerializedObject from the current selection
+                SerializedObject so = new SerializedObject(selectedObject);
+                // Bind it to the root of the hierarchy. It will find the right object to bind to.
+                rootVisualElement.Bind(so);
+
+                // Alternatively you can instead bind it to the TextField itself:
+                // m_ObjectNameBinding.Bind(so);
+            }
+            else
+            {
+                // Unbind the object from the actual visual element that was bound.
+                rootVisualElement.Unbind();
+                // If you bound the TextField itself, you'd do this instead:
+                // m_ObjectNameBinding.Unbind();
+
+                // Clear the TextField after the binding is removed
+                m_ObjectNameBinding.value = "";
+            }
+        }
+    }
+}
+
+--- bind-without-binding-path/Editor/SimpleBindingPropertyExample.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEditor.UIElements;
+using UnityEngine.UIElements;
+
+namespace UIToolkitExamples
+{
+    public class SimpleBindingPropertyExample : EditorWindow
+    {
+        TextField m_ObjectNameBinding;
+
+        [MenuItem("Window/UIToolkitExamples/Simple Binding Property Example")]
+        public static void ShowDefaultWindow()
+        {
+            var wnd = GetWindow<SimpleBindingPropertyExample>();
+            wnd.titleContent = new GUIContent("Simple Binding Property");
+        }
+
+        public void CreateGUI()
+        {
+            m_ObjectNameBinding = new TextField("Object Name Binding");
+            rootVisualElement.Add(m_ObjectNameBinding);
+            OnSelectionChange();
+        }
+
+        public void OnSelectionChange()
+        {
+            GameObject selectedObject = Selection.activeObject as GameObject;
+            if (selectedObject != null)
+            {
+                // Create the SerializedObject from the current selection
+                SerializedObject so = new SerializedObject(selectedObject);
+
+                // Note: the "name" property of a GameObject is actually named "m_Name" in serialization.
+                SerializedProperty property = so.FindProperty("m_Name");
+                // Bind the property to the field directly
+                m_ObjectNameBinding.BindProperty(property);
+            }
+            else
+            {
+                // Unbind any binding from the field
+                m_ObjectNameBinding.Unbind();
+            }
+        }
+    }
+}
+
+--- bind-with-uxml-csharp/Editor/SimpleBindingExampleUXML.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEditor.UIElements;
+using UnityEngine.UIElements;
+
+namespace UIToolkitExamples
+{
+    public class SimpleBindingExampleUXML : EditorWindow
+    {
+        [SerializeField]
+        VisualTreeAsset visualTree;
+
+        [MenuItem("Window/UIToolkitExamples/Simple Binding Example UXML")]
+        public static void ShowDefaultWindow()
+        {
+            var wnd = GetWindow<SimpleBindingExampleUXML>();
+            wnd.titleContent = new GUIContent("Simple Binding UXML");
+        }
+
+        public void CreateGUI()
+        {
+            visualTree.CloneTree(rootVisualElement);
+            OnSelectionChange();
+        }
+
+        public void OnSelectionChange()
+        {
+            GameObject selectedObject = Selection.activeObject as GameObject;
+            if (selectedObject != null)
+            {
+                // Create the SerializedObject from the current selection
+                SerializedObject so = new SerializedObject(selectedObject);
+                // Bind it to the root of the hierarchy. It will find the right object to bind to...
+                rootVisualElement.Bind(so);
+            }
+            else
+            {
+                // Unbind the object from the actual visual element
+                rootVisualElement.Unbind();
+
+                // Clear the TextField after the binding is removed
+                var textField = rootVisualElement.Q<TextField>("GameObjectName");
+                if (textField != null)
+                {
+                    textField.value = string.Empty;
+                }
+            }
+        }
+    }
+}
+
+--- bind-with-uxml-csharp/Editor/binding_example.uxml ---
+<UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement name="top-element">
+        <ui:Label name="top-label" text="UXML-Defined Simple Binding"/>
+        <ui:TextField name="GameObjectName" label="Name" text="" binding-path="m_Name"/>
+    </ui:VisualElement>
+</UXML>
+
+--- get-started-runtime-binding/ExampleObject.asset ---
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5061969b943f741da8662a4ef5c40cba, type: 3}
+  m_Name: ExampleObject
+  m_EditorClassIdentifier: DocsExampleUIToolkit::ExampleObject
+  simpleLabel: Hello World!
+
+
+--- get-started-runtime-binding/ExampleObject.cs ---
+using Unity.Properties;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+[CreateAssetMenu]
+public class ExampleObject : ScriptableObject
+{
+    [Header("Simple binding")]
+    [CreateProperty]
+    public string simpleLabel = "Hello World!";
+}
+
+--- get-started-runtime-binding/ExampleObject.uxml ---
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements"
+xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:Label text="Label" data-source="ExampleObject.asset" data-source-path="simpleLabel">
+        <Bindings>
+            <engine:DataBinding property="text" binding-mode="ToTarget" />
+        </Bindings>
+    </engine:Label>
+</engine:UXML>
+
+
+--- runtime-data-binding-multiple-properties/ExampleMultiPropertiesObject.cs ---
+using Unity.Properties;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+[CreateAssetMenu]
+public class ExampleMultiPropertiesObject : ScriptableObject
+{
+    [Header("Bind to multiple properties")]
+
+    [CreateProperty]
+    public Vector3 vector3Value;
+
+    [CreateProperty]
+    public float sumOfVector3Properties => vector3Value.x + vector3Value.y + vector3Value.z;
+}
+
+--- runtime-data-binding-multiple-properties/ExampleMultiPropertiesObject.uxml ---
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement data-source="MulPropertyObject.asset" name="VisualElement" style="flex-grow: 1;">
+        <engine:Vector3Field label="Vec3 Field">
+            <Bindings>
+                <engine:DataBinding property="value" data-source-path="vector3Value" binding-mode="ToSource"/>
+            </Bindings>
+        </engine:Vector3Field>
+        <engine:FloatField label="Float Field" name="FloatField">
+            <Bindings>
+                <engine:DataBinding property="value" data-source-path="sumOfVector3Properties" binding-mode="ToTarget"/>
+            </Bindings>
+        </engine:FloatField>
+    </engine:VisualElement>
+</engine:UXML>
+
+--- runtime-data-binding-multiple-properties/MulPropertyObject.asset ---
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26a142acb91a04403a85f9cfd305e19b, type: 3}
+  m_Name: MulPropertyObject
+  m_EditorClassIdentifier: Assembly-CSharp::ExampleMultiPropertiesObject
+  vector3Value: {x: 3, y: 64, z: 45}
+
+
+--- bind-custom-data-type/Temperature.cs ---
+using System;
+
+namespace UIToolkitExamples
+{
+    public enum TemperatureUnit
+    {
+        Celsius,
+        Farenheit
+    }
+
+    [Serializable]
+    public struct Temperature
+    {
+        public double value;
+        public TemperatureUnit unit;
+    }
+}
+
+--- bind-custom-data-type/PlanetScript.cs ---
+using UnityEngine;
+
+namespace UIToolkitExamples
+{
+    public class PlanetScript : MonoBehaviour
+    {
+        public Temperature coreTemperature;
+    }
+}
+
+--- bind-custom-data-type/Editor/PlanetEditor.cs ---
+using UnityEditor;
+using UnityEngine.UIElements;
+using UnityEditor.UIElements;
+
+namespace UIToolkitExamples
+{
+    [CustomEditor(typeof(PlanetScript))]
+    public class PlanetEditor : Editor
+    {
+        public override VisualElement CreateInspectorGUI()
+        {
+            return new PropertyField(serializedObject.FindProperty("coreTemperature"));
+        }
+    }
+}
+
+--- bind-custom-data-type/Editor/TemperatureDrawer.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace UIToolkitExamples
+{
+    [CustomPropertyDrawer(typeof(Temperature))]
+    public class TemperatureDrawer : PropertyDrawer
+    {
+        public override VisualElement CreatePropertyGUI(SerializedProperty property)
+        {
+            var asset = Resources.Load<VisualTreeAsset>("temperature_drawer");
+            var drawer = asset.Instantiate(property.propertyPath);
+
+            drawer.Q<Label>().text = property.displayName;
+
+            // Do not allow conversion when having multiple objects selected in the Inspector
+            if (!property.serializedObject.isEditingMultipleObjects)
+            {
+                drawer.Q<Button>().RegisterCallback<ClickEvent, SerializedProperty>(Convert, property);
+            }
+
+            return drawer;
+        }
+
+        static void Convert(ClickEvent evt, SerializedProperty property)
+        {
+            var valueProperty = property.FindPropertyRelative("value");
+            var unitProperty = property.FindPropertyRelative("unit");
+
+            // F -> C
+            if (unitProperty.enumValueIndex == (int)TemperatureUnit.Farenheit)
+            {
+                valueProperty.doubleValue -= 32;
+                valueProperty.doubleValue *= 5.0d / 9.0d;
+                unitProperty.enumValueIndex = (int)TemperatureUnit.Celsius;
+            }
+            else // C -> F
+            {
+                valueProperty.doubleValue *= 9.0d / 5.0d;
+                valueProperty.doubleValue += 32;
+                unitProperty.enumValueIndex = (int)TemperatureUnit.Farenheit;
+            }
+
+            // Important: because we are bypassing the binding system here, we must save the modified SerializedObject
+            property.serializedObject.ApplyModifiedProperties();
+        }
+    }
+}
+
+--- bind-custom-data-type/Editor/Resources/temperature_drawer.uxml ---
+<UXML xmlns="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="UnityEditor.UIElements UnityEditor.UIElements.xsd">
+    <VisualElement class="unity-base-field">
+        <Label class="unity-base-field__label"/>
+        <VisualElement class="unity-base-field__input" style="flex-direction:row">
+            <ue:DoubleField binding-path="value"/>
+            <ue:EnumField binding-path="unit"/>
+            <Button text="Convert" />
+        </VisualElement>
+    </VisualElement>
+</UXML>
+
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xsi:noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd"
+>
+    <VisualElement class="unity-base-field">
+        <Label class="unity-base-field__label"/>
+        <VisualElement class="unity-base-field__input" style="flex-direction:row">
+            <ue:DoubleField binding-path="value"/>
+            <ue:EnumField binding-path="unit"/>
+            <Button text="Convert" />
+        </VisualElement>
+    </VisualElement>
+
+</engine:UXML>
+
+--- bind-nested-properties/DestructibleTankScript.cs ---
+using System;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+[Serializable]
+public struct Health
+{
+    public int armor;
+    public int life;
+}
+
+[ExecuteInEditMode]
+public class DestructibleTankScript : MonoBehaviour
+{
+    public string tankName = "Tank";
+    public float tankSize = 1;
+
+    public Health health;
+
+    private void Update()
+    {
+        gameObject.name = tankName;
+        gameObject.transform.localScale = new Vector3(tankSize, tankSize, tankSize);
+    }
+
+    public void Reset()
+    {
+        health.armor = 100;
+        health.life = 10;
+    }
+}
+
+
+--- bind-nested-properties/Editor/DestructibleTankEditor.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+[CustomEditor(typeof(DestructibleTankScript))]
+public class DestructibleTankEditor : Editor
+{
+    [SerializeField]
+    VisualTreeAsset visualTreeAsset;
+
+    public override VisualElement CreateInspectorGUI()
+    {
+        return visualTreeAsset.CloneTree();
+    }
+}
+
+--- bind-nested-properties/Editor/destructible_tank_editor.uxml ---
+<UXML xmlns="UnityEngine.UIElements" xmlns:ue="UnityEditor.UIElements">
+    <Style src="tank_inspector_styles.uss"/>
+    <VisualElement name="row" class="container">
+        <Label text="Tank Script - Custom Inspector" />
+        <ue:PropertyField binding-path="tankName" name="tank-name-field" />
+        <ue:PropertyField binding-path="tankSize" name="tank-size-field" />
+        <BindableElement binding-path="health">
+            <ue:PropertyField binding-path="armor"/>
+            <ue:PropertyField binding-path="life"/>
+        </BindableElement>
+    </VisualElement>
+</UXML>
+
+--- bind-nested-properties/Editor/tank_inspector_styles.uss ---
+.container {
+	background-color: rgb(80, 80, 80);
+	flex-direction: column;
+}
+Label {
+	background-color: rgb(80, 80, 80);
+}
+TextField:hover {
+	background-color: rgb(255, 255, 0);
+}
+FloatField {
+	background-color: rgb(0, 0, 255);
+}

@@ -1,0 +1,1042 @@
+Raw files for Custom Controls
+
+--- create-bindable-custom-control/ExampleFieldCustomEditor.cs ---
+using UnityEditor;
+using UnityEngine.UIElements;
+using UnityEngine;
+
+namespace UIToolkitExamples
+{
+    [CustomEditor(typeof(ExampleFieldComponent))]
+    public class ExampleFieldCustomEditor : Editor
+    {
+        [SerializeField]
+        VisualTreeAsset m_Uxml;
+
+        public override VisualElement CreateInspectorGUI()
+        {
+            var parent = new VisualElement();
+
+            m_Uxml?.CloneTree(parent);
+
+            return parent;
+        }
+    }
+}
+
+--- create-bindable-custom-control/ExampleFieldComponent.cs ---
+using UnityEngine;
+
+namespace UIToolkitExamples
+{
+    public class ExampleFieldComponent : MonoBehaviour
+    {
+        [SerializeField]
+        double m_Value;
+    }
+}
+
+--- create-bindable-custom-control/ExampleField.cs ---
+using UnityEngine.UIElements;
+
+namespace UIToolkitExamples
+{
+    // ExampleField inherits from BaseField with the double type. ExampleField's underlying value, then, is a double.
+    public class ExampleField : BaseField<double>
+    {
+        // We can provide the existing BaseFieldTraits class as a type parameter for UxmlFactory, and this means we
+        // don't need to define our own traits class or override its Init() method. We do, however, need to provide it
+        // with the type of the underlying value (double) and the corresponding attribute description type
+        // (UxmlDoubleAttributeDescription).
+        public new class UxmlFactory :
+            UxmlFactory<ExampleField, BaseFieldTraits<double, UxmlDoubleAttributeDescription>> { }
+
+        Label m_Input;
+
+        // Default constructor is required for compatibility with UXML factory
+        public ExampleField() : this(null)
+        {
+
+        }
+
+        // Main constructor accepts label parameter to mimic BaseField constructor.
+        // Second argument to base constructor is the input element, the one that displays the value this field is
+        // bound to.
+        public ExampleField(string label) : base(label, new Label() { })
+        {
+            // This is the input element instantiated for the base constructor.
+            m_Input = this.Q<Label>(className: inputUssClassName);
+        }
+
+        // SetValueWithoutNotify needs to be overridden by calling the base version and then making a change to the
+        // underlying value be reflected in the input element.
+        public override void SetValueWithoutNotify(double newValue)
+        {
+            base.SetValueWithoutNotify(newValue);
+
+            m_Input.text = value.ToString("N");
+        }
+    }
+}
+
+--- create-bindable-custom-control/ExampleField.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:example="UIToolkitExamples">
+    <example:ExampleField label="Binding Target" binding-path="m_Value" />
+</ui:UXML>
+
+--- create-custom-control-with-custom-attributes/MyElement.cs ---
+using UnityEngine;
+using UnityEngine.UIElements;
+
+class MyElement : VisualElement
+{
+    public new class UxmlFactory : UxmlFactory<MyElement, UxmlTraits> { }
+
+    // Add the two custom UXML attributes.
+    public new class UxmlTraits : VisualElement.UxmlTraits
+    {
+        UxmlStringAttributeDescription m_String =
+            new UxmlStringAttributeDescription { name = "my-string", defaultValue = "default_value" };
+        UxmlIntAttributeDescription m_Int =
+            new UxmlIntAttributeDescription { name = "my-int", defaultValue = 2 };
+
+        public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
+        {
+            base.Init(ve, bag, cc);
+            var ate = ve as MyElement;
+
+            ate.myString = m_String.GetValueFromBag(bag, cc);
+            ate.myInt = m_Int.GetValueFromBag(bag, cc);
+        }
+    }
+
+    // Must expose your element class to a { get; set; } property that has the same name
+    // as the name you set in your UXML attribute description with the camel case format
+    public string myString { get; set; }
+    public int myInt { get; set; }
+}
+
+--- create-custom-style-custom-control/ExampleElementCustomStyle.cs ---
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace UIToolkitExamples
+{
+    public class ExampleElementCustomStyle : VisualElement
+    {
+        // Factory class, required to expose this custom control to UXML
+        public new class UxmlFactory : UxmlFactory<ExampleElementCustomStyle, UxmlTraits> { }
+
+        // Traits class
+        public new class UxmlTraits : VisualElement.UxmlTraits { }
+
+        // Use CustomStyleProperty<T> to fetch custom style properties from USS
+        static readonly CustomStyleProperty<Color> S_GradientFrom = new CustomStyleProperty<Color>("--gradient-from");
+        static readonly CustomStyleProperty<Color> S_GradientTo = new CustomStyleProperty<Color>("--gradient-to");
+
+        // Image child element and its texture
+        Texture2D m_Texture2D;
+        Image m_Image;
+
+        public ExampleElementCustomStyle()
+        {
+            // Create an Image and a texture for it. Attach Image to self.
+            m_Texture2D = new Texture2D(100, 100);
+            m_Image = new Image();
+            m_Image.image = m_Texture2D;
+            Add(m_Image);
+
+            RegisterCallback<CustomStyleResolvedEvent>(OnStylesResolved);
+        }
+
+        // When custom styles are known for this control, make a gradient from the colors.
+        void OnStylesResolved(CustomStyleResolvedEvent evt)
+        {
+            Color from, to;
+
+            if (evt.customStyle.TryGetValue(S_GradientFrom, out from)
+                && evt.customStyle.TryGetValue(S_GradientTo, out to))
+            {
+                GenerateGradient(from, to);
+            }
+        }
+
+        public void GenerateGradient(Color from, Color to)
+        {
+            for (int i = 0; i < m_Texture2D.width; ++i)
+            {
+                Color color = Color.Lerp(from, to, i / (float)m_Texture2D.width);
+                for (int j = 0; j < m_Texture2D.height; ++j)
+                {
+                    m_Texture2D.SetPixel(i, j, color);
+                }
+            }
+
+            m_Texture2D.Apply();
+            m_Image.MarkDirtyRepaint();
+        }
+    }
+}
+
+--- create-custom-style-custom-control/ExampleElementCustomStyle.uss ---
+ExampleElementCustomStyle {
+	--gradient-from: red;
+	--gradient-to: yellow;
+}
+
+--- create-custom-style-custom-control/ExampleElementCustomStyle.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" example="UIToolkitExamples" editor-extension-mode="False">
+    <Style src="ExampleElementCustomStyle.uss" />
+    <UIToolkitExamples.ExampleElementCustomStyle />
+</ui:UXML>
+
+
+--- slide-toggle/SlideToggle.uss ---
+.slide-toggle__input {
+    background-color: var(--unity-colors-slider_groove-background);
+    max-width: 25px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow: visible;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-right-color: var(--unity-colors-slider_thumb-border);
+    border-top-color: var(--unity-colors-slider_thumb-border);
+    border-bottom-color: var(--unity-colors-slider_thumb-border);
+    max-height: 16px;
+    margin-top: 10px;
+    border-left-color: var(--unity-colors-slider_thumb-border);
+    transition-property: background-color;
+    transition-duration: 0.5s;
+}
+
+.slide-toggle__input-knob {
+    height: 16px;
+    width: 16px;
+    background-color: var(--unity-colors-slider_thumb-background);
+    position: absolute;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    top: -1px;
+    transition-property: translate, background-color;
+    transition-duration: 0.5s, 0.5s;
+    translate: -1px 0;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: var(--unity-colors-slider_thumb-border);
+    border-right-color: var(--unity-colors-slider_thumb-border);
+    border-top-color: var(--unity-colors-slider_thumb-border);
+    border-bottom-color: var(--unity-colors-slider_thumb-border);
+}
+
+.slide-toggle__input--checked {
+    background-color: rgb(0, 156, 10);
+}
+
+.slide-toggle__input--checked > .slide-toggle__input-knob {
+    translate: 8px 0;
+}
+
+.slide-toggle:focus .slide-toggle__input-knob {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: var(--unity-colors-input_field-border-focus);
+    border-right-color: var(--unity-colors-input_field-border-focus);
+    border-top-color: var(--unity-colors-input_field-border-focus);
+    border-bottom-color: var(--unity-colors-input_field-border-focus);
+}
+
+--- slide-toggle/SlideToggleUsage.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="SlideToggle.uss" />
+    <MyUILibrary.SlideToggle label="My Toggle" />
+</ui:UXML>
+
+
+--- slide-toggle/SlideToggle.cs ---
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace MyUILibrary
+{
+    // Derives from BaseField<bool> base class. Represents a container for its input part.
+    public class SlideToggle : BaseField<bool>
+    {
+        public new class UxmlFactory : UxmlFactory<SlideToggle, UxmlTraits> { }
+
+        public new class UxmlTraits : BaseFieldTraits<bool, UxmlBoolAttributeDescription> { }
+
+        // In the spirit of the BEM standard, the SlideToggle has its own block class and two element classes. It also
+        // has a class that represents the enabled state of the toggle.
+        public static readonly new string ussClassName = "slide-toggle";
+        public static readonly new string inputUssClassName = "slide-toggle__input";
+        public static readonly string inputKnobUssClassName = "slide-toggle__input-knob";
+        public static readonly string inputCheckedUssClassName = "slide-toggle__input--checked";
+
+        VisualElement m_Input;
+        VisualElement m_Knob;
+
+        // Custom controls need a default constructor. This default constructor calls the other constructor in this
+        // class.
+        public SlideToggle() : this(null) { }
+
+        // This constructor allows users to set the contents of the label.
+        public SlideToggle(string label) : base(label, new())
+        {
+            // Style the control overall.
+            AddToClassList(ussClassName);
+
+            // Get the BaseField's visual input element and use it as the background of the slide.
+            m_Input = this.Q(className: BaseField<bool>.inputUssClassName);
+            m_Input.AddToClassList(inputUssClassName);
+            Add(m_Input);
+
+            // Create a "knob" child element for the background to represent the actual slide of the toggle.
+            m_Knob = new();
+            m_Knob.AddToClassList(inputKnobUssClassName);
+            m_Input.Add(m_Knob);
+
+            // There are three main ways to activate or deactivate the SlideToggle. All three event handlers use the
+            // static function pattern described in the Custom control best practices.
+
+            // ClickEvent fires when a sequence of pointer down and pointer up actions occurs.
+            RegisterCallback<ClickEvent>(evt => OnClick(evt));
+            // KeydownEvent fires when the field has focus and a user presses a key.
+            RegisterCallback<KeyDownEvent>(evt => OnKeydownEvent(evt));
+            // NavigationSubmitEvent detects input from keyboards, gamepads, or other devices at runtime.
+            RegisterCallback<NavigationSubmitEvent>(evt => OnSubmit(evt));
+        }
+
+        static void OnClick(ClickEvent evt)
+        {
+            var slideToggle = evt.currentTarget as SlideToggle;
+            slideToggle.ToggleValue();
+
+            evt.StopPropagation();
+        }
+
+        static void OnSubmit(NavigationSubmitEvent evt)
+        {
+            var slideToggle = evt.currentTarget as SlideToggle;
+            slideToggle.ToggleValue();
+
+            evt.StopPropagation();
+        }
+
+        static void OnKeydownEvent(KeyDownEvent evt)
+        {
+            var slideToggle = evt.currentTarget as SlideToggle;
+
+            // NavigationSubmitEvent event already covers keydown events at runtime, so this method shouldn't handle
+            // them.
+            if (slideToggle.panel?.contextType == ContextType.Player)
+                return;
+
+            // Toggle the value only when the user presses Enter, Return, or Space.
+            if (evt.keyCode == KeyCode.KeypadEnter || evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.Space)
+            {
+                slideToggle.ToggleValue();
+                evt.StopPropagation();
+            }
+        }
+
+        // All three callbacks call this method.
+        void ToggleValue()
+        {
+            value = !value;
+        }
+
+        // Because ToggleValue() sets the value property, the BaseField class fires a ChangeEvent. This results in a
+        // call to SetValueWithoutNotify(). This example uses it to style the toggle based on whether it's currently
+        // enabled.
+        public override void SetValueWithoutNotify(bool newValue)
+        {
+            base.SetValueWithoutNotify(newValue);
+
+            //This line of code styles the input element to look enabled or disabled.
+            m_Input.EnableInClassList(inputCheckedUssClassName, newValue);
+        }
+    }
+}
+
+
+--- pie-chart/PieChart.cs ---
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class PieChart : VisualElement
+{
+    float m_Radius = 100.0f;
+    float m_Value = 40.0f;
+
+    VisualElement m_Chart;
+
+    public float radius
+    {
+        get => m_Radius;
+        set
+        {
+            m_Radius = value;
+            m_Chart.style.height = diameter;
+            m_Chart.style.width = diameter;
+            m_Chart.MarkDirtyRepaint();
+        }
+    }
+
+    public float diameter => m_Radius * 2.0f;
+
+    public float value {
+        get { return m_Value; }
+        set { m_Value = value; MarkDirtyRepaint(); }
+    }
+
+    public PieChart()
+    {
+        generateVisualContent += DrawCanvas;
+    }
+
+    void DrawCanvas(MeshGenerationContext ctx)
+    {
+        var painter = ctx.painter2D;
+        painter.strokeColor = Color.white;
+        painter.fillColor = Color.white;
+
+        var percentage = m_Value;
+
+        var percentages = new float[] {
+            percentage, 100 - percentage
+        };
+        var colors = new Color32[] {
+            new Color32(182,235,122,255),
+            new Color32(251,120,19,255)
+        };
+        float angle = 0.0f;
+        float anglePct = 0.0f;
+        int k = 0;
+        foreach (var pct in percentages)
+        {
+            anglePct += 360.0f * (pct / 100);
+
+            painter.fillColor = colors[k++];
+            painter.BeginPath();
+            painter.MoveTo(new Vector2(m_Radius, m_Radius));
+            painter.Arc(new Vector2(m_Radius, m_Radius), m_Radius, angle, anglePct);
+            painter.Fill();
+
+            angle = anglePct;
+        }
+    }
+}
+
+--- pie-chart/PieChartComponet.cs ---
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+[RequireComponent(typeof(UIDocument))]
+public class PieChartComponent : MonoBehaviour
+{
+    PieChart m_PieChart;
+
+    void Start()
+    {
+        m_PieChart = new PieChart();
+        GetComponent<UIDocument>().rootVisualElement.Add(m_PieChart);
+    }
+}
+
+--- pie-chart/Editor/PieChartWindow.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class PieChartWindow : EditorWindow
+{
+    [MenuItem("Tools/PieChart Window")]
+    public static void ShowExample()
+    {
+        PieChartWindow wnd = GetWindow<PieChartWindow>();
+        wnd.titleContent = new GUIContent("PieChartWindow");
+    }
+
+    public void CreateGUI()
+    {
+        VisualElement root = rootVisualElement;
+
+        root.Add(new PieChart());
+    }
+}
+
+--- radial-progress/RadialProgress.cs ---
+using Unity.Collections;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace MyUILibrary.RadialProgress
+{
+    /// <summary>
+    /// An element that displays progress inside a partially filled circle
+    /// </summary>
+    public class RadialProgress : VisualElement
+    {
+        public new class UxmlTraits : VisualElement.UxmlTraits
+        {
+            // The progress property is exposed to UXML.
+            UxmlFloatAttributeDescription m_ProgressAttribute = new UxmlFloatAttributeDescription()
+            {
+                name = "progress"
+            };
+
+            // The Init method is used to assign to the C# progress property from the value of the progress UXML
+            // attribute.
+            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
+            {
+                base.Init(ve, bag, cc);
+
+                (ve as RadialProgress).progress = m_ProgressAttribute.GetValueFromBag(bag, cc);
+            }
+        }
+
+        // A Factory class is needed to expose this control to UXML.
+        public new class UxmlFactory : UxmlFactory<RadialProgress, UxmlTraits> { }
+
+        // These are USS class names for the control overall and the label.
+        public static readonly string ussClassName = "radial-progress";
+        public static readonly string ussLabelClassName = "radial-progress__label";
+
+        // These objects allow C# code to access custom USS properties.
+        static CustomStyleProperty<Color> s_TrackColor = new CustomStyleProperty<Color>("--track-color");
+        static CustomStyleProperty<Color> s_ProgressColor = new CustomStyleProperty<Color>("--progress-color");
+
+        // These are the meshes this control uses.
+        EllipseMesh m_TrackMesh;
+        EllipseMesh m_ProgressMesh;
+
+        // This is the label that displays the percentage.
+        Label m_Label;
+
+        // This is the number of outer vertices to generate the circle.
+        const int k_NumSteps = 200;
+
+        // This is the number that the Label displays as a percentage.
+        float m_Progress;
+
+        /// <summary>
+        /// A value between 0 and 100
+        /// </summary>
+        public float progress
+        {
+            // The progress property is exposed in C#.
+            get => m_Progress;
+            set
+            {
+                // Whenever the progress property changes, MarkDirtyRepaint() is named. This causes a call to the
+                // generateVisualContents callback.
+                m_Progress = value;
+                m_Label.text = Mathf.Clamp(Mathf.Round(value), 0, 100) + "%";
+                MarkDirtyRepaint();
+            }
+        }
+
+        // This default constructor is RadialProgress's only constructor.
+        public RadialProgress()
+        {
+            // Create a Label, add a USS class name, and add it to this visual tree.
+            m_Label = new Label();
+            m_Label.AddToClassList(ussLabelClassName);
+            Add(m_Label);
+
+            // Create meshes for the track and the progress.
+            m_ProgressMesh = new EllipseMesh(k_NumSteps);
+            m_TrackMesh = new EllipseMesh(k_NumSteps);
+
+            // Add the USS class name for the overall control.
+            AddToClassList(ussClassName);
+
+            // Register a callback after custom style resolution.
+            RegisterCallback<CustomStyleResolvedEvent>(evt => CustomStylesResolved(evt));
+
+            // Register a callback to generate the visual content of the control.
+            generateVisualContent += context => GenerateVisualContent(context);
+
+            progress = 0.0f;
+        }
+
+        static void CustomStylesResolved(CustomStyleResolvedEvent evt)
+        {
+            RadialProgress element = (RadialProgress)evt.currentTarget;
+            element.UpdateCustomStyles();
+        }
+
+        // After the custom colors are resolved, this method uses them to color the meshes and (if necessary) repaint
+        // the control.
+        void UpdateCustomStyles()
+        {
+            if (customStyle.TryGetValue(s_ProgressColor, out var progressColor))
+            {
+                m_ProgressMesh.color = progressColor;
+            }
+
+            if (customStyle.TryGetValue(s_TrackColor, out var trackColor))
+            {
+                m_TrackMesh.color = trackColor;
+            }
+
+            if (m_ProgressMesh.isDirty || m_TrackMesh.isDirty)
+                MarkDirtyRepaint();
+        }
+
+        // The GenerateVisualContent() callback method calls DrawMeshes().
+        static void GenerateVisualContent(MeshGenerationContext context)
+        {
+            RadialProgress element = (RadialProgress)context.visualElement;
+            element.DrawMeshes(context);
+        }
+
+        // DrawMeshes() uses the EllipseMesh utility class to generate an array of vertices and indices, for both the
+        // "track" ring (in grey) and the progress ring (in green). It then passes the geometry to the MeshWriteData
+        // object, as returned by the MeshGenerationContext.Allocate() method. For the "progress", only a slice of
+        // the index arrays is used to progressively reveal parts of the mesh.
+        void DrawMeshes(MeshGenerationContext context)
+        {
+            float halfWidth = contentRect.width * 0.5f;
+            float halfHeight = contentRect.height * 0.5f;
+
+            if (halfWidth < 2.0f || halfHeight < 2.0f)
+                return;
+
+            m_ProgressMesh.width = halfWidth;
+            m_ProgressMesh.height = halfHeight;
+            m_ProgressMesh.borderSize = 10;
+            m_ProgressMesh.UpdateMesh();
+
+            m_TrackMesh.width = halfWidth;
+            m_TrackMesh.height = halfHeight;
+            m_TrackMesh.borderSize = 10;
+            m_TrackMesh.UpdateMesh();
+
+            // Draw track mesh first
+            var trackMeshWriteData = context.Allocate(m_TrackMesh.vertices.Length, m_TrackMesh.indices.Length);
+            trackMeshWriteData.SetAllVertices(m_TrackMesh.vertices);
+            trackMeshWriteData.SetAllIndices(m_TrackMesh.indices);
+
+            // Keep progress between 0 and 100
+            float clampedProgress = Mathf.Clamp(m_Progress, 0.0f, 100.0f);
+
+            // Determine how many triangle are used to depending on progress, to achieve a partially filled circle
+            int sliceSize = Mathf.FloorToInt((k_NumSteps * clampedProgress) / 100.0f);
+
+            if (sliceSize == 0)
+                return;
+
+            // Every step is 6 indices in the corresponding array
+            sliceSize *= 6;
+
+            var progressMeshWriteData = context.Allocate(m_ProgressMesh.vertices.Length, sliceSize);
+            progressMeshWriteData.SetAllVertices(m_ProgressMesh.vertices);
+
+            var tempIndicesArray = new NativeArray<ushort>(m_ProgressMesh.indices, Allocator.Temp);
+            progressMeshWriteData.SetAllIndices(tempIndicesArray.Slice(0, sliceSize));
+            tempIndicesArray.Dispose();
+        }
+
+    }
+}
+
+
+--- radial-progress/RadialProgressExample.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="RadialProgress.uss"/>
+    <ui:VisualElement style="align-items: center;">
+        <MyUILibrary.RadialProgress progress="87.1" />
+    </ui:VisualElement>
+</ui:UXML>
+
+--- radial-progress/RadialProgress.uss ---
+.radial-progress {
+        min-width: 26px;
+        min-height: 20px;
+        --track-color: rgb(130, 130, 130);
+        --progress-color: rgb(46, 132, 24);
+        --percentage-color: white;
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        flex-direction: row;
+        justify-content: center;
+        width: 100px;
+        height: 100px;
+    }
+
+    .radial-progress__label {
+        -unity-text-align: middle-left;
+        color: var(--percentage-color);
+    }
+
+--- radial-progress/RadialProgressComponent.cs ---
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+using MyUILibrary.RadialProgress;
+
+namespace MyUILibrary.RadialProgress
+{
+    [RequireComponent(typeof(UIDocument))]
+    public class RadialProgressComponent : MonoBehaviour
+    {
+
+        RadialProgress m_RadialProgress;
+
+        void Start()
+        {
+            var root = GetComponent<UIDocument>().rootVisualElement;
+
+           m_RadialProgress = new RadialProgress() {
+                style = {
+                    position = Position.Absolute,
+                    left = 20, top = 20, width = 200, height = 200
+                }
+            };
+
+            root.Add(m_RadialProgress);
+        }
+
+        void Update()
+        {
+            m_RadialProgress.progress = ((Mathf.Sin(Time.time) + 1.0f) / 2.0f) * 60.0f + 10.0f;
+        }
+    }
+}
+
+
+--- radial-progress/EllipseMesh.cs ---
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace MyUILibrary
+{
+    public class EllipseMesh
+    {
+        int m_NumSteps;
+        float m_Width;
+        float m_Height;
+        Color m_Color;
+        float m_BorderSize;
+        bool m_IsDirty;
+        public Vertex[] vertices { get; private set; }
+        public ushort[] indices { get; private set; }
+
+        public EllipseMesh(int numSteps)
+        {
+            m_NumSteps = numSteps;
+            m_IsDirty = true;
+        }
+
+        public void UpdateMesh()
+        {
+            if (!m_IsDirty)
+                return;
+
+            int numVertices = numSteps * 2;
+            int numIndices = numVertices * 6;
+
+            if (vertices == null || vertices.Length != numVertices)
+                vertices = new Vertex[numVertices];
+
+            if (indices == null || indices.Length != numIndices)
+                indices = new ushort[numIndices];
+
+            float stepSize = 360.0f / (float)numSteps;
+            float angle = -180.0f;
+
+            for (int i = 0; i < numSteps; ++i)
+            {
+                angle -= stepSize;
+                float radians = Mathf.Deg2Rad * angle;
+
+                float outerX = Mathf.Sin(radians) * width;
+                float outerY = Mathf.Cos(radians) * height;
+                Vertex outerVertex = new Vertex();
+                outerVertex.position = new Vector3(width + outerX, height + outerY, Vertex.nearZ);
+                outerVertex.tint = color;
+                vertices[i * 2] = outerVertex;
+
+                float innerX = Mathf.Sin(radians) * (width - borderSize);
+                float innerY = Mathf.Cos(radians) * (height - borderSize);
+                Vertex innerVertex = new Vertex();
+                innerVertex.position = new Vector3(width + innerX, height + innerY, Vertex.nearZ);
+                innerVertex.tint = color;
+                vertices[i * 2 + 1] = innerVertex;
+
+                indices[i * 6] = (ushort)((i == 0) ? vertices.Length - 2 : (i - 1) * 2); // previous outer vertex
+                indices[i * 6 + 1] = (ushort)(i * 2); // current outer vertex
+                indices[i * 6 + 2] = (ushort)(i * 2 + 1); // current inner vertex
+
+                indices[i * 6 + 3] = (ushort)((i == 0) ? vertices.Length - 2 : (i - 1) * 2); // previous outer vertex
+                indices[i * 6 + 4] = (ushort)(i * 2 + 1); // current inner vertex
+                indices[i * 6 + 5] = (ushort)((i == 0) ? vertices.Length - 1 : (i - 1) * 2 + 1); // previous inner vertex
+            }
+
+            m_IsDirty = false;
+        }
+
+        public bool isDirty => m_IsDirty;
+
+        void CompareAndWrite(ref float field, float newValue)
+        {
+            if (Mathf.Abs(field - newValue) > float.Epsilon)
+            {
+                m_IsDirty = true;
+                field = newValue;
+            }
+        }
+
+        public int numSteps
+        {
+            get => m_NumSteps;
+            set
+            {
+                m_IsDirty = value != m_NumSteps;
+                m_NumSteps = value;
+            }
+        }
+
+        public float width
+        {
+            get => m_Width;
+            set => CompareAndWrite(ref m_Width, value);
+        }
+
+        public float height
+        {
+            get => m_Height;
+            set => CompareAndWrite(ref m_Height, value);
+        }
+
+        public Color color
+        {
+            get => m_Color;
+            set
+            {
+                m_IsDirty = value != m_Color;
+                m_Color = value;
+            }
+        }
+
+        public float borderSize
+        {
+            get => m_BorderSize;
+            set => CompareAndWrite(ref m_BorderSize, value);
+        }
+
+    }
+}
+
+--- radial-progress-vector-api/RadialProgress.cs ---
+using Unity.Collections;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace MyUILibrary.RadialProgressVectorApi
+{
+
+    // An element that displays progress inside a partially filled circle
+    public class RadialProgress : VisualElement
+    {
+        public new class UxmlTraits : VisualElement.UxmlTraits
+        {
+            // The progress property is exposed to UXML.
+            UxmlFloatAttributeDescription m_ProgressAttribute = new UxmlFloatAttributeDescription()
+            {
+                name = "progress"
+            };
+
+            // Use the Init method to assign the value of the progress UXML attribute to the C# progress property.
+            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
+            {
+                base.Init(ve, bag, cc);
+
+                (ve as RadialProgress).progress = m_ProgressAttribute.GetValueFromBag(bag, cc);
+            }
+        }
+
+        // Define a factory class to expose this control to UXML.
+        public new class UxmlFactory : UxmlFactory<RadialProgress, UxmlTraits> { }
+
+        // These are USS class names for the control overall and the label.
+        public static readonly string ussClassName = "radial-progress";
+        public static readonly string ussLabelClassName = "radial-progress__label";
+
+        // These objects allow C# code to access custom USS properties.
+        static CustomStyleProperty<Color> s_TrackColor = new CustomStyleProperty<Color>("--track-color");
+        static CustomStyleProperty<Color> s_ProgressColor = new CustomStyleProperty<Color>("--progress-color");
+
+        Color m_TrackColor = Color.gray;
+        Color m_ProgressColor = Color.red;
+
+        // This is the label that displays the percentage.
+        Label m_Label;
+
+        // This is the number that the Label displays as a percentage.
+        float m_Progress;
+
+        // A value between 0 and 100
+        public float progress
+        {
+            // The progress property is exposed in C#.
+            get => m_Progress;
+            set
+            {
+                // Whenever the progress property changes, MarkDirtyRepaint() is named. This causes a call to the
+                // generateVisualContents callback.
+                m_Progress = value;
+                m_Label.text = Mathf.Clamp(Mathf.Round(value), 0, 100) + "%";
+                MarkDirtyRepaint();
+            }
+        }
+
+        // This default constructor is RadialProgress's only constructor.
+        public RadialProgress()
+        {
+            // Create a Label, add a USS class name, and add it to this visual tree.
+            m_Label = new Label();
+            m_Label.AddToClassList(ussLabelClassName);
+            Add(m_Label);
+
+            // Add the USS class name for the overall control.
+            AddToClassList(ussClassName);
+
+            // Register a callback after custom style resolution.
+            RegisterCallback<CustomStyleResolvedEvent>(evt => CustomStylesResolved(evt));
+
+            // Register a callback to generate the visual content of the control.
+            generateVisualContent += GenerateVisualContent;
+
+            progress = 0.0f;
+        }
+
+        static void CustomStylesResolved(CustomStyleResolvedEvent evt)
+        {
+            RadialProgress element = (RadialProgress)evt.currentTarget;
+            element.UpdateCustomStyles();
+        }
+
+        // After the custom colors are resolved, this method uses them to color the meshes and (if necessary) repaint
+        // the control.
+        void UpdateCustomStyles()
+        {
+            bool repaint = false;
+            if (customStyle.TryGetValue(s_ProgressColor, out m_ProgressColor))
+                repaint = true;
+
+            if (customStyle.TryGetValue(s_TrackColor, out m_TrackColor))
+                repaint = true;
+
+            if (repaint)
+                MarkDirtyRepaint();
+        }
+
+        void GenerateVisualContent(MeshGenerationContext context)
+        {
+            float width = contentRect.width;
+            float height = contentRect.height;
+
+            var painter = context.painter2D;
+            painter.lineWidth = 10.0f;
+            painter.lineCap = LineCap.Butt;
+
+            // Draw the track
+            painter.strokeColor = m_TrackColor;
+            painter.BeginPath();
+            painter.Arc(new Vector2(width * 0.5f, height * 0.5f), width * 0.5f, 0.0f, 360.0f);
+            painter.Stroke();
+
+            // Draw the progress
+            painter.strokeColor = m_ProgressColor;
+            painter.BeginPath();
+            painter.Arc(new Vector2(width * 0.5f, height * 0.5f), width * 0.5f, -90.0f, 360.0f * (progress / 100.0f) - 90.0f);
+            painter.Stroke();
+        }
+    }
+}
+
+--- radial-progress-vector-api/RadialProgressExample.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="RadialProgress.uss"/>
+    <ui:VisualElement style="align-items: center;">
+        <MyUILibrary.RadialProgress progress="87.1" />
+    </ui:VisualElement>
+</ui:UXML>
+
+--- radial-progress-vector-api/RadialProgress.uss ---
+.radial-progress {
+    min-width: 26px;
+    min-height: 20px;
+    --track-color: rgb(130, 130, 130);
+    --progress-color: rgb(46, 132, 24);
+    --percentage-color: white;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    flex-direction: row;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+}
+
+.radial-progress__label {
+    -unity-text-align: middle-left;
+    color: var(--percentage-color);
+}
+
+--- radial-progress-vector-api/RadialProgressComponent.cs ---
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+using RadialProgressControl = MyUILibrary.RadialProgressVectorApi.RadialProgress;
+
+namespace MyUILibrary.RadialProgressVectorApi
+{
+    [RequireComponent(typeof(UIDocument))]
+    public class RadialProgressComponent : MonoBehaviour
+    {
+
+        RadialProgressControl m_RadialProgress;
+
+        void Start()
+        {
+            var root = GetComponent<UIDocument>().rootVisualElement;
+
+           m_RadialProgress = new RadialProgressControl() {
+                style = {
+                    position = Position.Absolute,
+                    left = 20, top = 20, width = 200, height = 200
+                }
+            };
+
+            root.Add(m_RadialProgress);
+        }
+
+        void Update()
+        {
+            m_RadialProgress.progress = ((Mathf.Sin(Time.time) + 1.0f) / 2.0f) * 60.0f + 10.0f;
+        }
+    }
+}
