@@ -1,0 +1,781 @@
+Raw files for Styling & Animation
+
+--- create-a-transition/TransitionExample.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using System.Collections.Generic;
+
+public class TransitionExample : EditorWindow
+{
+    [SerializeField]
+    VisualTreeAsset m_VisualTreeAsset;
+
+    [MenuItem("Window/UI Toolkit/TransitionExample")]
+    public static void ShowExample()
+    {
+        TransitionExample wnd = GetWindow<TransitionExample>();
+        wnd.titleContent = new GUIContent("TransitionExample");
+    }
+
+    public void CreateGUI()
+    {
+        // Each editor window contains a root VisualElement object
+        VisualElement root = rootVisualElement;
+
+        // VisualElements objects can contain other VisualElement following a tree hierarchy.
+        cSharpLabel = new Label("Hello World! From C#");
+        root.Add(cSharpLabel);
+
+        // Create transition on the new Label.
+        cSharpLabel.style.transitionDuration = new List<TimeValue>{ new TimeValue(3) };
+
+        // Record default rotate and scale values.
+        defaultRotate = cSharpLabel.resolvedStyle.rotate;
+        defaultScale = cSharpLabel.resolvedStyle.scale;
+
+        // Set up event handlers to simulate use of :hover pseudoclass.
+        cSharpLabel.RegisterCallback<PointerOverEvent>(OnPointerOver);
+        cSharpLabel.RegisterCallback<PointerOutEvent>(OnPointerOut);
+
+        // Instantiate UXML
+        VisualElement labelFromUXML = m_VisualTreeAsset.Instantiate();
+        root.Add(labelFromUXML);
+    }
+
+    // The Label created with C#.
+    VisualElement cSharpLabel;
+
+    // The default rotate and scale values for the new Label.
+    Rotate defaultRotate;
+    Scale defaultScale;
+
+    void OnPointerOver(PointerOverEvent evt)
+    {
+        SetHover(evt.currentTarget as VisualElement, true);
+    }
+
+    void OnPointerOut(PointerOutEvent evt)
+    {
+        SetHover(evt.currentTarget as VisualElement, false);
+    }
+
+    // When the user enters or exits the Label, set the rotate and scale.
+    void SetHover(VisualElement label, bool hover)
+    {
+        label.style.rotate = hover ? new(Angle.Degrees(10)) : defaultRotate;
+        label.style.scale = hover ? new Vector2(1.1f, 1) : defaultScale;
+    }
+
+    // Unregister all event callbacks.
+    void OnDisable()
+    {
+        cSharpLabel.UnregisterCallback<PointerOverEvent>(OnPointerOver);
+        cSharpLabel.UnregisterCallback<PointerOutEvent>(OnPointerOut);
+    }
+}
+
+
+--- create-a-transition/TransitionExample.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="TransitionExample.uss" />
+    <ui:Label text="Hello World! From UXML" />
+    <ui:Label text="Hello World! With Style" class="custom-label" />
+</ui:UXML>
+
+
+--- create-a-transition/TransitionExample.uss ---
+.custom-label {
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+}
+
+Label:hover {
+    scale: 1.1 1;
+    rotate: 10deg;
+}
+
+Label {
+    transition-duration: 3s;
+}
+
+
+--- transition-events-example/TransitionExample.cs ---
+using System;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace UIExamples.TransitionEventsExample
+{
+    public class TransitionExample : EditorWindow
+    {
+        [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
+
+        private Button clickMeButton;
+        private VisualElement colorChanger;
+        private Label eventLabel;
+        private Label timeLabel;
+
+        private DateTime lastEvent;
+        private static readonly TimeSpan NearlyInstantaneousThreshold = TimeSpan.FromMilliseconds(10);
+
+        private static readonly string ClickMeButtonClass = "click-me";
+        private static readonly string ColorChangerClass = "color-changer";
+        private static readonly string ColorChangerTransitionClass = "color-transition";
+        private static readonly string EventLabelName = "eventLabel";
+        private static readonly string TimeLabelName = "timeLabel";
+        private static readonly string TimeBelowThresholdText = "Almost instantaneous.";
+
+        [MenuItem("Window/UI Toolkit/TransitionEventsExample")]
+        public static void ShowExample()
+        {
+            TransitionExample wnd = GetWindow<TransitionExample>();
+            wnd.titleContent = new GUIContent("TransitionEventsExample");
+            wnd.minSize = new Vector2(500f, 400f);
+        }
+
+        public void CreateGUI()
+        {
+            lastEvent = DateTime.Now;
+
+            // Each editor window contains a root VisualElement object
+            VisualElement root = rootVisualElement;
+
+            // Instantiate UXML
+            VisualElement uxmlAsset = m_VisualTreeAsset.Instantiate();
+            root.Add(uxmlAsset);
+
+            // Get the relevant elements by querying the root element
+            clickMeButton = root.Q<Button>(className: ClickMeButtonClass);
+
+            colorChanger = root.Q<VisualElement>(className: ColorChangerClass);
+
+            eventLabel = root.Q<Label>(name: EventLabelName);
+
+            timeLabel = root.Q<Label>(name: TimeLabelName);
+
+            // Add callbacks for clicking on the button and monitoring the color changing element.
+            clickMeButton.RegisterCallback<ClickEvent>(OnClickEvent);
+
+            colorChanger.RegisterCallback<TransitionRunEvent>(OnTransitionRun);
+            colorChanger.RegisterCallback<TransitionStartEvent>(OnTransitionStart);
+            colorChanger.RegisterCallback<TransitionEndEvent>(OnTransitionEnd);
+            colorChanger.RegisterCallback<TransitionCancelEvent>(OnTransitionCancel);
+        }
+
+        private void OnDisable()
+        {
+            clickMeButton.UnregisterCallback<ClickEvent>(OnClickEvent);
+
+            colorChanger.UnregisterCallback<TransitionRunEvent>(OnTransitionRun);
+            colorChanger.UnregisterCallback<TransitionStartEvent>(OnTransitionStart);
+            colorChanger.UnregisterCallback<TransitionEndEvent>(OnTransitionEnd);
+            colorChanger.UnregisterCallback<TransitionCancelEvent>(OnTransitionCancel);
+        }
+
+        private void OnClickEvent(ClickEvent evt)
+        {
+            colorChanger.ToggleInClassList(ColorChangerTransitionClass);
+        }
+
+        private void OnTransitionRun(TransitionRunEvent evt)
+        {
+            DisplayLatestEvent("TransitionRunEvent", DateTime.Now);
+        }
+
+        private void OnTransitionStart(TransitionStartEvent evt)
+        {
+            DisplayLatestEvent("TransitionStartEvent", DateTime.Now);
+        }
+
+        private void OnTransitionEnd(TransitionEndEvent evt)
+        {
+            DisplayLatestEvent("TransitionEndEvent", DateTime.Now);
+        }
+
+        private void OnTransitionCancel(TransitionCancelEvent evt)
+        {
+            DisplayLatestEvent("TransitionCancelEvent", DateTime.Now);
+        }
+
+        private void DisplayLatestEvent(string eventType, DateTime timestamp)
+        {
+            // If two events are sent too close together, add both to the Latest event line.
+            // This happens if the delay is set to 0 and the TransitionRun and TransitionStart
+            // are sent at the same time, or if the button was pressed before the transition
+            // was over, thus sending TransitionCancel and TransitionRun (and potentially
+            // TransitionStart) events close together.
+            var elapsed = timestamp - lastEvent;
+            if (elapsed <= NearlyInstantaneousThreshold)
+            {
+                timeLabel.text = TimeBelowThresholdText;
+                eventLabel.text = $"{eventLabel.text}, {eventType}";
+            }
+            else
+            {
+                timeLabel.text = $"{elapsed:s\\.ff} s";
+                eventLabel.text = eventType;
+            }
+
+            lastEvent = timestamp;
+        }
+    }
+}
+
+
+--- transition-events-example/TransitionExample.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+        xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+        noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="TransitionExample.uss"/>
+    <ui:VisualElement class="main-container">
+        <ui:Button text="Click Me!" class="click-me"/>
+        <ui:VisualElement class="color-changer"/>
+        <ui:VisualElement class="label-section">
+            <ui:VisualElement class="label-line">
+                <ui:Label text="Latest event(s) :  "/>
+                <ui:Label name="eventLabel"/>
+            </ui:VisualElement>
+            <ui:VisualElement class="label-line">
+                <ui:Label text="Time since last event :  "/>
+                <ui:Label name="timeLabel"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
+
+--- transition-events-example/TransitionExample.uss ---
+.click-me {
+    width: 250px;
+    height: 50px;
+    font-size: 40px;
+    -unity-font-style: bold-and-italic;
+    margin: 30px;
+}
+
+.color-changer {
+    margin: 10px;
+    width: 150px;
+    height: 150px;
+    border-width: 10px;
+    border-radius: 75px;
+    background-color: rgb(0, 31, 138);
+    transition: background-color 3s ease-in-out 1s;
+}
+
+.main-container {
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+    background-color: rgb(60, 60, 60);
+}
+
+.label-section {
+    margin: 10px;
+    border-width: 2px;
+    width: 95%;
+    align-items: center;
+}
+
+.label-line {
+    flex-direction: row;
+    margin: 5px;
+    flex-grow: 1;
+    align-items: center;
+    width: 90%;
+    height: 25px;
+    font-size: 14px;
+    padding: 0;
+}
+
+.color-transition {
+    background-color: rgb(177, 221, 111);
+}
+
+--- loop-transition-example/Editor/LoopingExample.uss ---
+#yoyo-label{
+    transition-duration: 3s;
+}
+.text-style {
+    font-size: 20px;
+    flex-grow: 0;
+    margin: 20px;
+}
+.enlarge-scale-a2b{
+    scale: 1.5 1.5;
+    transition-duration: 3s;
+}
+.enlarge-scale-yoyo{
+    scale: 1.5 1.5;
+}
+#container{
+    flex-grow:1;
+    justify-content: space-around;
+    align-items: center;
+}
+
+--- loop-transition-example/Editor/LoopingExample.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+             xsi="http://www.w3.org/2001/XMLSchema-instance"
+             engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+             noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+             editor-extension-mode="False">
+    <Style src="LoopingExample.uss" />
+    <ui:VisualElement name="container">
+        <ui:VisualElement>
+                <ui:Label text="Yo-yo Transition" name="yoyo-label" class="text-style" />
+        </ui:VisualElement>
+        <ui:VisualElement>
+                <ui:Label text="A-to-B Transition" name="a2b-label" class="text-style"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
+
+
+--- loop-transition-example/Editor/LoopingExample.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+public class LoopingExample : EditorWindow
+{
+    [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
+    private Label _yoyoLabel;
+    private Label _a2bLabel;
+    [MenuItem("Window/UI Toolkit/Transition Looping Example")]
+    public static void ShowExample()
+    {
+        var wnd = GetWindow<LoopingExample>();
+        wnd.titleContent = new GUIContent("TransitionStyle");
+    }
+    public void CreateGUI()
+    {
+        VisualElement root = rootVisualElement;
+        VisualElement asset = m_VisualTreeAsset.Instantiate();
+        root.Add(asset);
+        SetupYoyo(root);
+        SetupA2B(root);
+    }
+    // This method powers the yo-yo loop.
+    private void SetupYoyo(VisualElement root)
+    {
+        _yoyoLabel = root.Q<Label>(name: "yoyo-label");
+        // When the animation ends, the callback toggles a class to set the scale to 1.3
+        // or back to 1.0 when it's removed.
+        _yoyoLabel.RegisterCallback<TransitionEndEvent>(evt => _yoyoLabel.ToggleInClassList("enlarge-scale-yoyo"));
+        // Schedule the first transition 100 milliseconds after the root.schedule.Execute method is called.
+        root.schedule.Execute(() => _yoyoLabel.ToggleInClassList("enlarge-scale-yoyo")).StartingIn(100);
+    }
+    // This method powers the A-to-B cycle.
+    private void SetupA2B(VisualElement root)
+    {
+        _a2bLabel = root.Q<Label>(name:"a2b-label");
+        _a2bLabel.RegisterCallback<TransitionEndEvent>(evt =>
+        {
+            _a2bLabel.RemoveFromClassList("enlarge-scale-a2b");
+            _a2bLabel.schedule.Execute(() => _a2bLabel.AddToClassList("enlarge-scale-a2b")).StartingIn(10);
+        });
+        _a2bLabel.schedule.Execute(() => _a2bLabel.AddToClassList("enlarge-scale-a2b")).StartingIn(100);
+    }
+}
+
+
+--- text-animation-example/Editor/TextAnimation.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using TextElement = UnityEngine.UIElements.TextElement;
+
+public class TextAnimation : EditorWindow
+{
+    [MenuItem("Window/UI Toolkit/TextAnimation")]
+    public static void ShowExample()
+    {
+        TextAnimation wnd = GetWindow<TextAnimation>();
+        wnd.titleContent = new GUIContent("TextAnimation");
+    }
+
+    Label label;
+    float animationDuration = 10f;
+    float elapsed = 0f;
+    IVisualElementScheduledItem animationJob;
+    bool isTextVisible = true;
+
+    public void CreateGUI()
+    {
+        VisualElement root = rootVisualElement;
+
+        var container = new VisualElement()
+        {
+            style =
+            {
+                flexGrow = 1,
+                top = 0,
+                bottom = 0,
+                right = 0,
+                left = 0
+            },
+            focusable = true // We can only receive key events on a window with a focusable element.
+        };
+        label = new Label("Hello ❤️ World!") { style = { flexGrow = 1, fontSize = 24, unityTextAlign = TextAnchor.MiddleCenter } };
+        container.Add(label);
+        root.Add(container);
+
+        rootVisualElement.RegisterCallback<KeyDownEvent>(evt => OnSpacebarPressed(evt), TrickleDown.TrickleDown);
+        label.PostProcessTextVertices += OnPostProcessTextVertices;
+
+        animationJob = label.schedule.Execute(UpdateTime).Every(1000 / 60); // 60 FPS
+        animationJob.Pause(); // Pause the job until the animation starts
+    }
+
+    private void UpdateTime()
+    {
+        elapsed += Time.deltaTime;
+        if (elapsed >= animationDuration)
+        {
+            elapsed = animationDuration; // Cap at max duration
+            animationJob.Pause();
+        }
+
+        label.MarkDirtyRepaint();
+    }
+
+    public void OnSpacebarPressed(KeyDownEvent evt)
+    {
+        if (evt.keyCode != KeyCode.Space || animationJob.isActive)
+            return;
+
+        elapsed = 0f;
+        animationJob.Resume();
+        isTextVisible = !isTextVisible;
+    }
+
+    void OnPostProcessTextVertices(TextElement.GlyphsEnumerable glyphs)
+    {
+        int glyphsToToggle = (int)(elapsed * glyphs.Count / animationDuration);
+
+        int toggled = 0;
+        foreach (TextElement.Glyph glyph in glyphs)
+        {
+            if (toggled++ >= glyphsToToggle)
+                break;
+
+            var verts = glyph.vertices;
+            for (int i = 0; i < verts.Length; i++)
+            {
+                var v = verts[i];
+                var tint = v.tint;
+                tint.a = isTextVisible ? (byte)255 : (byte)0;
+                v.tint = tint;
+                verts[i] = v;
+            }
+        }
+    }
+}
+
+--- link-tag-example/Editor/LinkTag.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="LinkTag.uss" />
+    <ui:Label tabindex="-1" text="Link to &lt;link=&quot;1&quot;&gt;&lt;color=#40a0ff&gt;&lt;u&gt;Unity&lt;/u&gt;&lt;/color&gt;&lt;/link&gt;&#10;Link to &lt;link=&quot;2&quot;&gt;&lt;color=#40a0ff&gt;&lt;u&gt;UITK Discussions&lt;/u&gt;&lt;/color&gt;&lt;/link&gt;!" display-tooltip-when-elided="true" enable-rich-text="true" selectable="true" emoji-fallback-support="false" class="link" />
+    <ui:Label tabindex="-1" text="Link to &lt;a href=&quot;https://www.google.com/&quot;&gt;&lt;u&gt;Google&lt;/u&gt;&lt;/a&gt; using &lt;noparse&gt;&lt;a&gt;&lt;/noparse&gt; tag." display-tooltip-when-elided="true" name="Label" />
+</ui:UXML>
+
+--- link-tag-example/Editor/LinkTag.cs ---
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEngine.UIElements.Experimental;
+
+public class LinkTag : EditorWindow
+{
+    [SerializeField]
+    private VisualTreeAsset m_VisualTreeAsset = default;
+
+    [MenuItem("Window/LinkTag Sample")]
+    public static void ShowExample()
+    {
+        LinkTag wnd = GetWindow<LinkTag>();
+        wnd.titleContent = new GUIContent("LinkTag Sample");
+    }
+
+    readonly string linkCursorClassName = "link-cursor";
+    Dictionary<int, string> m_UrlLookup;
+    Label linkLabel;
+
+    public void OnEnable()
+    {
+        // Use the dictionary to map link IDs to URLs.
+        // The link ID is the number in the link tag, and the URL is the destination.
+        // This is a simple example, in a real application you can define a more complex structure.
+        m_UrlLookup = new Dictionary<int, string>()
+        {
+            { 1, "https://www.google.com/" },
+            { 2, "https://discussions.unity.com/" }
+        };
+    }
+
+    public void CreateGUI()
+    {
+        VisualElement uxml = m_VisualTreeAsset.Instantiate();
+        rootVisualElement.Add(uxml);
+
+        linkLabel = rootVisualElement.Q<Label>(className: "link");
+
+        linkLabel.RegisterCallback<PointerDownLinkTagEvent>(HyperlinkOnPointerDown);
+        linkLabel.RegisterCallback<PointerUpLinkTagEvent>(HyperlinkOnPointerUp);
+        linkLabel.RegisterCallback<PointerMoveLinkTagEvent>(HyperlinkPointerMove);
+        linkLabel.RegisterCallback<PointerOverLinkTagEvent>(HyperlinkOnPointerOver);
+        linkLabel.RegisterCallback<PointerOutLinkTagEvent>(HyperlinkOnPointerOut);
+    }
+
+    void HyperlinkOnPointerOver(PointerOverLinkTagEvent _)
+    {
+        linkLabel.AddToClassList(linkCursorClassName);
+    }
+    void HyperlinkPointerMove(PointerMoveLinkTagEvent _) { }
+    void HyperlinkOnPointerOut(PointerOutLinkTagEvent _)
+    {
+        linkLabel.RemoveFromClassList(linkCursorClassName);
+    }
+
+    void HyperlinkOnPointerDown(PointerDownLinkTagEvent _) { }
+
+    void HyperlinkOnPointerUp(PointerUpLinkTagEvent evt)
+    {
+        var linkID = int.Parse(evt.linkID);
+        if (m_UrlLookup.TryGetValue(linkID, out var url))
+            Application.OpenURL(url);
+    }
+
+}
+
+
+--- link-tag-example/Editor/LinkTag.uss ---
+Label {
+    font-size: 75px;
+}
+
+/*Turn the mouse pointer into a hand pointer when you hover over the link text.
+  Note that the cursor override for the link value doesn’t work at runtime.*/
+
+.link-cursor {
+    cursor: link;
+}
+
+--- create-a-custom-swirl-filter/SwirlFilterExample.uss ---
+.outside {
+    flex-grow: 1;
+    position: absolute;
+    height: 207px;
+    width: 234px;
+    top: 46px;
+    left: 27px;
+    background-color: rgb(255, 0, 0);
+}
+
+.inside {
+    flex-grow: 1;
+    position: absolute;
+    height: 75px;
+    width: 100px;
+    top: 46px;
+    left: 27px;
+    background-color: rgb(0, 255, 247);
+}
+
+.filterEffect {
+    filter: filter("SwirlFilter/SwirlFilterFunction.asset" 58.9 2.3);
+}
+
+
+--- create-a-custom-swirl-filter/SwirlFilterExample.uxml ---
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="SwirlFilterExample.uss" />
+    <engine:VisualElement class="outside filterEffect">
+        <engine:VisualElement class="inside" />
+    </engine:VisualElement>
+</engine:UXML>
+
+
+--- create-a-custom-swirl-filter/SwirlFilter/Swirl.shader ---
+Shader "Unlit/Swirl"
+{
+    Properties
+    {
+        _MainTex ("Texture", 2D) = "white" {}
+    }
+    SubShader
+    {
+        Tags { "RenderType"="Opaque" }
+        Blend One Zero
+        ZWrite Off
+        ZTest Always
+        Cull Off
+
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+            #pragma multi_compile _ _UIE_OUTPUT_LINEAR
+
+            #include "UnityCG.cginc"
+            #include "UnityUIEFilter.cginc"
+
+            struct v2f
+            {
+                float4 vertex : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                uint rectIndex : TEXCOORD1;
+            };
+
+            sampler2D _MainTex;
+            float4 _MainTex_ST;
+            float4 _MainTex_TexelSize;
+
+            float _Angle;
+            float _Radius;
+
+            v2f vert (FilterVertexInput v)
+            {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.rectIndex = GetFilterRectIndex(v);
+                return o;
+            }
+
+            float2 NormalizeUVs(float2 uv, float4 uvRect)
+            {
+                // Normalize UV coordinates based on the atlas rect
+                return float2(
+                    (uv.x - uvRect.x) / uvRect.z,
+                    (uv.y - uvRect.y) / uvRect.w
+                );
+            }
+
+            float2 MapToUVRect(float2 uv, float4 uvRect)
+            {
+                // Map UV coordinates to the atlas rect
+                return float2(
+                    uv.x * uvRect.z + uvRect.x,
+                    uv.y * uvRect.w + uvRect.y
+                );
+            }
+
+            fixed4 frag (v2f i) : SV_Target
+            {
+                float effectRadius = _Radius;
+                float effectAngle = _Angle;
+
+                float4 uvRect = GetFilterUVRect(i.rectIndex);
+
+                float2 uv = NormalizeUVs(i.uv, uvRect);
+                float2 center = float2(0.5, 0.5);
+                uv = uv - center;
+
+                float len = length(uv * float2(_MainTex_TexelSize.z * _MainTex_TexelSize.y, 1.));
+                float angle = atan2(uv.y, uv.x) + effectAngle * smoothstep(effectRadius, 0., len);
+                float radius = length(uv);
+
+                uv = radius * float2(cos(angle), sin(angle)) + center;
+                uv = MapToUVRect(uv, uvRect);
+
+                half4 col = tex2D(_MainTex, uv);
+
+                #if _UIE_OUTPUT_LINEAR
+                col.rgb = GammaToLinearSpace(col.rgb);
+                #endif
+
+                return col;
+            }
+            ENDCG
+        }
+    }
+}
+
+--- create-a-custom-swirl-filter/SwirlFilter/SwirlFilter.asset ---
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19107, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: SwirlFilter
+  m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.UIElements.FilterFunctionDefinition
+  m_FilterName: swirl
+  m_Parameters:
+  - m_Name: angle
+    m_InterpolationDefaultValue:
+      m_Type: 0
+      m_FloatValue: 0
+      m_ColorValue: {r: 0, g: 0, b: 0, a: 0}
+  - m_Name: radius
+    m_InterpolationDefaultValue:
+      m_Type: 0
+      m_FloatValue: 0
+      m_ColorValue: {r: 0, g: 0, b: 0, a: 0}
+  m_Passes:
+  - m_Material: {fileID: 2100000, guid: 410b26533861d4ad5b736c33ea860dd0, type: 2}
+    m_PassIndex: 0
+    m_ParameterBindings:
+    - m_Index: 0
+      m_Name: _Angle
+    - m_Index: 1
+      m_Name: _Radius
+    m_ReadMargins:
+      m_Left: 0
+      m_Top: 0
+      m_Right: 0
+      m_Bottom: 0
+    m_WriteMargins:
+      m_Left: 0
+      m_Top: 0
+      m_Right: 0
+      m_Bottom: 0
+
+
+--- create-a-custom-swirl-filter/SwirlFilter/Swirl.mat ---
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Swirl
+  m_Shader: {fileID: 4800000, guid: a0086fb18538742a0b09fc35e29d48e7, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _UIE_OUTPUT_LINEAR
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats: []
+    m_Colors: []
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1

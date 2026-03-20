@@ -1,0 +1,1355 @@
+Raw files for Navigation & Interaction
+
+--- create-a-tabbed-menu-for-runtime/TabbedMenu.cs ---
+using UnityEngine;
+using UnityEngine.UIElements;
+
+//Inherits from class `MonoBehaviour`. This makes it attachable to a game object as a component.
+public class TabbedMenu : MonoBehaviour
+{
+    private TabbedMenuController controller;
+
+    private void OnEnable()
+    {
+        UIDocument menu = GetComponent<UIDocument>();
+        VisualElement root = menu.rootVisualElement;
+
+        controller = new(root);
+
+        controller.RegisterTabCallbacks();
+    }
+}
+
+--- create-a-tabbed-menu-for-runtime/TabbedMenu-template.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="TabbedMenu-style.uss" />
+    <ui:VisualElement>
+        <ui:VisualElement name="tabs">
+            <ui:Label name="LondonTab" text="London" class="tab currentlySelectedTab" />
+            <ui:Label name="ParisTab" text="Paris" class="tab" />
+            <ui:Label name="OttawaTab" text="Ottawa" class="tab" />
+        </ui:VisualElement>
+        <ui:VisualElement name="tabContent">
+            <ui:Label text="London is the capital city of England" name="LondonContent" />
+            <ui:Label text="Paris is the capital of France" name="ParisContent" class="unselectedContent" />
+            <ui:Label text="Ottawa is the capital of Canada" name="OttawaContent" class="unselectedContent" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
+
+
+--- create-a-tabbed-menu-for-runtime/TabbedMenu-style.uss ---
+/* Style for tabs */
+#tabs {
+    flex-direction: row;
+    background-color: rgb(229, 223, 223);
+    font-size: 12px;
+    -unity-font-style: bold;
+    font-size: 14px;
+}
+
+/* Sets each label in tabs to have the same size. */
+.tab {
+    flex-grow:1;
+}
+
+/* Adds background color for the selected tab */
+.currentlySelectedTab {
+    background-color: rgb(173, 166, 166);
+}
+
+/* Style for tabContent */
+#tabContent {
+    background-color: rgb(255, 255, 255);
+    font-size: 20px;
+}
+
+/* Hides the unselected tab content */
+.unselectedContent {
+    display: none;
+}
+
+
+--- create-a-tabbed-menu-for-runtime/TabbedMenuController.cs ---
+using UnityEngine.UIElements;
+
+public class TabbedMenuController
+{
+	/* Define member variables*/
+	private const string tabClassName = "tab";
+	private const string currentlySelectedTabClassName = "currentlySelectedTab";
+	private const string unselectedContentClassName = "unselectedContent";
+	// Tab and tab content have the same prefix but different suffix
+	// Define the suffix of the tab name
+	private const string tabNameSuffix = "Tab";
+	// Define the suffix of the tab content name
+	private const string contentNameSuffix = "Content";
+
+	private readonly VisualElement root = default;
+
+    public TabbedMenuController(in VisualElement root)
+    {
+        this.root = root;
+    }
+
+	public void RegisterTabCallbacks()
+    {
+		UQueryBuilder<Label> tabs = GetAllTabs();
+		tabs.ForEach(RegisterTabCallbacks);
+	}
+
+	private void RegisterTabCallbacks(Label tab)
+	{
+		tab.RegisterCallback<ClickEvent>(TabOnClick);
+	}
+	/* Method for the tab on-click event:
+
+	   - If it is not selected, find other tabs that are selected, unselect them
+	   - Then select the tab that was clicked on
+	*/
+	private void TabOnClick(ClickEvent evt)
+	{
+		Label clickedTab = evt.currentTarget as Label;
+		if (!TabIsCurrentlySelected(clickedTab))
+		{
+			UQueryBuilder<Label> tabs = GetAllTabs();
+			UQueryBuilder<Label> otherSelectedTabs =
+				tabs.Where((Label tab) => tab != clickedTab && TabIsCurrentlySelected(tab));
+			otherSelectedTabs.ForEach(UnselectTab);
+			SelectTab(clickedTab);
+		}
+	}
+	//Method that returns a Boolean indicating whether a tab is currently selected
+	private static bool TabIsCurrentlySelected(in Label tab)
+	{
+		return tab.ClassListContains(currentlySelectedTabClassName);
+	}
+
+	private UQueryBuilder<Label> GetAllTabs()
+	{
+		return root.Query<Label>(className: tabClassName);
+	}
+
+	/* Method for the selected tab:
+       -  Takes a tab as a parameter and adds the currentlySelectedTab class
+       -  Then finds the tab content and removes the unselectedContent class */
+	private void SelectTab(in Label tab)
+	{
+		tab.AddToClassList(currentlySelectedTabClassName);
+		VisualElement content = FindContent(tab);
+		content.RemoveFromClassList(unselectedContentClassName);
+	}
+
+	/* Method for the unselected tab:
+       -  Takes a tab as a parameter and removes the currentlySelectedTab class
+       -  Then finds the tab content and adds the unselectedContent class */
+	private void UnselectTab(Label tab)
+	{
+		tab.RemoveFromClassList(currentlySelectedTabClassName);
+		VisualElement content = FindContent(tab);
+		content.AddToClassList(unselectedContentClassName);
+	}
+
+	// Method to generate the associated tab content name by for the given tab name
+	private static string GenerateContentName(in Label tab)
+	{
+		int prefixLength = tab.name.Length - tabNameSuffix.Length;
+		string prefix = tab.name.Substring(0, prefixLength);
+		return prefix + contentNameSuffix;
+	}
+	// Method that takes a tab as a parameter and returns the associated content element
+	private VisualElement FindContent(in Label tab)
+	{
+		return root.Q(GenerateContentName(tab));
+	}
+}
+
+
+--- move-elements-at-runtime/UI/NameTagContainer.uxml ---
+<engine:UXML xmlns:engine="UnityEngine.UIElements" >
+    <engine:VisualElement name="BaseContainer" style="flex-grow: 1;" />
+</engine:UXML>
+
+
+--- move-elements-at-runtime/UI/NameTag.uxml ---
+<engine:UXML xmlns:engine="UnityEngine.UIElements">
+    <Style src="NameTag.uss" />
+    <engine:Label text="NPC" name="NameTag" picking-mode="Ignore" />
+</engine:UXML>
+
+
+--- move-elements-at-runtime/UI/NameTag.uss ---
+#NameTag {
+    /* This sets the position of the Label element to be absolute, rather than relative to the parent container. */
+    position: absolute;
+    /* This ensures that the pivot point of the Label element is centered, rather than in the top left corner.*/
+    translate: -50% -50%;
+    -unity-font-style: bold;
+    color: rgb(181, 210, 248);
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(11, 60, 123);
+}
+
+
+--- move-elements-at-runtime/UI/MovingElements.uxml ---
+<engine:UXML xmlns:engine="UnityEngine.UIElements" >
+    <engine:VisualElement name="BaseContainer" style="flex-grow: 1;" />
+</engine:UXML>
+
+
+--- move-elements-at-runtime/Scripts/SortElements.cs ---
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class SortElements : MonoBehaviour
+{
+    [SerializeField]
+    UIDocument m_MovingElements;
+
+    VisualElement m_BaseContainer;
+
+    MovingNameTag[] m_MovingNameTags;
+
+    void Start()
+    {
+        m_MovingNameTags = FindObjectsByType<MovingNameTag>(FindObjectsSortMode.None);
+        m_BaseContainer = m_MovingElements.rootVisualElement.Q<VisualElement>("BaseContainer");
+    }
+
+    void Update()
+    {
+        m_BaseContainer.Sort(CompareOrder);
+    }
+
+    static int CompareOrder(VisualElement x, VisualElement y)
+    {
+        // Compare the scale of the visual elements in the base container, which is
+        // determined by the distance of the object it follows in the MovingNameTag component
+        return x.style.scale.value.value.x.CompareTo(y.style.scale.value.value.x);
+    }
+}
+
+
+--- move-elements-at-runtime/Scripts/MovingNameTag.cs ---
+using System;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class MovingNameTag : MonoBehaviour
+{
+    [SerializeField]
+    VisualTreeAsset m_NameTagTemplate;
+
+    [SerializeField]
+    UIDocument m_BaseContainerDocument;
+
+    [SerializeField]
+    Transform m_UITransform;
+
+    [SerializeField]
+    float m_ScaleMultiplier;
+
+    [SerializeField]
+    float m_DistanceCullingRange;
+
+    VisualElement m_Root;
+    VisualElement m_BaseContainer;
+    VisualElement m_NpcNameTag;
+
+    Camera m_MainCamera;
+
+    void Awake()
+    {
+        m_MainCamera = Camera.main;
+
+        m_BaseContainer = m_BaseContainerDocument.rootVisualElement.Q<VisualElement>("BaseContainer");
+
+        m_NpcNameTag = m_NameTagTemplate.Instantiate();
+
+        // Set DynamicTransform hint on the moving element to optimize performance.
+        m_NpcNameTag.usageHints = UsageHints.DynamicTransform;
+        m_BaseContainer.Add(m_NpcNameTag);
+        m_NpcNameTag.style.position = new StyleEnum<Position>(Position.Absolute);
+    }
+
+    void Update()
+    {
+        SetNameTagPositionAndScale();
+    }
+
+    void SetNameTagPositionAndScale()
+    {
+        var cameraSpaceLocation = GetCameraSpaceLocation(m_UITransform);
+
+        // Use style.translate to set the position of the name tag.
+        m_NpcNameTag.style.translate = new Translate(cameraSpaceLocation.x, cameraSpaceLocation.y);
+
+        // Get distance of NPC from camera.
+        var distance = Vector3.Distance(m_UITransform.position, m_MainCamera.transform.position);
+
+        // Calculate 1/distance so the name tag get smaller as the distance gets bigger.
+        var scale = 1 / distance * m_ScaleMultiplier;
+
+        m_NpcNameTag.style.scale = new Scale(new Vector2(scale, scale));
+
+        // Display name tag based on whether it's in front of the camera and within culling range.
+        if (cameraSpaceLocation.z < 0 || distance > m_DistanceCullingRange)
+        {
+            m_NpcNameTag.style.display = DisplayStyle.None;
+        }
+        else
+        {
+            m_NpcNameTag.style.display = DisplayStyle.Flex;
+        }
+    }
+
+    Vector3 GetCameraSpaceLocation(Transform objectTransform)
+    {
+        // Get the size of the parent visual element of the name tag.
+        var containerSize = m_BaseContainer.layout.size;
+        var screenPoint = m_MainCamera.WorldToViewportPoint(objectTransform.position);
+        var output = new Vector3(screenPoint.x * containerSize.x, (1 - screenPoint.y) * containerSize.y, screenPoint.z);
+
+        return output;
+    }
+}
+
+--- move-elements-at-runtime/Scripts/RandomMovement.cs ---
+using UnityEngine;
+using Random = UnityEngine.Random;
+
+public class RandomMovement : MonoBehaviour
+{
+    public float moveSpeed;
+
+    public float movementRange;
+
+    public Vector3 targetPosition;
+
+    private float m_PositionY;
+
+    // Initialize the starting position and target position of the GameObject.
+    void Start()
+    {
+        m_PositionY = transform.position.y;
+        targetPosition = new Vector3(0, m_PositionY, 0);
+    }
+
+    // Updates the position of the GameObject at fixed intervals.
+    // Move the GameObject towards the target position, and sets a new random target position when the current target is reached.
+    void FixedUpdate()
+    {
+        if (transform.position != targetPosition)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+        }
+        else
+        {
+            targetPosition = new Vector3(Random.Range(-movementRange, movementRange), m_PositionY, Random.Range(-movementRange, movementRange));
+        }
+    }
+}
+
+
+--- create-a-popup-window/Editor/PopupExample.cs ---
+using UnityEditor;
+using UnityEngine.UIElements;
+using PopupWindow = UnityEditor.PopupWindow;
+
+public class PopupExample : EditorWindow
+{
+    // Add menu item
+    [MenuItem("Example/Popup Example")]
+    static void Init()
+    {
+        EditorWindow window = EditorWindow.CreateInstance<PopupExample>();
+        window.Show();
+    }
+
+    private void CreateGUI()
+    {
+        var visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/PopupExample.uxml");
+        visualTreeAsset.CloneTree(rootVisualElement);
+
+        var button = rootVisualElement.Q<Button>();
+        button.clicked += () => PopupWindow.Show(button.worldBound, new PopupContentExample());
+    }
+}
+
+--- create-a-popup-window/Editor/PopupWindowContent.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Toggle label="Toggle 1" name="Toggle1"/>
+    <ui:Toggle label="Toggle 2" />
+    <ui:Toggle label="Toggle 3" />
+</ui:UXML>
+
+--- create-a-popup-window/Editor/PopupContentExample.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class PopupContentExample : PopupWindowContent
+{
+    //Set the window size
+    public override Vector2 GetWindowSize()
+    {
+        return new Vector2(200, 100);
+    }
+
+    public override void OnGUI(Rect rect)
+    {
+        // Intentionally left empty
+    }
+
+    public override void OnOpen()
+    {
+        Debug.Log("Popup opened: " + this);
+
+        var visualTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/PopupWindowContent.uxml");
+        visualTreeAsset.CloneTree(editorWindow.rootVisualElement);
+    }
+
+    public override void OnClose()
+    {
+        Debug.Log("Popup closed: " + this);
+    }
+}
+
+--- create-a-popup-window/Editor/PopupExample.uss ---
+.popup-button {
+        width: 200px;
+    }
+
+--- create-a-popup-window/Editor/PopupExample.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="PopupExample.uss" />
+    <ui:Button text="Popup Options" display-tooltip-when-elided="true" class="popup-button" />
+</ui:UXML>
+
+--- create-a-drag-and-drop-window-inside-a-custom-editor-window/DragAndDropWindow.cs ---
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEditor.UIElements;
+
+public class DragAndDropWindow : EditorWindow
+{
+    [MenuItem("Window/UI Toolkit/Drag And Drop")]
+    public static void ShowExample()
+    {
+        DragAndDropWindow wnd = GetWindow<DragAndDropWindow>();
+        wnd.titleContent = new GUIContent("Drag And Drop");
+    }
+
+    public void CreateGUI()
+    {
+        // Each editor window contains a root VisualElement object
+        VisualElement root = rootVisualElement;
+
+          // Import UXML
+        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/DragAndDropWindow.uxml");
+        VisualElement labelFromUXML = visualTree.Instantiate();
+        root.Add(labelFromUXML);
+
+        // A stylesheet can be added to a VisualElement.
+        // The style will be applied to the VisualElement and all of its children.
+        var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/DragAndDropWindow.uss");
+
+        DragAndDropManipulator manipulator =
+        new(rootVisualElement.Q<VisualElement>("object"));
+
+    }
+}
+
+--- create-a-drag-and-drop-window-inside-a-custom-editor-window/DragAndDropWindow.uss ---
+.slot {
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+    background-color: rgb(255, 255, 255);
+    border-top-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.slot_row {
+    flex-direction: row;
+}
+
+.object {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    border-radius: 30px;
+    background-color: rgb(0, 0, 0);
+}
+
+--- create-a-drag-and-drop-window-inside-a-custom-editor-window/DragAndDropWindow.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="DragAndDropWindow.uss" />
+    <ui:VisualElement name="slots">
+        <ui:VisualElement name="slot_row1" class="slot_row">
+            <ui:VisualElement name="slot1" class="slot" />
+            <ui:VisualElement name="slot2" class="slot" />
+        </ui:VisualElement>
+        <ui:VisualElement name="slot_row2" class="slot_row">
+            <ui:VisualElement name="slot1" class="slot" />
+            <ui:VisualElement name="slot2" class="slot" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement name="object" class="object" />
+</ui:UXML>
+
+--- create-a-drag-and-drop-window-inside-a-custom-editor-window/Pouch.png ---
+PNG
+
+   
+IHDR         o  
+CiCCPICC profile  xڝSwX>eVBl "#Y a@Ņ
+VHUĂ
+H(gAZU\8ܧ}zy&j 9R<:OHɽH g  yx~t?o  p.$P&W   "R .T  Sd
+   ly|B" 
+ I> ة آ  (G$@ `UR, @".Y2G vX@` B,  8 C L0ҿ_pH ˕͗K3w!lBa)f	"#HL  8?flŢko">! N_puk[ V h]3	Z
+zy8@P<
+%b0>3o~@z q@qanvRB1n#ǅ)4\,XP"MyRD!ɕ2	w
+ ONl~Xv @~- g42y  @+ ͗  \L  D*AaD@$<B
+AT:18
+\p`	Aa!:b""aH4 Q"rBj]H#-r9\@ 2G1Qu@Ơst4]k=Kut }c1fa\E`X&cX5V5cX7va$^lGXLXC%#W	1'"O%zxb:XF&!!%^'_H$ɒN
+!%2IIkHH-S>iL&m O:ňL	$RJ5e?2BQͩ:ZImvP/S4u%͛Cˤ-Кigih/t	݃EЗkw
+
+Hb(k{/LӗT02goUX**|:V~TUsU?yTU^V}FUP	թU6RwRPQ__c
+FHTc!2eXBrV,kMb[Lvv/{LSCsfffqƱ9ٜJ!
+{--?-jf~7zھbrup@,:m:u	6Qu>cy	Gm7046l18c̐ckihhI'&g5x>fob4ek<abi2ۤĤ)͔kfѴt,ܬج9՜kaټEJ6ǖږ|MV>VyVV׬I\,mWlPW:˶vm))Sn1
+9a%m;t;|rtuvlp4éĩWggs5KvSmnz˕ҵܭm=}M.]=AXq㝧/^v^Y^O&0m[{`:>=e>>z"=#~~~;yN`k5/>B
+Yroc3g,Z0&L~oL̶Gli})*2.QStqt,֬Yg񏩌;jrvgjlRlc웸xEt$	=sl3Ttcܢ˞w<Y5Y|8? BP/OnM򄛅OEQJ<V8;}ChOFu3	OR+y#MVDެq-9R
+i+0(Of++
+ym#slLѣRPL/+x[[xHHZ3f#|PظxY"E#Sw.1]Rdxi}h˲PXRUjyRҥC+W4nZcadUj[V*_pFWN_|ymJHnYJjAІ
+_mJtzjʹ5a5[̶6z]V&ֿw{;켵+xWkE}nݏb~ݸGwOŞ{{Ejtolܯ	mR6H:p囀oڛwpZ*A'ߦ|{PߙHy+:u-m=茣^G~1cu5W(=䂓dN?=ԙyLk]Q]gCϞ?tL_]p"b%K==G~pH[oeW<tM;js.]yn&%vw
+L]zxem``Y	ӇGG#F#
+dΓ᧲~VysKXϿyr﫩:#y=}ǽ(@PcǧO>|/9%   tEXtSoftware Adobe ImageReadyqe<  iTXtXML:com.adobe.xmp     <?xpacket begin="﻿" id="W5M0MpCehiHzreSzNTczkc9d"?> <x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 6.0-c006 79.164753, 2021/02/15-11:52:13        "> <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"> <rdf:Description rdf:about="" xmlns:xmpMM="http://ns.adobe.com/xap/1.0/mm/" xmlns:stRef="http://ns.adobe.com/xap/1.0/sType/ResourceRef#" xmlns:xmp="http://ns.adobe.com/xap/1.0/" xmpMM:OriginalDocumentID="xmp.did:4f9a208b-0a75-4c4b-8800-c3477964a455" xmpMM:DocumentID="xmp.did:87D838F3448911EC96D3C7373DC495F9" xmpMM:InstanceID="xmp.iid:87D838F2448911EC96D3C7373DC495F9" xmp:CreatorTool="Adobe Photoshop 22.2 (Macintosh)"> <xmpMM:DerivedFrom stRef:instanceID="xmp.iid:e02d9158-441c-4aaa-967d-92166c14d5c0" stRef:documentID="adobe:docid:photoshop:4d790a80-9706-a446-8fb4-5775d12358a2"/> </rdf:Description> </rdf:RDF> </x:xmpmeta> <?xpacket end="r"?><yL  5IDATxKdYf}ߌgVfUVetOM (IPh!"@r!
+. qAjA-86& 3So#yʎG~{fzX;2"<ܟwٱcܧw78c̏K<K>}~}~#~=K9ܥgVŏ=O///\^oU=
+G}y.x?U~R^wǯ_^_ f.ؠk׮:EAgggKoʏżKs˫9~ȏn[tM9YII;nK{Wh4tyחDC۞P3iP1*h>_Ne9ݺy6v''''E/K|y= EINnbOwӋcNmi-oSe4kk]'X,u<[ri̗?~MOZ[[|L7v|Xѐ쑋޽tӏ5h6ST)meczu
+O //oϥ1_L{՛DӒf%4LF?Eܥ:Og'Oh2R,.)qfFECl_AJ8<.sݥ;n4:"ql#Z̖t{t-*X>'h|rNYcSQ.(M8n4nRס~?a/=|i]޺Kc<*Od7D>{"ٔƓ	?Tp[v]ڼC;?5&597vlcEI)͗jsPޣz=^ܧϿ}o.KcNo'r
+ݾqOtz>|:"%_ײ-ߎf9[/C鄍6M	~/4Oh]_^m:9m?uy_˜NÈr-c~	]vB4].hco}ڹC|
+
+0a7PI8M٨K6䂒$ѢVáv79ی7pIY+ζK 8"ݗa1'<H|L
+:y1'(}}SlO9>:2ϱ&.G
+`=4y"'dvlԍ<㼹%h2أdkQ?Gg2E=ޫq{{ܺE夤	SZm;\hL56r1Z`N)l>
+1V<Y֠<{c-tpz* v68opG-/˰3s~Gğ<x@:
+t>9-ڵ^RjWO}F36ClxaBm6l$b}yZ'9Mfsʓq!ovNfؗǥg@Aso{Ύ'cLfUSCLi>eXM]l=y1{4sno9p.KBd'g##܆A/miFݭ5r	өggce.}陿UZy;o3O8'kt
+fИI[{W@h>ZL
+,& D)5@ΉKo窿#vxo"k6oΆC1ntҰss+	?r|H̱Kc1fğ>|H>LʭktImGgTGti窅0;xM,ґ, P\jX91D99&@ixV}0_tǏxL'5㐼	@s{k؟r\7<qC7nЭh<sh:fK>EWnd/צ/)>y&q43x>#cQ&&fiJr¯t85fy]bb@5yш/~vyTZ]zKcvybxkWG~D<gt||ijAӓ~FϿzLsi~h
+
+a!)xr)?ϒ4¿FT^JJ04ޤdA+
+`mKЧ9-|>RΡnJtƆzz/}مu	;Y~'_e#ءxN/i3Uf=JFjBKիz)+%~YNeQPJIBn_eVRΈGHi:h*p-w.ݐbΆ<N<=xS.ݦ?sIvy\z?%Հ7zbkRt4!/
+v;bXŀ
+HZ^>Ԓj>Q/_a%;yZ$a,9.Sy/GNᚗ.k8Pf^ϓE 1Q/J8Ns2Ew7l.,xKs4柧'_͈<߹}
+ɫ?ЭQlUY舠-=<r&auf/s
+-ܮg Q:cx]@feG0?XZҒHH:	a8fD62X8/d/a:Q1YR\zS	Ur6:?24ˁo
+؂ݸ~n]EI!t?|@ߦ&Ǉ't‖s6%5rY4NZbOK
+_Tjd	+-pɐg!2ޤnf@oԡ!,Jb~\ǆĠMy;$ITס%%,}4(?̥/ce|@)qKнӒq}??gim{W?\ۢMww6j63AO359#ix6aX)X<z#;4#-TrTh÷jȽ5<`Ԉl`Sbe,b
+ ^Ǉ/Kiս=ND%{ҘH^,ĈܺKђ?ާhJWvŠ~=/hFrk?kw%7=آ7vhw{]f>￠{lc:{={i[bk)5kRf
+)/kRWY.㊂y%z0 7=Ha~QK\jރ9H?җ5uFӽ;h:(٣}a=iC!<1·ŜNzy?4hغi}+_?yAOf٪fl%:>-O(E+TN'hK
+#^vtYVV
+'5+s/
+NJɉ_
+E~
+ ^]6xt7l~4_rZL<`*5gCNA׆II)hu*@Խ1!79׷vـ۴_u2υ^ۡ}ݽy6vߝ涄4hPjQVhsQk[_51{Y,Muļr.
+X2l,] d)awlc<24>P|e$˽{.bje,BVugk]Em^t.=[*;l(	5M1/MR:cOv|r@V6JjNNҌB
+sf%}p*%0d?2aŨWWk)% >uFvwwh4tTL4;|ᇴۦr/Z&.sپM~H-'8jlP~%e"u蔞8jPץ%/ϾxL~NO^=y/%mmФLiyzH驄5|QO6Ԉ6\ ;g=@8zBn\e˟z7|"SZ2	ɧmPk=cDd]
+i>YdԆ~CKkWhCd,!|:'^]	!xA/lH/OhĹZrt~H)9y_~Ǜz,9O9Qfb
+8a<i0PwFIl)a^+#?J	P21r}F,g)҉-\PF\(PCu{w.Kc~,ǵkdKyL!,B4CF=
+i6QۥV۹xـf?5΋MmUK^M`iuC/؈lķh{&-6=>"6b,LUYk51&X-#𻴰71 rQ:k:pwkG"p-qLeX.i6_D]2`?Ls鬑K'ȥݻCT54fa;ok0oMgCA?62OMao=?qL3p8	Ӝ:nZPM:<:Ϗ#Ғtw}
+97>AYO3"Ϋ>"!]vQl|x*$T[ -&稁JaL?H!IBGf2}ec2P/qTěCoMщu6dgF4fP5+f03mcuFe#`w}S#7fC1&KINR>,$keJ^ʼKEIј1?ˋU{پָJ$*26I^{($DF< ؤ!zj-'!񺝶ae ߔ Px,эQRewM7E)瘳Q]yz(kL+Φ	%h.ќiRYTSݔp&(_b'SJs:-H4G	9oWSr3͎W0{n̨Aj&IJ{VXQ(ySKuZ;ruT+k.t}ְ%nA7ѺҐ$Ru
+HBr]vU@wS5~viµt4ȍk4L'x~GmKLS3sƃL0qW
+J;xwd*y+l@_S"5kTqֽ(ޜI*
+zz|lCЍ`,ūif	(xpNqD AOGPm~<5)"NGT#獄]JSNK^kjeT
+A!{4M||#j8d[-Yh o %Bls
+LrC^l	Oэʈt>6[LQ.Zp3M
+rS)_<م	f!R١IBi[ٱ2ʜԉT|p-^-o;+[ŭƐʢQhjL6xbgJ
+(ATG2]bckC{J;(>dѷ՘;2}LͲ%j Gt20҆U-&z>6	ƣkvmѰF^o_ݥWE+PE,razw'ϊ쪥ԱegǣlZ̏GV`T>ZaR_Y4LW{ٲT ~ @O
+Di2tYRkLA=h@kskSNw;L:63t[=qhxp5}Ntx|ʡH ;-6LuV!#l
+&c-W!ʉ,JN@ah>s^ݢZޢ,oD~/֕1G-%Q+k!U8'Sx833"_T<0Qo9jbU*ROPNke3$n^3k4^*"F=hYy5Om00my#'h'>h(aBVޒ|S[
+-
+c롧xơ jk!_-
+(k7[yMgShm/<tJ3flc4xY
+
+syoHK.c낭Eʐw͋CWl@I0ZɬJUO0],IlkAxz>u`Ic}nKɂ?{ |Moܸ.s;|&s}~[u q
+zqm|LC6( 42伹Qn2>HYfNv	i+jwυy
+q~$yx6b<5ƄFqʛI
+Ël
+&*MYk	3P.櫮2W%51`maQx?l׼3C]4h1iHThPS~|[)ml|0x;穿hvDnܢ锍j" B^)	I.B_a r.	O0$X O<E?[yCGȱߗk6B"2j5qѤqJKAS
+Pvyh{b̭RKCusȺ(miGV+"BXyFdJ&T_B+\lgjf,:#<C3JC˯2nI8Ɔ|K?Z {|qTCׯ_ާ'	X5~)fb>JX$Eؒ]Fjl(x-":l1b2]LCnN#!TnCج"Ʀm0Z\e'FL&j5]ufw-PZfAayɫT)"eMY`8i4whr4SFI>?ɡd; ǧ3*Z((KH[R>+<Y[QCmS!e#l	mC_(ϧ:ɻ"@Be^~ʋ1T--?%Q(3'JOlMv햦Ma"U:|5
+2}9P2/4ʐ PU֥`Y
+D6M<ZyS;LiՖn,?,gɉԈ&8O?v6ir2=<Rb/C@sptǊǇ\-Z0u53%D|-0ݾI7n"ld0{{gKX{BDqhB@yJ[ȗSj,_c}]p^AIULk
+YQ
+_Ex͉2/+'%yT>^%:.r|uQ5ם}F詃j(Xe߅1?D~]FK?Nf9c󂅗ĤB k0°q{xk_x(4q.i>FyOTjQb1WfBª#oRij3f~;7D"x4U'X$ӯƂ{geOL,(;w LD
+/$^"#&_
+%V]뙒hh.+yrQA%+4#PUd @Y.J)hWW^Lפ2Q#8 $}$=&=dOޠ1{LXA?2;Nsvx"ҼE9!2]55"_e&ZH3\
+=C*T'.b_اs٤Fַ6h}{Sd8b\X181=k^J3
+
+n]zz"Fn ̉RыLկJ^Mn:Bj{_mUjMD.6AMǛ6Pkd2vQ=8p3K@Iԩ,SI{{]O'>O? p឵	ʋfyT2DPcrޗE	"Xt1Mt!ȤF
+^C=/"Ց5]Ω7z-zyxBO==pwc]ݵe=54XmKKfmVV#<nZ%h4	S	A\7j*MYs*MqzRx$	D
+Tm*Y6Dfot
+,(:|,/?)";.P~O-Gy{{͍
+z'z4:D{<B""j4T▼^hE
+2"%5奕op:0)]uzрU7pG`73Q{_$嵝>
+z9MN9ͩޥ3:;>5qW//R<F&YX
+/&ځlk8*dg:t4U"B<Ƙ&} rzjՠ)F,5Ĭ
+fqtZ9}{]xJAI0RsrnCHBE3ȱ%-Hޡ iy?44 ԈiIÓ	 jy.P4OZ, R*0dY3hyQ{ƼjoBF+l8uF0XlHOtP=R荥iTT
+%mڲկˤ
+4ou6S
+f}q>uEKLD>U5NiPmQ.^M&M*Ԭc[sVvDjKIgvq2~ȭE	'4	#J/czr}O>/,7fx_P~]ODN|*ƞSZ[VkD>*;>Q:,,i<ze3O~oad0_k8b*"M(՝ym9{ƜB^ӆA9MxM^|CX.tu)*54:9Qؼ(jᱤ
+ ˫Ϙdȡ8h	u[o9hmP"FMu:&YHHk.̠锢4҉!Bzc6ֈ/5*Kc>4R(k5N|llI'@_=z߉G]]<'>vƇQXJY)H ?˂N,
+⺠{ȱ2#HdmԁV(qꋺlF o䍲6ѽyW42L\Uׁ|!  d"zځs,^ǁXhɁ;!1n]B)H
+,R)߇8gbHgrj0H4dYTC d+$Zbhr-9casnm71~%h04l"^x~Z\De]A9t&ZB
+ڵ{O07	(3?w1Btht9|!9
+AETdXL"`hXYJzR0޲ƥWx-k"(tȐ5B(1#LAnw
+X%r}D7ܗ|蟮.kx.G2)#
+X
+_VGu:BV'l5Ntt~&@dDҐ[6d|i9n0SԔJmx.t9
+״/ZVΣl1FȾ1fX. ʒ<U
+☼[h
+.i/1r_BF3ai4P
+U'&4g8p*HbJ1Os8r,Hޫj|<9^c̎5C*%5^	3c6q<`,PBCz:wJ/8
+qo9nN+(̐c`t̨iufq?
+
+6UxEm^@Fxa@ \1
+iVBLbU#*ZNUB=e{uPSC
+)wcԪ苞OʔKU&kCTX:T<xŘ݌jw.r8-DĨ	ŷRGľvmRCQTe%S^
+	"HtҸ
+B0hR
+X}M%ӾxѴrxj/m~681{?(7wm=:FIi0bo|gںD,A>vM'.ݭ"nxTՃfjf[ZAH9MjHK
+lF>.9YzcdKPsJeɥi	Шl9SvЖXv:O
+A7`<GF=߱G]uL>h1ԍ&3^hy,@-.P);OPnIO7	?ΟZs0`g|d@LQjS.Bv
+%T
+M"Ǒj{SS/8_:荫;w:Gc:?<G	&>z:)}TIUܢ2-˲U&
+thLt[>f4eD9	X#N݅RS9K5GwډuuOKJ*XTB#4jVY)Ep0zkt|0${֩o䓏^[ya̿m'cmmvF{93%'#J̈rEg	t}*cK$K4waCTjbm!<s;U4rvAMQKjkmW"HӼ)rl)u< )
+OOD"DllʞXuܚi?xM˭qM90J$|AI6T<KTY"y6Jb$8
+Ko&ṖUy`g?0FK=&xobQ!}jTFuQPS'5j@
+jK/6e:ދH!ffU(@5=-FmfȯUvo6Ny!.DC`Oy)\\=GBAJPz#
+P?tPDT&Wҳ
+6dt.ŢPժ.CE=
+azTMdyK3_wi.1$YDJ^p0ԴOGGZBAĆ5Q=W*,S$ϛ#V0#vff8IHD&A"
+f4рVOs}jл։[,Yb 0d!2OB*|U%_
+`J+^\^ήiLU%mU%5g5cgFo1y'~tm*e^ay8^Ž&Ҋ.NxjrO F񛗮عVw𰂂\MTZzmuG:i
+}3#FX1<'˟F,E~Yl5ިvt섯+Dl d׃v	Ux	d9is9䕴C*4T i_QSȏJ#NRY
+s\ ^bsE
+3uuYӤtN+LlԖv^+MEJYv_ZOKhDntp2J
+[Z~r|S-SCgԹŀYuI_90t?_б6<(l)W{\
+ZJu*c1M!!\x	^coޥ2L_ό.jњS.QN{v-)FF1@@YφRdGot[564vkq>frDc$PG0&lZHR&֮)d'bIl[89`,|
+p~#AȬsTpBB{-ȋsX\t BJ!um,eSna6YLy#j1Z}ΚS&.ߣշh8
+e0&CF'|.KbQf%I
+[Rg8K20BK%AKÿ)
+%DnLXkyzEWS҈<X j	Q{*Fy+f.b
+k6&`PBt
+A 1	]U"Z)ՐheBZ
+nwJN?\^*4ަ]x-	hW		4sv	T~R#2!Q%qupxX)$QkX;L(L9->NUi<+":)l'ƌz?}ݓ0xYtd&|hrV˨lh	2>rpI5[\\8_)0:'|2N9$J,:[]R
+!j^oᡀpeϊH,.hxA p<Ic iDdb*1fZQ:c6&ݾn޹NoߐvR3
+6vg&^dbX#*ٙ"hu82yYi08 ͪP_dYi/5I@ 6]@uAF8J
+rB4qA&TpIܐggOy&n]4_3uSj?H"|o]G8MPU,Y}2m2Q-ZF5@.qZJL_
+a^e '1OIB	-5z+] #ʂ)&<,'#vA!l<v^Ӥ<2yAqDʐc#GyH׷v[7RsN8r6:Jg4BH+\;0hr|!F"y\ʵ@<O-SfgY+|X]+׎.m@d'h#dWx!V^Rx	+K1z^J
+^ڪ|ř$5?6OƘw/l0:3JaaDiJ
+F&ZtiնT];YE}m	$5#@
+(n:ڡ N1Bi_,5x8
+5
+ f@JR>OLuupHx`*⤖
++bƹf&X-Jpm\HsѼ3.<zͭ
+hț..(l\kgZ":Y<$pyu.j],Rqx/]E?HD*i	)Ј{S޼Գi2(kD2EEY7NLVIC
+!K5#ƒͨV2
+RGn|o'95rd>ZxWƴ={hm0 %,ntqw{>[a-K-n$.@!Rځc=68A>ʤ(I˟yC6Oϴƅ9*BaN@T<o]ZBTBd¡{+^&~ގT҉(SV\*(Y^TrB>lإ5nH
+rƓN"FF=԰ld&Ӛ6|x|!3_C,Wfo(:R;%l 4\/Qd<75@@WJŊ9{mcZ
+*shQ S"xfw<WS^P J[Ti <ie'q`Êqlu|}Ő@	ubW_,v:Wa]1w
+Cu}S6Լ>!=a \H,S-^\sIăE/0mmw̍~r=8;M
+#)f1&J$HzRA^M21PSov\	 hv3`T:#z_TSD]lwMLͳJN2M I
+"t&o>030MDª;`G (ɨeϢPt)⃸^xjxOLfju&r{ܕ|9%  8 ZV(>W]Qs[QdUlg5ۉq]Dc5ətjSw:JNkc_Tt-@,t>jJ*+[]5rM1MnU0#K#/Rtđ#s|L3UjO/".Z-8JIWS*$6򅨠j(V(*q<"]a|W	NΣ(1 UC\}X㉕ov8VY%TfxB[p1v)UR+qCMktg#B8D3(I1YvG1Ld|׬0^F9
+'sf)ڍ\<h+bup펾f=kd\$'*
+0zK<&6"٥b?Svj펼!{g"+0Ⓔ8< @.iL!MB>)s/dT
+ 3|:1h'dZN@g_Oн5dYޯ*fJFFA5So}R<!G
+=/mJ|0nGq(I!:9X dl3H
+ԭ~*ߐ)v&^-kPIO:-:>0RkaHj3SR.:e'H-nu֘㹴..EA2V&3!ySF0\UUsցdp@VX\6:&CcP8ɡNwOA/rʡVpTBJU_wR!89H'N͊Ĺ0I I3vJ$Y+4-e(z*넽EjJ)6xgD@1Z"IMy#nmkAޚxF&K꫔VJ2ip֬P$Fr)7t'cշ&WIPbyu$?'fdDbBb 6Z>-%,К:SiזB\]
+;W6ZiμX3I'c2p {[;[⩑ަ6[73>$/hN)n^xȭaf1D(vԁMb07Ґ^hо&"]OL#x0! %)[Ff.E~}
+*zpAlEZ/e<l"2ST
+nq`.j3RU\ѡYĢiYGcaBkNͤIm ,س}.m]ۣЭ?=ΎC@
+էHoȴnc]Z{}U>rU IjkiM_fc Ӕ7@JBԉ%AknI]Yb`q[Xabn)%60pєl4sB؎<Sg0.pgsgGѝux^u{] m"BfwZvM &izTX(@HJ/k% Q0nDKE
+26<5f0K+#ǯVȒCje$I{u9m^#yxBOֺ5I)U̅Z3ie#o9NEh#7Ј'8CqwEy|1zvy\{kcڥ-vWo)
+jU :|jﺆUv%H^pUE#8O湡YeNDBtgJb%4m'>+A(ء햀t(g]02EQ= ֕-==v6zGC34|,0|m Tp?I %{{73:;*
+#qD.
+1誼#*2j64jԘVvʳ $/+n=
+;8W(]I[|K#Y| /
+
+0t6al))I?X邸*$򣑓/;5SK/Q˶m+@`ʩҋ/㧜#\ikwƼ GlS]>"?\Tq\jW/	3ZVhJ8rDW\QJ$XXU@T-+im-
+E >Xo}?K=Vg9΅w>m¡9X~RFtݤ{ߧ+{B<?ʖ7~7sc;Y}ɘ!; sA,c.
+hڛ
+N3l0BNCpSh,CmDeo~,:UZViDHtqY;0A(WkUy&
+?)cgc:N8
+raLH+B]Z-k8-38Zj;.R\B~_aFhX(5HU$ 2		MpNt򅰔vR%tWE8mj&QL1H:Y#LST Q(Y7$jpEm
+Z)ѳ:p"woh؜Ra<?Ya9X"Ѓ_D8lć}w))哆EllE73^μbh___xZWaDiD,SE;osayDGDٖv!_o0|F.&TZCҴA>NEݗb0u|ONe3B8)
+LR%(♱E:
+	7ґutOAkQU
+"ܲYJMLR`* NwiJ&و^<{I>D3iъyPԇln,G0+ {ΕU٫(|E6	 ʥ TqC`IUiUy(ZY#MI+:"^Zji_&d޼GB-]/Xl~! {z<3 u5SW۝Lg1`i0a0_H\PLpIvR>,ǒ-|eආ2R-ZՅA[ؕT-taڣↀէ;[r5sɁTkYZ:p*=m	 SGͱi
+A3Cqvr)'>`Tͥ;˱5jY
+@6F|͕hZ>}|t&-$A2ئT(fG8QaEUcd3}%(d+;@]d8RxE)PDh<8:iUgSA HDg?
+sqAj4 Dv鋟|F_+:>R%=H+BAs -`̝tNu4_|Z;Lkh!KM3LAƗH@MH[ݙy#^W<_]YZ,u%ueRg`v{w[Ӄ#cƼhBYH}ѹRLom9z>IP[fL`^uZe4։q
+P_uE+Wn\ {LNS9`? ##8"dTM&q3f}Zsw\[CVԽ.u6vy.-=&-- wݦuZ[ߠo~~*sRTޑ'yroXP=&CWE-??>O1_NR8z0bL6f+n/_?mn̚g{Cόc:]p8C]"2Tu5u.JSxFB'i
+#J3W*=lXƕ_;:	/p0l`Ļ>Ne=IjR'qfU9j3Ab.xҬS!Y^s'1,L9[dȷRCsT`%q%j~[@n^	`ՖThiRMbUZÑrΨ,"t륥<icm
+gޝ%7٣@<|$o9uwmZh>R&ߌYE2aw3^tjbJ+^Oyu)lmSÛ$czea,mF~wm7le7欦OrQP˲
+4.MJ<:<1KG#tjsN](3iFHӒú[M)պ:Wb恵,y54a
+F|!!ڰ0T[QӶ/5xxr~r~ '0iY8UR.lV	U2FMb.fD
+"
+CSlA6e){B	a:עݛֽt~rJ_9zM/3m/.dD
+'W	0T1Νw^гd/5nw>5`Cy~W4ǿK9kwƃQ3I)wAc"HyAxm0;iPV0糹|mcXt
+)g7۪0;/R"5u2
+"?N7-[[ _3677eIX. '>ݺ@W6"0$gZC
+Kșy5AJy! :A1t7B#<q6{]A< y07BxdCV86)*:`]̈.RT
++ƔRaRZ
+)UiJ#s'ʀjH@RainݽE{WD{|>jĕP!uu7Ϻ\]?_<ir,WH
+aB{!'ߗ~vRgGa$k)lJzڸXܬs(,[vZr_ݿK~D
+d̤ǑR%<|0b7̗sY#iRxvYA=z?Ǐ.^ic//<yZD!8(ZNW^o2 $<wڷp҂6WG{U(Q@θaVM<^!s+Ì4"b
+c#Y6	{,X
+U"h 3-S-9gr~V,`9	-EmtF
+RF)0A}ۺ\Ppш~Xo^59Rb6G|.U`bESMxhX1ISBխ 8'OcEs;7{h#mܺCфd(R6YAz7P0UjitiT)iG u=߻ugG{tHOS%+$/Hy1]7 xI=[z뫺|ŻDS,1m8NN&NWPлtub
+]=K58 -MWpa]bT]'F0VO<Sو8EH,C'/dESVaU2)CLA(I+R
+EN D$62tc85	*	_i>r41K̏Apv\JeLka=sui{o6|^ܚl/KTR/v^atTF23r}aEoV"ZA	\E>إnqK15ι9ݫAFM%k=*Ɛ:,W1t$_?-@SrR`FUxB˯5k0wFgJoŖU%grYCO;|s{QHc(~$j+GjRH'N3>oh(_f[M:̈́nʤo,	HpaJ*Ŗ4-iE;:	-SH&cbtxY:~#C_5]ZC>k5beR5|[Xv3qȓNuVr6צZTtm~>=NEC
+gR6۝5:p?K܆XoV?.Ẋs|-sc6{)ݻ޵ѬKY+R)~FJߜ6F4ݡų/)L.O$֔W=Նa鵇tts8MxRyȩSM@)GxEmּ_ zƉwbu?!hũ-VLC rHi%,ښ*cs0g2tRb|BU&z]P:GNBi߭MM|Be$HT =
+>*)Q
+佅bq%(XQ <Øy֔Fm.%a0ST)3Dw6@ِMe ͻ4LI	Fϗ@@gs޷o<8v>yF
+ay֋<=)aMq.6}wCtdGF/aCuV6>
+D_rJn6aɈ| b6c1[^rksDYځ1X{9r|{}j9{kz\|sx_FT_E]4\JF[y5Ď_3\ձ(*M܊XzП)Ooej9pQRᴄѷ&ma`3Y՘"4C39M/ϡP1RʲFЙEhQ&U]e6*mķ HW9+VҍTPJW7o6:d\B (.pκ?
+^keCF
+!=PI TJv'sp9f
+<<K_|E{;#34廗~kZ+ªH9o	molPKӣ{_5w>Orzk-?לd6C0ݎOfvrMՠ063 Ce,/|足9ĝsçtv|FF|xF[S<1<ʓK,1ǥDCe&wlu|~ͭ+3x.?Z:c)¦:t5aM%'MVJ5<tK)M3ȅ*	^T=4NI׻]^ Mi
+@7j:@H0Pn6|NoRPcҳeauʤ"ȿuB
+HDef`!6UtjntaRZF}fq578XG_lLO|8:KJmLY ug9ݎ`%*66}Z4(y*^
+@rݱR* zj
+z՗7O2gj|O
+|Z&m^z!t"z~!tltB|᭘fwGp]v|n/~7a|G^8$vMq>9``-u.kP2dqM6o~
+;9jΦm^<w&tV
+0SJz3}~"tP)!ӜaRxSXT"J80L$ZKީXH<cO1NZVӮJؑDUJiේvF%3F:3f154sE)`0b
+kB(UǎaEotc{>yv{8Ndl5;Q)T;ML=iMN4r.T ؏kŞwY*^zRii~ EgS66y>98hb*vc{s]ِkxs=C}߳C&6
+OW{EIE}&X(?ѕ/qΟTXp
+XZMjg*ڥ*3k=3Yv<TOh:mnW,go61Cr/zuoϸYm&;aa[It=#u?!k6{X[ӌEjJT+2kY#.Rs`^vP[`5
+gF_tص$ƤQDZM5^E'9t<mpx3q{.ۑ+p:N2qwFK%
+"P/Qm>cCH_
+zdz&h}kC6#, K{,}ͻ֣)/|h u30F4
+{˛P
+9s]Wine뗙?:'t~>SbbϢQ.cz)rΗJnfÕBo<95hzRG2~$gi_{gE6N:s9җPX0Rsi$
+0
+<_t,$--T|)f?pDj1L$Ḷ)XwG$
+ӎr+Ro:_lm[t؋e &˝lfiC9粱xD"W5[WЇ|`y??kuB'G	8zYP:BwetQc䈢JoH	`)3gݐ~o0prG׮R
+'F҂0"
+-x9҂	mnϦc|x4'c:>ЗOsmC8<&Ԟ[5^-gfD]wtӝROG''jpX5зSKcrpPhx^*UC甤5){_s
+4_b~mƌߨ ar9Oʘ2OO4[LDa`A`	X@}^vk~SY.<Vq!ĽWT*MܴRRYo%W
+"pvJZOWZ}dZX%PhXWVaѨ*:f5tLBo^9|Gŋ}:<lmjm+LXP_K(w:+6eAKK<ko_ P^>?~?z=l2Ny.ƼQKD1Jڢm8nciF4$ܦ+l}s'b(]5:vV]$a[H1o@~t-O>D?W9{!L82	hJRNr'$BoȨZ+굵WBw_~Θ_KC[VFylȯ^֚hKl9aG=rF(t꫻tp~F^In(hD^mws%oZƧ>RHcucaREyAg:vb{bD iFʖW_
+
+CEI7H?gk~ЄYR7[NBQ34ivD#,$11<e
+Xug78,,:g6jVBw~
+p:trvN_
+aB
+{kMWvhe]S.,@T֢(Ӏ_c|JʦCwG҅QCaJ0N>i6gJ|5PiI/֊M	B9"liD(ф*Gk~sv'_Sm_ЅAs
+H&&v:YTaP}qpV56P9Ŧ #6D
+&[P勗0
+ik-o8_5,XP~f١=.Zd)碔ͪ@ aVm\L!iP%,bC|k
+aݡm^\wv+iȓco>' o+l3SUR8&^v)1)ܮ2 Φ:RTQ"$x{p} ù<PYQ^8ec,fS|&WH571ng	{!ԜSQU!cWBw?pЋg䱑CAJ'O%[	tL&R5M_B[Jr&P	Qq" \!3ނb75ZPڹr@}%si'CLhЫu
+ (I8)2
+1Po\j*Dnm>j'j24JkI~;n((9UԚ>BT@C_j
+&f%Ҕ-ț6Wxƺ)??_ӣSM֐15h"p"2̅2)(WP\L
+B@x7 7_ѩlNKʎS6pc)	DlBR<&gao'n&f/H>F^]U%|hz8>ݟJoףGЂkB
+mX0tY'9bJ7`IM`2BݷW"Kq{̘0j^Y{JFԌ4Q8/]k9Ѵ*ЭZh14V@6MJZޖNr8-<zUeh̵`'
+:H|;+=oU$Fi "]52\͵yq CtH&Q;Z9SLj;)$q^L 	MjX戀[Pbe^MVO^7iae(aq{s ˲<s{[mfii  #:4E `J0:(Cd@
+
+¡A8#`0T/]յW{/^̞w'twee[[B/_!c@4WYդ}ZY =豵K- r6ӲLy|"~dTa\PAz턯xܧЏ3xsK	_$IΔJeJ	\"b|^fF_EIf:	3K
+k[u@'9d
+PRͦ,7@HYe"7ܶb"R̵3#͝xHd]fԷ0V>]Qy_Qa̯,#=ĊKv7C~8
+-QXqҽPͥt$T4ƿIa'܄'i7qla&\2m
+F̓ͭԯ$ܨ?EKΥ$wzU-:+zMЊU&*$℉ѵ>j^Ӫ	e2W
+"-xvCڰ :ނR>mE&
+RP&.q)6;C1t`x3[ZIF`ƛ1:kL@vQ'c=M=!	U&i%9.iLb{%by>zi%ˊk36Pk {!N\
+Ee0tۡ\@ޤ.>Y5	PMh~෵4k.׾auFIv&ZB	q6.Dješi{qO aa-K>dTWKDj듨@檭i_~I Kba]]QԠ^e8Dφ&R5#K9Y3>y.Evϳ䒲kH5
+27l
+٩|JEEJ$`eazpr<\قJN01%;2strL7FӢ5Sb`dK{c]swSbmdby)C鏵RaZ--kUQlQ*Jh3|ʖB&>95?37?gnk!F%WeOwlnչ(U/M -ޱe銙Yld6?u|.c4Y@!t^Sa8!kUڋcA/ʬ
+2jQVQ̞$'Tw!@7̛f<GB~ocz
+zǲ!cD)CKRc}ɠ
+k~MZ$A9oF!~}czQ0)GO05YSavx8C'L?m%Z+@Ԏ6L/`D#+xJY/Jw6 ܲt攔Dbʁ!|BgJ
+"Gg!A+lceu(gįl1g>y/<pZ8k}VF;l!Q(f{ Q^WRMdY.
+Js|7hF9	дgW̛;a}8\"
+FXܷT儫ܚicio[w	tF@ŃA9[t$UyEՂ7t-08vQ3hTN8Mq9%/.5Sro)ȑ؟κ̰ma]u[DvS`q#Q4Qe(bIArmۤry Ό4!Ve!@KVGب
+/:o"X`"DeIko
+yv6FCYxܹk>~tΆy=ddVSwOzZ&Vqk8vZr
+1/>wG2wwQ &	cb\`q UG'f'T&xl_	-]bYtN*]}H*"&`Ⱦi;~dR;?} *R]	Ye)#~\FiQ[\^	9W9@Ѯ</VJFRM`	IxE`N[Xm\7wr2RN("$Tm0(0|@ptmq`CjkM!U.2/h+e|)K'TmRr(d! {2'4dpx@ln{
+YT}4̃N\޸GΜ
+g;F|$.i9yD} aCOK l|	&:u.4U/-t-ΩN[Tvnfzt`>}m7o\1P?n37l~6O߿6Ϗ8[] K0$#HIk..!׫j8#'~k.Xα;zj[S
+k/^@xo\Bᅣ$_ M09N8-0~+,8B}V5e2|3⧊}D>oZ*,,Mك'	M)>#J!>Qb-}^j~=p?̼>ϟ<:{2ɥʫ	+ZDLm+ǡsa.2QDv*cdIqG$H
+'7TF@FcB`}P?y4=}N3^
+l_5?տi~J?|܀BÀ5Q,&1OΟk{sVĖXydhf|h&	-h)~
+f۳xoo8ömHb
+J2i2L7}eP~7xZENoàv8NY8KT»-Ő'y
+8#EWA2IUEj	Z&<sBbjm׮A8;u$dd  EeYInmedhq=$4ӺDg3gBnr[/:
+)@
+M回a5E-ZE)TYcF{xsCB@Q*׉x69-"~'w?4wy>qhnɼL[) jy]١KH],U֚T9b6WR~z<ͭE0 #D\so
+ѝϓB	Sj.o<rut"<ɹQ}5EӉYئdv+cITÇRGHZZ >P<!(Ph
+U0P7xklHp
+{ރ\
+i	\T^ax^h(.!t\DvliQo,$g|j87XrpDv8ށ.cȀ,*W;n2ɉSs3
+? N4g,%"̭pslF
+H+mL?"2{6ol$lT+Ӡ5+und3B0*R.W{$s}x?u`[qHBVxO,}q$5o{PE̬8I*ib[˴,VX;bG4+P<Q`TsDV-v9lrRD) :-L0'_2oC ?3^(-ﴺH#[SƯ2a?q6]y,B)	٪)/]w9]^VD#5,OĠ\|>E2gkWf_C=
+[ ThwgnCmbXaN"=@;MF`=V5K,9lblZ7G8g&7W[LdsaOWi.vaxϋ{xa7zpȺI5/QGqL;Ht1)Zˊw=9Dߥ1Ç*}z e3i&kKobO]䤯
+ȉmbN¸^(qwa3eލ+zb Co2
+_a
+uQE;yr1QRM:hԉIyEw>٨EZ>|":*>)&6F3v)i
+CJ
+p:=a|iCDvƸd4үBϬME5W>4&Z'lJ*ҷ^55	T-Tn-/J+7Lf^;kI=
+aUd*]-aOʲfSW0Z;INbME/dF΄qhY
+<5-h!mv.JZrW; C\&ݠw?js80ݥ;)KN QgZ٩|ZK?뗦ѹϏ'%`mseYd9NiEW7x9f O67X"&N+_G^ T<C+隭&Ul^N	MXZNK$B-Lq'Nm!$0E'Kʌ+[/ :`ThȊ󩉛d{̅HZI.-/?yx앨/ґʃ_g% eIt)֨zePǌ  k)ʰ<xtUmd
+S(eaH~NsQCbf2d8L.~~6;lT\!Ե> Q<0K!<zg>|22D[y}w'Oԏxfl#fV5vX䙕u#5*%H)L&/	rKrb0+ÿSRQQx[Ƥ4ڪ%@VP6	fxJmVYaGSU%e8
+"zZBIDY8&<sINdz&ʨ\>ս;lݻ穊D}}2[!`TFN<0E}^05DnZex	:nWV4wfX:ɡ녲pJ;H`<|@Dp3VEd]E؇U\o4>P8R)I}hO{*
+$su04dÍ\
+gZ s*XꠡCFcAle}5k22bNw#py:"F2#9M\h)-gw!e\ 3a#Nզ:biprr,@-vVg]VΤ^NYu]0"{J3I Dls0Uǽ<EU˰~̬2xuXjfL'4k)VRQI)@EMm9O7yt6
+BHƙANyzxlvZJy>QdAh@2w_v\$ssz^PSRh	^["MY$@>	L~d9/ր@RyFjI+guR1ĺfmWt4k<s
+Y1TxzZȄYIKeK!puV;*4sCg	ećw2f̒fu
+Ɩ]Ty٭#3K]vTB+2z"t{{+p~X'4N!h|N^22B)f=1}ؕ1QnawZd 塎:/1zo6~J.7UZA}g	 ф|K|T!F"OlEN2n_fm[Ĳ8ٮHb	?!e2
+j3IHUW-qO&fe$Bq h2/T,
+hσ-2-K	 (HJbn))\'Z
+Y\eMU`(K<>fP, }%6" #/#5;rv>"
+hbjPYMslH`.إ1Z}e\7=jFu:@yY(eh
+i38~
+I~cwaʠ1l.Qg|;{,BI$ddOR2'ESBmFe%#;QTjӴI*+jcى%ę 灠HkWxeK}53	YAq@x=瓱<*Т-pf2GǠTNX++U%ZmGr¬bzw:b5+7( _ /gwCڍkZެ'Oh)_\TFʜ}(b#(Z oh8
+}JqpR? m!‛\VRO/dtpsnhc1-$6rq :DC*8QUsfEVT\|~O~
+>>aKFv@D9Y2DEѡnWX{>gqv+xy,(U(=4b3-
+wzͯ
+'M3q!Lϡ( d{-YྞQ\\/=tٺ)*:+<Dåv4(6K ě23%alC {>2tA:I<d^ l=	DKz-߄:!h'=4&!fN?ڣ%dVWє'"<~7<n;#V};f/p޹k>;aj	e!ݱ,,1WYU3@2OO@r*vBYT6L^VE:D}|(Ym&ib`s7#K%0}M+.L!qxY
+h1
+/<|B  i(,ELr k˥`DMrbcV{(]vnɘ蕻JGSL`gǏA|- ^U>.5WHiT{xbn7>bo3^ѐl8!	7
+@&I {N -!wCEYL@~Jjp i뱔I2Eq!
+4R"Y22pnp.K#Uq薰y4x:頦
+s"! Nxd'do
+mRGha9,.*ZQɌ1#	2XSX!+vh\Q\tj@BLTcTNsjv\6X6?8K
+e.<~i2Ѳ
+}XktՔpL@1xGE6M
+"T*6#Ά >	bدȊJa/2NȶvH=jܾV(X3mxc.ne}y(H6X<]kfF L\l(8Ӕ)\5@5\qZtPOfs5e͖xJs	NH:iՂE3v=+
+UK$`!D@?$pUŻu
+dDiԭ67Oɠ23@CR>M#JE7K$mWe}eIåImm)K#^18pږ+q	(\ E4ƍ(o@$OLnܼ=J:!u峞Udq	{LNY<0=Vl3iS5v	ր:&͞ϡ֣`kT:NaҌ~!Bݟ̫X[jy4^Lst׳1xvlȂw ĲJQ& ;Bf>Oub;5Ѭk(X]$Lf}ǰsdEC;xskP}B+ѬZ2yOau
++hJ:m-i9\ҜSʢ } $?{<Q&T&Niw
+)HZr8273w=m{8L?o3_dDht
+OTA;f#mUOf$5򓱀=Cw͘)w?%$97<WTQ>+iytGtו{l#G@!}fN۝~C t('ߋ*ؿV2tݵϭ 4aMWV,wH'rf`c!?"`@y@/_~lWѣf@ۼz'5q̜"gt?B\\`2XQq?tlpNf'![{*b^`!T*7PˁgZӰ&ȋL>	en"L6Ζ6Ӥ+J:FmlNJFA;?lo2I-H
++Gwhܒ"tG>jM(]w5!ϐmc6w{3͛W_V0+|WO%'-e$\bm 
+4ɉ0WvBC
+r9Bs5;>*^J9աf_));z#:Ju>if_k.$N-%9A<3Z~kQɚ\P_eN=[wŸ{ATC΂ij1\"\})Njebtsp_Z(Z="<u|%Ⅾ]$מ**d)_$$6dHEŅêp`2_d0/&a-aLGIA5^ XaazeZExgOqrï
+hD{۟{dT
+hr%{dtjC{d8Z/KH>) G-jbCh26٧$_-\S܉	k
+lC1ڵYǈ/ N`ݥ%:3
+&W`w7( $0'lmxe{6:*EYau
+Zظ4Ugs ؋w{Jm5*` <y<{켛⟛s$`	ܬ2 `Џ~='G3z]:zp.ՒIke)>b𬺉=0PV#o޾M!dk[pnNLwRDuiWrX(l]o2H}Bo mn'ۧLkۄ&#-G;xED'zjKᅷ!lD
+S
+\8Yb$)X}ؑ	hKV#ջJN`~&J3-°&22u-~~o^r{yF/E>%7NhMSsҵ]_VEɅ,*'c`FbqG4eF^5$]joH9irt%HAyIO:1<U[\(cYP
+(߬LSAN(MTI3u$^*2V7rA,T㊗CFck<'hƀԊ
+|H[KFx2.W<g$2` Q*2k<VԻ	
+ LǛ˔{}v~8U/#v>k$y`-B" Cct\x_Ezr0:\5L$Kjm6pKu;pSX
+:%4Ck̺,\56W4f-L|u3C+{6Jt2 3$LKx*Őkm?WFR㳎}eBV9|s
+mD`#uR1űUƿj>Cz#_}fUL=zNm{y[afyE'zZǅhdo$Z].٫k9(lmCŶņ: / eW!3=4j_;;C?_0Ѣɜ>0X>݁M:Е`?$mND6GZ;Tift>f.(KCc% L|jy-&hsEUZk4c;\g:39re:DIK:(=RwcY!]e=Ir&D%bFj2ϗ#uUe&q6EEh+md)
+?Cxac=:ʮoחR>VRe/33H0ڪڵYқ1+yE66SSʛlȣ"5f9lX
+ OJ3>0C avx6
+aKbQCR&ˈ<%vɵ2mLcM>*"5Eun3s\:	l~BP/oXySLM	 pHE}5)b4ꨬe*	Rm9Tr
+Z7{G$?;-V@>TA|cE	xy˦nRPh<=%-Vy ,`ԣ/l_v0;xV@onv醜}ȕfi	IxCo]V",S{TMK3qs$mIP35pn3[SLb `+TsY6/
+!EK: ');.gA06ZJENğz|kj6FRa]"ّ}sfv7hL}spxJ%{]*,V>uv'jbskwO Fif*pC3Mw<~xhz
+73ix3,y>ƞ&VټG/
+hP+k24
+UDo鍶Gi?jY/,] JIn\11ŭ}4$pOfS.7i(!vJ`!w4RN9'(D	 &0v6>ӡipXxJcdbGO+wFrJ#.
+"O9r|/$6XI&Tjfs8"Ӄ'lee`9'*5k33M\}XD- T`2c|C0wA}oONH=F|i}r0fAWoݢ&
+>h.og 4Q{Hw"YwBqSɥ 2K(w$pl,
+"NNF8ՙcH!)hDd?ܤDNlF^:MkybuA>8m1kH8	c="$W43&"eq=RP/-V/Cɱ^In0 tPX,ڇȋzi-{WER
+D8P# 4[]}$5k}H ]TyVɫz5?ϩw_Ȗ<
+5K(>e^TUFbbimYq!qC \ hPB6?!Y ۴.jhc]XCU9mb37$Q}WUvQ#-xt'[H)ĲQ+Z"l2sLM~M"܀񑨯k+H=_{q' 0{j :lT	obM#/ &lX	.@qkgF۝@ίEJDs?O94Cǡw_Z1ͪy7&yo !V
+dr!x,ݸp/D=!;S퉭|ckv&
+22UZV^MHOy/ecs&LFJDWϜm<8@`t]B} Jez>icO|x2[1b0NJu] \YU*3 Ű516݆e/`/ E`P@#C-#vwfg{ `gsҽ
+pz6JΑ.VGthp@'Hǳ9)@(vStsѮxS86O*Rn
+?稚yv	=K)ֲ҃vI,T k-mIfӖJ&!	Q=ꓗ3GY($Dy=EۅޘqLQЉJEJ*."\mYwUBkgx' X?[-XOHǷ~<=_wdPs]j꡿Ǝ9%ɄͽϹH8v\yWP6{I ݰ߾uCJaYrtBo2=5'#be}%āy=lAcUn)$qp7xEZX)Er>D6Gu5B|Z,>U <0܂Viy=KNko[\k'2UNNڌ"WG*($@gɼao`vQwu@¸H7|ܸ~O>CK\/zS|m]~犹}+]Pؕn ^{e
+}YZ6/aJI+0<tzA QOgarGNG|Z7u(<
+i}ǌiy)qIיƘrڋ* CC%W6+\ԻZ1$Bclm.rϊ+@F)06QWgl_˳Kq>vJ;kZ%iR>ъgTC9f'T~QfŴ	LG~H%=8bKF~2/r}'@B6>ʔ$cQcf)c$g;ZD腒z	]1hFsz|sm9VW-;i(xm3 E˹=㖭&3r);tu\:'83*!=l,55=_
+F1
+a93b
+ |4CrÁUݲ@	P׃FD<4Y}Ljj/g.֤4֐m"x@s.r ,̳.|(2'w4M߿c-OT.bY8u.*$/IcE['		iG/(s+CpÉg)ߐqF֠ve`e䉖@MɉBȿ65տUnmj4ҏSn6? TŐN[f
+,	F荻{8sR
+1bR ˠs8+yyi:pFVz6_#T,4Blf`ɑ1/3Ɵ@2ٗ]xOg}Сَ'<8r/+FTzCڎT|OP7\x8S+d|Ei_7;$2SlZ1a"M,\κ1">PAi|A)49fl(3j$c턟lϜOU>B"/''ϣʄPJi=O~Z2V<;H-T!6Kzlh]Ӡ˭d
+߿eV#r[/z22Ǐ͛oN`v\[[=s}wd=zN';k;'ۘF+ڳ4Ydp8زdR}-?(X:6GR!+Ǚ<s&*{
+CNZʊ0j1Lg
+:;u(;!w8w*3Y*&8 r:83~_(l>N3+`J\Tу0֬]mTF-'9rux~쭷^},_f 9j]箭?[op '#b -#M
+S.%݁2<Zrҿ/GSO+&}E1?aO]I̒jŠ3>j*鿫n.aFeF[wzT?nG(|=KA
+~	OʲuȐ9MΙjc<\4sZdÞzmtn @ceϫ͙oA_ؿ.~z!*Ue"uwD!C~&+L`QN$8o 7#_!
+Qdv
+Iv͚h+쁅TyRV`e[/ &LdQƯyt6Gs{AgDZz^L20b_@X
+["՘
+7VEkjBml#ׯlR ct޾̽納 ev~g_xl~{faeޕD2*]iEyV2y-*D4GZ(
+ײd¾ͭpHet1_ÚW<p2nBk>(
+V|f'>0ؚJ==j)+7|52zB+O㣓#18KȖ6<P;v՜fQW
+%u^"z)eǍ'gݡo
+aˀ<~S!9?*Uz؇95IpkO:bgf%RTl^F  Ou}^	CI{0}mCrqB^ICPZcX䬪wX଩Du3)̪}
+`ڒN x0
+|c>rH'AP=hЧ3	SE1gխP-5Dq}*j_W.m"wgo2K &UgM$QLHPAFNd÷d:#)]r`K̚3+ka*IaS3^y+\{fdcl2sNSŖ%IkSsj`&v~8zaΰ*$ ~~ã2#_04WjUA*0L#L0&a)	yk#[u%3+)ޫ0r0Z)E=e/&L8OÍV'vhr
+OS*)62L
+" 'yWRYU+UrlL,کDS׍Lv]5Vbʌ
+""!XJZ*	Bp',a8't9y,}ӒUC܂y[95Zͧv/2Ih=2Wϥ%v	K\0<W9X^`6R}	ƅ# J
+;O/<B\yYY1dqꁝ]4ɋ!/C~Ȕ.B,Ѫ;`[	E9OɌD=b
+ZcgB?VQ8Y*lgJxЦ@&	5gbkmPW<(mlcRƙ!Qǵ7`-k-&^9f!(_`u3<Y_
++WR.K䅽g
+h~O:3
+re]1xI^bhmj= EI-ǫ(N-v)L{o1~'ΰ)5l\C2(ޗ3	ԙxnO诱;ΧT2$
+}y&ug;Zb6^{1Sk>Z9-ۤ!@.t;751_)a -.DCx!0ㆩt8{/9A5<,flch"[ٝD%g2)alQuA=9}SSkA80NRD/	%5"ހ	N'4Hz:w%tB[mX3!UaMXiĮ]`|͇޺=m?3pa\vz7<~? &ĵ!I\Ӧ-*r1TBf1XYm.+xd>Z i8RVeg})i?i1A bB)M1h_,Qmg+N-ř2e̺!Bˍ`iۜ&쎄yUXIgStX;2ȥ>1퓵Bi+#{e`:@w߽In(lf)y1F4DOi@aF#qi;@nf8DK:6bM4SdVREUn5pfiWʸ*8Ӯ\
+,ۢ>óA@{r¡2DRpxd_reE}	/Z^k ;9AkW%?y:-sn.ap/~aoo
+hĆA#aڅ	8Rb-3
+=%nn{#e1TN#G2/vEZjLcqc̇xҺId2B=wq!jkYu%vٺiw%9*${TxhiguІ%
+@P'.daDӜg	6=7fsF}9`OIR:t+!aN]C%-R"β[69RtGuub8\_EgL/2j|&qfR18)YLr(uIvİUBiu|B
+89n$A7ڸӉz'q&iCA/gpl.Kv#sǭs/m!k0k^C#P!
+0?<3PĤ|"pY[hٱ:^O!8m-q	E|ܚDJ	$BrdN&D[GK;a+]cg;_P]ɿaBL>߄@uPy- 1]L$w>
+}B򘎞D낉xHj{.,ۃ|oR0C3!<|h=h}pJn"f7{Gq:-y?Kʅ 0X`U)V`̒el.*q,ĶT	*bq67 RV]R0h$av(-Zᮣ
+e]w>UEhN"ļ),<{~mlymjL]n!=WB>c@?8;Q1Vlx@ͧșDҭNJyU&RPe1 Ya:I׉[<[Jk]L4oMhdcv<y(:tª|oJ.2BkP)Y@
+Oa3WB;wӿe٘s y@/ bdsھW5eZJlxY"	o̝Eϻ&(&ړp=duLn(4![08N8EI5\
+ d|zin͝8j2Ϙ5DPb-45kk40Wf0X{7&nm"Cj${תQ
+rIu4N]*m$V*&)h#t*Cb>8SnRYTCܦg9<e+"2]Rnx1=5ˊY.MCiEc,"UzJhyugӌ77xÇ/zퟚoM	fЗh&dh/QNQJY^$hm2R:⵬8+@<t ˜JZHL*yCPD?<!.HRr#FLa菝LC6e\lh Uoj#$uU 2fRڤsAVW%s'PeJU_Ӡ3ׯnݍ.L!$ɓVk7)p@c=VĶd&ZʗevoSek঩!F8cE]	EJ!@1b[ld(X:k,<Meq*%5ev>
+[i8A|_قT(y$b.?x@ހAgw $eǯ4mq_R@k23bYX^8!RH.iXhkdYƕhK.WT{<:9uOoy--J%8
+/7ǚ
+sRšQUQb
+=[%TKxEQgYlZ9cJe#4P׬~
+G=3\Ș}/H+-z0n 1@U1M$-&ᡳL0ɊGwT2`皧וg)QZ8%@	-䐦{ TNN&ќ-Mo-a/sR)쳌ERW_? jQe|oj0_8V2u7&2Y]9k{;`,V:TFͦ]R,]:X:O}.X`:'&DyǙw|/k" jپZ](}	`M3Mqagd^അ.-;g{wC0_M?^\QCXSIXўQ,;]j]$/
+f(x Ț3:I鼚	0's9ky+:fEU*Ê;=0Rul\NaB;l
+=nlc B.?3_8CzmB(ĖF(^\^^鎯_Jn>sR\ↈlb` 8 [Ȓ]Ⓝ25c]5KLgJuѐ۫%`a}7y<@FFF #/x[z}ghR("iP,#JV01(c$dЉS2	ULd}Foq8Z"xEcL%9NזbQ=KkFSFEEtSu^P&xdvLgV"osGE|˯oK0.dv^4'Q@FT}B)bEmf σ$#&lWAV5Fow,ÖA*5!ߘ-jyFUr1(;pNW:?LEĬW˼~,=*_2A'[GDB;]6],uk;9+$Ұv2Ug	:)pYs%.zBO󈙎yeH~N)yy
+C=7?\s	wa̗l
+9\@XҰfMVb'T&6ekX,h%#zf+ЄRVͫ:HR/c85ݳ6畇W}*'LYmA*AksL<^;/РAWyoόCP%߈qt<#
+aW9jm$66
+H.Vx5X]4kڋU`,K%TP<Q!::i `'>ãړP^t(?~D?\:/и !?5풌ՎXՒm҅/^)!A3pFT`+ʘcE
+I&j/կr0WllQ^)dd}L&Osv"Srmq؇Q>d%.1F :l7Ok%~4nփ.Zn{%.Z:R{[aZmLr^V.BԋUӐkhU
+,FO'txXc<lP<e536wz+G??ZOR5fksН$Qm'^3b@F.|cjZ"OjR/輥~Μ\^qDaAHk3O5
+PRy7a܌|@Ơ7_Su0u
+uy}44amyxxBي[)U3 Hf2Zf(ɺ^blL$vLC+&Pd4+b&6'F0܋1d6g$1S[ҷ7o4}v2G[t̗
+hdCWHr
+)_hNf
+hMQ_;]52I8ڷ8ģv"g90$-,.*C[Eh.Q7-]5>냃ktk)׷:ȵ'}cxwgf
+O
+*Sk5w"ZѪh{CkǒoE+.HHΘ4ߞtªPVÂvnPHL hC<3#G õ?`^_`/4t o2t2Q-k`Pa\UsaV(w2'OYY
+<IfhF$&TՄ1Y IIUoݺYoZ߂`~L;Uifk\Bs@LDV>RQ%ge{d,o'.N*)m֟|Y3.WG|Y3Q\@LA/D _rB%JppPȯ믍xyD H1}Vr'\v\sRos[TJDc^C4++cs}{]1:GU3?}+~u0"OF;h@C<kfs42<HRCHaLSȊ&rRE5YI(c֌kHĴz2=
+<'kc9DaF;]3u
+?^˹[p/cwU@C=cwy)Eqz
+f!xZ&9#:و5֥<ϱP|W4"52~-+p[g2{k_}!!C%h0P>gNemɜ
+¬VH
+6u.aQUYˋۃ{j|4nlaowow@u Ugиo~)y-5x%۔I美z%i{d2)/r8LD{>4(6"p80wLAok2>}J|x~z}8<sGN:1C	ЩY,RϴZP {^YC4p9IᣓzpF!77$7͐JHơ;w/(9(n.d*d7m6Cv"4fX[
+|7}}%	=Z§$lwmXor:^\M
+=VA r	1
+Oַ:3z	ys:̬=eJAix:Y񧪌H!X9ΥaiQ| 0kVϺp`;O[*u%JnW8%îMu:APfbuD@r@L?C	NfMe)ܱdY͑{CPo<K1֗d(ʿetxy7(1=֡S^lʺMO.')3]rzkJlh(u{<A1NaF#_&ou0{^@i(6I-2sΜ٠p&Zj	(!U|2$,> x3^{>ȷn}tQUkg趙TD[VI
+q0MOx^ҐKs_5Wl9uM&jyO>Y}AA:"+W4za']':5#5znƟ-ey2x5":fs#=([&Kou0;2db6ӊPRďKg2FiW[Yza6=@UAVU/+5ׁoSfbɪC)x(x,]%'IOdXUEmnڣ3uR ;+{Dܾ3yo&֗g~߇/\C/fh`OIZ`Zza#]Ⱦ3`@ vyrXo*:O_!L[f"=4,	iC5OYȀ6zc7~cvf8d@3Y`^gh#HF&G424b3"Vhld\;l>ö²$+(#|{O.-;X X[WOW@?甝+!WΚ6v.ҰJaoSy
+\f3JndѨcNf!l|ƁFfn D
+@f5eX//<dQy` ?!1%x9PV.r:W.
+DQZ*H)KL	1ۦĭ~>O@^ZQr_	{ԣkڭY(ncٹ20e{uY}{.<d䵘:9%Q7SSW,nJkfu歷2O=sw乮u0/#C	u(Jd\; \"#YzzA+UO@^2
+rF7q:d/u,AV^kAW="l_ 9wo^臱;1:3s]xADևх:^3z(C\!8@Qeߕw~יy}}H'!I],̓'Oi|.oe^_Az]f_|/B[@^jzzIu0ycmm\zuZ[c_z.)EcRVEz~U7%w۳f
+_  Ǟ    IENDB`
+
+--- create-a-drag-and-drop-window-inside-a-custom-editor-window/DragAndDropManipulator.cs ---
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class DragAndDropManipulator : PointerManipulator
+{
+    public DragAndDropManipulator(VisualElement target)
+    {
+        this.target = target;
+        root = target.parent;
+    }
+
+    protected override void RegisterCallbacksOnTarget()
+    {
+        target.RegisterCallback<PointerDownEvent>(PointerDownHandler);
+        target.RegisterCallback<PointerMoveEvent>(PointerMoveHandler);
+        target.RegisterCallback<PointerUpEvent>(PointerUpHandler);
+        target.RegisterCallback<PointerCaptureOutEvent>(PointerCaptureOutHandler);
+    }
+
+    protected override void UnregisterCallbacksFromTarget()
+    {
+        target.UnregisterCallback<PointerDownEvent>(PointerDownHandler);
+        target.UnregisterCallback<PointerMoveEvent>(PointerMoveHandler);
+        target.UnregisterCallback<PointerUpEvent>(PointerUpHandler);
+        target.UnregisterCallback<PointerCaptureOutEvent>(PointerCaptureOutHandler);
+    }
+
+    private Vector2 targetStartPosition { get; set; }
+
+    private Vector3 pointerStartPosition { get; set; }
+
+    private bool enabled { get; set; }
+
+    private VisualElement root { get; }
+
+    private void PointerDownHandler(PointerDownEvent evt)
+    {
+        targetStartPosition = target.transform.position;
+        pointerStartPosition = evt.position;
+        target.CapturePointer(evt.pointerId);
+        enabled = true;
+    }
+
+    private void PointerMoveHandler(PointerMoveEvent evt)
+    {
+        if (enabled && target.HasPointerCapture(evt.pointerId))
+        {
+            Vector3 pointerDelta = evt.position - pointerStartPosition;
+
+            target.transform.position = new Vector2(
+                Mathf.Clamp(targetStartPosition.x + pointerDelta.x, 0, target.panel.visualTree.worldBound.width),
+                Mathf.Clamp(targetStartPosition.y + pointerDelta.y, 0, target.panel.visualTree.worldBound.height));
+        }
+    }
+
+    private void PointerUpHandler(PointerUpEvent evt)
+    {
+        if (enabled && target.HasPointerCapture(evt.pointerId))
+        {
+            target.ReleasePointer(evt.pointerId);
+        }
+    }
+
+    private void PointerCaptureOutHandler(PointerCaptureOutEvent evt)
+    {
+        if (enabled)
+        {
+            VisualElement slotsContainer = root.Q<VisualElement>("slots");
+            UQueryBuilder<VisualElement> allSlots =
+                slotsContainer.Query<VisualElement>(className: "slot");
+            UQueryBuilder<VisualElement> overlappingSlots =
+                allSlots.Where(OverlapsTarget);
+            VisualElement closestOverlappingSlot =
+                FindClosestSlot(overlappingSlots);
+            Vector3 closestPos = Vector3.zero;
+            if (closestOverlappingSlot != null)
+            {
+                closestPos = RootSpaceOfSlot(closestOverlappingSlot);
+                closestPos = new Vector2(closestPos.x - 5, closestPos.y - 5);
+            }
+            target.transform.position =
+                closestOverlappingSlot != null ?
+                closestPos :
+                targetStartPosition;
+
+            enabled = false;
+        }
+    }
+
+    private bool OverlapsTarget(VisualElement slot)
+    {
+        return target.worldBound.Overlaps(slot.worldBound);
+    }
+
+    private VisualElement FindClosestSlot(UQueryBuilder<VisualElement> slots)
+    {
+        List<VisualElement> slotsList = slots.ToList();
+        float bestDistanceSq = float.MaxValue;
+        VisualElement closest = null;
+        foreach (VisualElement slot in slotsList)
+        {
+            Vector3 displacement =
+                RootSpaceOfSlot(slot) - target.transform.position;
+            float distanceSq = displacement.sqrMagnitude;
+            if (distanceSq < bestDistanceSq)
+            {
+                bestDistanceSq = distanceSq;
+                closest = slot;
+            }
+        }
+        return closest;
+    }
+
+    private Vector3 RootSpaceOfSlot(VisualElement slot)
+    {
+        Vector2 slotWorldSpace = slot.parent.LocalToWorld(slot.layout.position);
+        return root.WorldToLocal(slotWorldSpace);
+    }
+}
+
+--- drag-and-drop-across-window/DragAndDrop.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="DragAndDrop.uss" />
+    <ui:VisualElement class="background">
+        <ui:VisualElement class="header">
+            <ui:Label text="Drag And Drop Sample" display-tooltip-when-elided="true" class="header__label" />
+        </ui:VisualElement>
+        <ui:VisualElement class="drop-area">
+            <ui:Label text="Drag an asset here..." display-tooltip-when-elided="true" class="drop-area__label" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
+
+
+--- drag-and-drop-across-window/DragAndDrop.uss ---
+.background {
+    flex-grow: 1;
+    background-color: rgba(30, 30, 30, 255);
+}
+
+.header {
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgba(112, 128, 144, 255);
+    border-left-color: rgba(211, 211, 211, 255);
+    border-right-color: rgba(211, 211, 211, 255);
+    border-top-color: rgba(211, 211, 211, 255);
+    border-bottom-color: rgba(211, 211, 211, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
+.header__label {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 255);
+}
+
+.drop-area {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgba(112, 128, 144, 255);
+    border-left-color: rgba(211, 211, 211, 255);
+    border-right-color: rgba(211, 211, 211, 255);
+    border-top-color: rgba(211, 211, 211, 255);
+    border-bottom-color: rgba(211, 211, 211, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.drop-area--dropping {
+    opacity: 0.4;
+    background-color: rgba(0, 100, 0, 255);
+}
+
+.drop-area__label {
+    -unity-font-style: italic;
+    color: rgba(255, 255, 255, 255);
+}
+
+--- drag-and-drop-across-window/Editor/DragAndDropWindow.cs ---
+ using UnityEditor;
+    using UnityEngine;
+    using UnityEngine.UIElements;
+
+    namespace Samples.Editor.General
+    {
+        public partial class DragAndDropWindow : EditorWindow
+        {
+            // This is the visual tree that contains the UI structure of the window.
+            [SerializeField]
+            VisualTreeAsset uxmlAsset;
+
+            // This manipulator contains all of the event logic for this window.
+            DragAndDropManipulator manipulator;
+
+            // This is the minimum size of both windows.
+            readonly static Vector2 windowMinSize = new(300, 180);
+
+            // These are the starting positions of the windows.
+            readonly static Vector2 windowAPosition = new(50, 50);
+            readonly static Vector2 windowBPosition = new(450, 100);
+
+            // These are the titles of the windows.
+            const string windowATitle = "Drag and Drop A";
+            const string windowBTitle = "Drag and Drop B";
+
+            // This method opens two DragAndDropWindows when a user selects the specified menu item.
+            [MenuItem("Window/UI Toolkit/Drag And Drop (Editor)")]
+            public static void OpenDragAndDropWindows()
+            {
+                // Create the windows.
+                var windowA = CreateInstance<DragAndDropWindow>();
+                var windowB = CreateInstance<DragAndDropWindow>();
+
+                // Define the attributes of the windows and display them.
+                windowA.minSize = windowMinSize;
+                windowB.minSize = windowMinSize;
+                windowA.Show();
+                windowB.Show();
+                windowA.titleContent = new(windowATitle);
+                windowB.titleContent = new(windowBTitle);
+                windowA.position = new(windowAPosition, windowMinSize);
+                windowB.position = new(windowBPosition, windowMinSize);
+            }
+
+            void OnEnable()
+            {
+                if (uxmlAsset != null)
+                {
+                    uxmlAsset.CloneTree(rootVisualElement);
+                }
+
+                // Instantiate manipulator.
+                manipulator = new(rootVisualElement);
+            }
+
+            void OnDisable()
+            {
+                // The RemoveManipulator() method calls the Manipulator's UnregisterCallbacksFromTarget() method.
+                manipulator.target.RemoveManipulator(manipulator);
+            }
+        }
+    }
+
+--- drag-and-drop-across-window/Editor/DragAndDropManipulator.cs ---
+ using UnityEngine;
+    using UnityEditor;
+    using UnityEngine.UIElements;
+
+    namespace Samples.Editor.General
+    {
+        // The DragAndDropManipulator class is a private class within DragAndDropWindow.
+        public partial class DragAndDropWindow
+        {
+            // DragAndDropManipulator is a manipulator that stores pointer-related callbacks, so it inherits from
+            // PointerManipulator.
+            class DragAndDropManipulator : PointerManipulator
+            {
+                // The Label in the window that shows the stored asset, if any.
+                Label dropLabel;
+                // The stored asset object, if any.
+                Object droppedObject = null;
+                // The path of the stored asset, or the empty string if there isn't one.
+                string assetPath = string.Empty;
+
+                public DragAndDropManipulator(VisualElement root)
+                {
+                    // The target of the manipulator, the object to which to register all callbacks, is the drop area.
+                    target = root.Q<VisualElement>(className: "drop-area");
+                    dropLabel = root.Q<Label>(className: "drop-area__label");
+                }
+
+                protected override void RegisterCallbacksOnTarget()
+                {
+                    // Register a callback when the user presses the pointer down.
+                    target.RegisterCallback<PointerDownEvent>(OnPointerDown);
+                    // Register callbacks for various stages in the drag process.
+                    target.RegisterCallback<DragEnterEvent>(OnDragEnter);
+                    target.RegisterCallback<DragLeaveEvent>(OnDragLeave);
+                    target.RegisterCallback<DragUpdatedEvent>(OnDragUpdate);
+                    target.RegisterCallback<DragPerformEvent>(OnDragPerform);
+                }
+
+                protected override void UnregisterCallbacksFromTarget()
+                {
+                    // Unregister all callbacks that you registered in RegisterCallbacksOnTarget().
+                    target.UnregisterCallback<PointerDownEvent>(OnPointerDown);
+                    target.UnregisterCallback<DragEnterEvent>(OnDragEnter);
+                    target.UnregisterCallback<DragLeaveEvent>(OnDragLeave);
+                    target.UnregisterCallback<DragUpdatedEvent>(OnDragUpdate);
+                    target.UnregisterCallback<DragPerformEvent>(OnDragPerform);
+                }
+
+                // This method runs when a user presses a pointer down on the drop area.
+                void OnPointerDown(PointerDownEvent _)
+                {
+                    // Only do something if the window currently has a reference to an asset object.
+                    if (droppedObject != null)
+                    {
+                        // Clear existing data in DragAndDrop class.
+                        DragAndDrop.PrepareStartDrag();
+
+                        // Store reference to object and path to object in DragAndDrop static fields.
+                        DragAndDrop.objectReferences = new[] { droppedObject };
+                        if (assetPath != string.Empty)
+                        {
+                            DragAndDrop.paths = new[] { assetPath };
+                        }
+                        else
+                        {
+                            DragAndDrop.paths = new string[] { };
+                        }
+
+                        // Start a drag.
+                        DragAndDrop.StartDrag(string.Empty);
+                    }
+                }
+
+                // This method runs if a user brings the pointer over the target while a drag is in progress.
+                void OnDragEnter(DragEnterEvent _)
+                {
+                    // Get the name of the object the user is dragging.
+                    var draggedName = string.Empty;
+                    if (DragAndDrop.paths.Length > 0)
+                    {
+                        assetPath = DragAndDrop.paths[0];
+                        var splitPath = assetPath.Split('/');
+                        draggedName = splitPath[splitPath.Length - 1];
+                    }
+                    else if (DragAndDrop.objectReferences.Length > 0)
+                    {
+                        draggedName = DragAndDrop.objectReferences[0].name;
+                    }
+
+                    // Change the appearance of the drop area if the user drags something over the drop area and holds it
+                    // there.
+                    dropLabel.text = $"Dropping '{draggedName}'...";
+                    target.AddToClassList("drop-area--dropping");
+                }
+
+                // This method runs if a user makes the pointer leave the bounds of the target while a drag is in progress.
+                void OnDragLeave(DragLeaveEvent _)
+                {
+                    assetPath = string.Empty;
+                    droppedObject = null;
+                    dropLabel.text = "Drag an asset here...";
+                    target.RemoveFromClassList("drop-area--dropping");
+                }
+
+                // This method runs every frame while a drag is in progress.
+                void OnDragUpdate(DragUpdatedEvent _)
+                {
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Generic;
+                }
+
+                // This method runs when a user drops a dragged object onto the target.
+                void OnDragPerform(DragPerformEvent _)
+                {
+                    // Set droppedObject and draggedName fields to refer to dragged object.
+                    droppedObject = DragAndDrop.objectReferences[0];
+                    string draggedName;
+                    if (assetPath != string.Empty)
+                    {
+                        var splitPath = assetPath.Split('/');
+                        draggedName = splitPath[splitPath.Length - 1];
+                    }
+                    else
+                    {
+                        draggedName = droppedObject.name;
+                    }
+
+                    // Visually update target to indicate that it now stores an asset.
+                    dropLabel.text = $"Containing '{draggedName}'...\n\n" +
+                        $"(You can also drag from here)";
+                    target.RemoveFromClassList("drop-area--dropping");
+                }
+            }
+        }
+    }

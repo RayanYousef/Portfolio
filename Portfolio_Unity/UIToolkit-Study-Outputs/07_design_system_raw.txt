@@ -1,0 +1,571 @@
+--- SwirlFilterExample.uss ---
+.outside {
+    flex-grow: 1;
+    position: absolute;
+    height: 207px;
+    width: 234px;
+    top: 46px;
+    left: 27px;
+    background-color: rgb(255, 0, 0);
+}
+
+.inside {
+    flex-grow: 1;
+    position: absolute;
+    height: 75px;
+    width: 100px;
+    top: 46px;
+    left: 27px;
+    background-color: rgb(0, 255, 247);
+}
+
+.filterEffect {
+    filter: filter("SwirlFilter/SwirlFilterFunction.asset" 58.9 2.3);
+}
+
+
+--- texture_preview_element.uss ---
+.texture-preview-element {
+    width: 200px;
+    height: 200px;
+}
+
+.texture-preview-element > .unity-image {
+    flex-grow: 1;
+}
+
+--- LinkTag.uss ---
+Label {
+    font-size: 75px;
+}
+
+/*Turn the mouse pointer into a hand pointer when you hover over the link text.
+  Note that the cursor override for the link value doesn’t work at runtime.*/
+
+.link-cursor {
+    cursor: link;
+}
+
+--- tank_inspector_styles.uss ---
+.container {
+	background-color: rgb(80, 80, 80);
+	flex-direction: column;
+}
+Label {
+	background-color: rgb(80, 80, 80);
+}
+TextField:hover {
+	background-color: rgb(255, 255, 0);
+}
+FloatField {
+	background-color: rgb(0, 0, 255);
+}
+
+--- TabbedMenu-style.uss ---
+/* Style for tabs */
+#tabs {
+    flex-direction: row;
+    background-color: rgb(229, 223, 223);
+    font-size: 12px;
+    -unity-font-style: bold;
+    font-size: 14px;
+}
+
+/* Sets each label in tabs to have the same size. */
+.tab {
+    flex-grow:1;
+}
+
+/* Adds background color for the selected tab */
+.currentlySelectedTab {
+    background-color: rgb(173, 166, 166);
+}
+
+/* Style for tabContent */
+#tabContent {
+    background-color: rgb(255, 255, 255);
+    font-size: 20px;
+}
+
+/* Hides the unselected tab content */
+.unselectedContent {
+    display: none;
+}
+
+
+--- NameTag.uss ---
+#NameTag {
+    /* This sets the position of the Label element to be absolute, rather than relative to the parent container. */
+    position: absolute;
+    /* This ensures that the pivot point of the Label element is centered, rather than in the top left corner.*/
+    translate: -50% -50%;
+    -unity-font-style: bold;
+    color: rgb(181, 210, 248);
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(11, 60, 123);
+}
+
+
+--- PositioningTest.uss ---
+.vs {
+    height: 70px;
+    width: 70px;
+    margin-bottom: 2px;
+    background-color: gray;
+}
+
+#relative{
+    width: 70px;
+    height: 70px;
+    background-color: purple;
+    left: 25px;
+    margin-bottom: 2px;
+    position:relative;
+}
+
+#absolutePositionElement{
+    left: 25px;
+    top: 25px;
+    width: 70px;
+    height: 70px;
+    background-color: black;
+    position: absolute;
+}
+
+
+--- ExampleElementCustomStyle.uss ---
+ExampleElementCustomStyle {
+	--gradient-from: red;
+	--gradient-to: yellow;
+}
+
+--- texture_preview_element.uss ---
+.texture-preview-element {
+    width: 200px;
+    height: 200px;
+}
+
+.texture-preview-element > .unity-image {
+    flex-grow: 1;
+}
+
+--- RadialProgress.uss ---
+.radial-progress {
+        min-width: 26px;
+        min-height: 20px;
+        --track-color: rgb(130, 130, 130);
+        --progress-color: rgb(46, 132, 24);
+        --percentage-color: white;
+        margin-left: 5px;
+        margin-right: 5px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        flex-direction: row;
+        justify-content: center;
+        width: 100px;
+        height: 100px;
+    }
+
+    .radial-progress__label {
+        -unity-text-align: middle-left;
+        color: var(--percentage-color);
+    }
+
+--- SlideToggle.uss ---
+.slide-toggle__input {
+    background-color: var(--unity-colors-slider_groove-background);
+    max-width: 25px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow: visible;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-right-color: var(--unity-colors-slider_thumb-border);
+    border-top-color: var(--unity-colors-slider_thumb-border);
+    border-bottom-color: var(--unity-colors-slider_thumb-border);
+    max-height: 16px;
+    margin-top: 10px;
+    border-left-color: var(--unity-colors-slider_thumb-border);
+    transition-property: background-color;
+    transition-duration: 0.5s;
+}
+
+.slide-toggle__input-knob {
+    height: 16px;
+    width: 16px;
+    background-color: var(--unity-colors-slider_thumb-background);
+    position: absolute;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    top: -1px;
+    transition-property: translate, background-color;
+    transition-duration: 0.5s, 0.5s;
+    translate: -1px 0;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: var(--unity-colors-slider_thumb-border);
+    border-right-color: var(--unity-colors-slider_thumb-border);
+    border-top-color: var(--unity-colors-slider_thumb-border);
+    border-bottom-color: var(--unity-colors-slider_thumb-border);
+}
+
+.slide-toggle__input--checked {
+    background-color: rgb(0, 156, 10);
+}
+
+.slide-toggle__input--checked > .slide-toggle__input-knob {
+    translate: 8px 0;
+}
+
+.slide-toggle:focus .slide-toggle__input-knob {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-color: var(--unity-colors-input_field-border-focus);
+    border-right-color: var(--unity-colors-input_field-border-focus);
+    border-top-color: var(--unity-colors-input_field-border-focus);
+    border-bottom-color: var(--unity-colors-input_field-border-focus);
+}
+
+--- ListEntry.uss ---
+#list-entry {
+    height: 41px;
+    align-items: flex-start;
+    justify-content: center;
+    padding-left: 10px;
+    background-color: rgb(170, 89, 57);
+    border-color: rgb(49, 26, 17);
+    border-width: 2px;
+    border-radius: 15px;
+}
+
+#character-name {
+    -unity-font-style: bold;
+    font-size: 18px;
+    color: rgb(49, 26, 17);
+}
+
+--- MainView.uss ---
+#background {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(115, 37, 38);
+}
+
+#main-container {
+    flex-direction: row;
+    height: 350px;
+}
+
+#character-list {
+    width: 230px;
+    border-color: rgb(49, 26, 17);
+    border-width: 4px;
+    background-color: rgb(110, 57, 37);
+    border-radius: 15px;
+    margin-right: 6px;
+}
+
+#character-name {
+    -unity-font-style: bold;
+    font-size: 18px;
+}
+
+#character-class {
+    margin-top: 2px;
+    margin-bottom: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#right-container {
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+#details-container {
+    align-items: center;
+    background-color: rgb(170, 89, 57);
+    border-width: 4px;
+    border-color: rgb(49, 26, 17);
+    border-radius: 15px;
+    width: 252px;
+    justify-content: center;
+    padding: 8px;
+    height: 163px;
+}
+
+#details {
+    border-color: rgb(49, 26, 17);
+    border-width: 2px;
+    height: 120px;
+    width: 120px;
+    border-radius: 13px;
+    padding: 4px;
+    background-color: rgb(255, 133, 84);
+}
+
+#character-portrait {
+    flex-grow: 1;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.unity-collection-view__item {
+    justify-content: center;
+}
+
+
+--- DragAndDropWindow.uss ---
+.slot {
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+    background-color: rgb(255, 255, 255);
+    border-top-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.slot_row {
+    flex-direction: row;
+}
+
+.object {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    border-radius: 30px;
+    background-color: rgb(0, 0, 0);
+}
+
+--- ScrollViewExample.uss ---
+Label {
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+    /* Style to wrap text of the label */
+    white-space: normal;
+}
+
+/* Style to wrap elements inside the scroll view */
+#scroll-view-wrap-example .unity-scroll-view__content-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+Button {
+    width: 50px;
+    height: 50px;
+}
+
+--- TransitionExample.uss ---
+.click-me {
+    width: 250px;
+    height: 50px;
+    font-size: 40px;
+    -unity-font-style: bold-and-italic;
+    margin: 30px;
+}
+
+.color-changer {
+    margin: 10px;
+    width: 150px;
+    height: 150px;
+    border-width: 10px;
+    border-radius: 75px;
+    background-color: rgb(0, 31, 138);
+    transition: background-color 3s ease-in-out 1s;
+}
+
+.main-container {
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+    background-color: rgb(60, 60, 60);
+}
+
+.label-section {
+    margin: 10px;
+    border-width: 2px;
+    width: 95%;
+    align-items: center;
+}
+
+.label-line {
+    flex-direction: row;
+    margin: 5px;
+    flex-grow: 1;
+    align-items: center;
+    width: 90%;
+    height: 25px;
+    font-size: 14px;
+    padding: 0;
+}
+
+.color-transition {
+    background-color: rgb(177, 221, 111);
+}
+
+--- LoopingExample.uss ---
+#yoyo-label{
+    transition-duration: 3s;
+}
+.text-style {
+    font-size: 20px;
+    flex-grow: 0;
+    margin: 20px;
+}
+.enlarge-scale-a2b{
+    scale: 1.5 1.5;
+    transition-duration: 3s;
+}
+.enlarge-scale-yoyo{
+    scale: 1.5 1.5;
+}
+#container{
+    flex-grow:1;
+    justify-content: space-around;
+    align-items: center;
+}
+
+--- PopupExample.uss ---
+.popup-button {
+        width: 200px;
+    }
+
+--- DragAndDrop.uss ---
+.background {
+    flex-grow: 1;
+    background-color: rgba(30, 30, 30, 255);
+}
+
+.header {
+    align-items: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgba(112, 128, 144, 255);
+    border-left-color: rgba(211, 211, 211, 255);
+    border-right-color: rgba(211, 211, 211, 255);
+    border-top-color: rgba(211, 211, 211, 255);
+    border-bottom-color: rgba(211, 211, 211, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+}
+
+.header__label {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 255);
+}
+
+.drop-area {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: rgba(112, 128, 144, 255);
+    border-left-color: rgba(211, 211, 211, 255);
+    border-right-color: rgba(211, 211, 211, 255);
+    border-top-color: rgba(211, 211, 211, 255);
+    border-bottom-color: rgba(211, 211, 211, 255);
+    border-left-width: 2px;
+    border-right-width: 2px;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.drop-area--dropping {
+    opacity: 0.4;
+    background-color: rgba(0, 100, 0, 255);
+}
+
+.drop-area__label {
+    -unity-font-style: italic;
+    color: rgba(255, 255, 255, 255);
+}
+
+--- TransitionExample.uss ---
+.custom-label {
+    font-size: 20px;
+    -unity-font-style: bold;
+    color: rgb(68, 138, 255);
+}
+
+Label:hover {
+    scale: 1.1 1;
+    rotate: 10deg;
+}
+
+Label {
+    transition-duration: 3s;
+}
+
+
+--- tank_inspector_styles.uss ---
+.container {
+	background-color: rgb(80, 80, 80);
+	flex-direction: column;
+}
+Label {
+	background-color: rgb(80, 80, 80);
+}
+TextField:hover {
+	background-color: rgb(255, 255, 0);
+}
+FloatField {
+	background-color: rgb(0, 0, 255);
+}
+
+--- RadialProgress.uss ---
+.radial-progress {
+    min-width: 26px;
+    min-height: 20px;
+    --track-color: rgb(130, 130, 130);
+    --progress-color: rgb(46, 132, 24);
+    --percentage-color: white;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    flex-direction: row;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+}
+
+.radial-progress__label {
+    -unity-text-align: middle-left;
+    color: var(--percentage-color);
+}

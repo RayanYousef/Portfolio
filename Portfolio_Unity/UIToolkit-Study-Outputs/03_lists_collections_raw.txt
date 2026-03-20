@@ -1,0 +1,1117 @@
+Raw files for Lists & Collections
+
+--- create-listview-runtime-ui/UI/ListEntry.uss ---
+#list-entry {
+    height: 41px;
+    align-items: flex-start;
+    justify-content: center;
+    padding-left: 10px;
+    background-color: rgb(170, 89, 57);
+    border-color: rgb(49, 26, 17);
+    border-width: 2px;
+    border-radius: 15px;
+}
+
+#character-name {
+    -unity-font-style: bold;
+    font-size: 18px;
+    color: rgb(49, 26, 17);
+}
+
+--- create-listview-runtime-ui/UI/MainView.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="MainView.uss" />
+    <ui:VisualElement name="background">
+        <ui:VisualElement name="main-container">
+            <ui:ListView focusable="true" name="character-list" />
+            <ui:VisualElement name="right-container">
+                <ui:VisualElement name="details-container">
+                    <ui:VisualElement name="details">
+                        <ui:VisualElement name="character-portrait" />
+                    </ui:VisualElement>
+                    <ui:Label text="Label" name="character-name" />
+                    <ui:Label text="Label" display-tooltip-when-elided="true" name="character-class" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
+
+
+--- create-listview-runtime-ui/UI/MainView.uss ---
+#background {
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(115, 37, 38);
+}
+
+#main-container {
+    flex-direction: row;
+    height: 350px;
+}
+
+#character-list {
+    width: 230px;
+    border-color: rgb(49, 26, 17);
+    border-width: 4px;
+    background-color: rgb(110, 57, 37);
+    border-radius: 15px;
+    margin-right: 6px;
+}
+
+#character-name {
+    -unity-font-style: bold;
+    font-size: 18px;
+}
+
+#character-class {
+    margin-top: 2px;
+    margin-bottom: 8px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+#right-container {
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+#details-container {
+    align-items: center;
+    background-color: rgb(170, 89, 57);
+    border-width: 4px;
+    border-color: rgb(49, 26, 17);
+    border-radius: 15px;
+    width: 252px;
+    justify-content: center;
+    padding: 8px;
+    height: 163px;
+}
+
+#details {
+    border-color: rgb(49, 26, 17);
+    border-width: 2px;
+    height: 120px;
+    width: 120px;
+    border-radius: 13px;
+    padding: 4px;
+    background-color: rgb(255, 133, 84);
+}
+
+#character-portrait {
+    flex-grow: 1;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.unity-collection-view__item {
+    justify-content: center;
+}
+
+
+--- create-listview-runtime-ui/UI/ListEntry.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+<Style src="ListEntry.uss" />
+<ui:VisualElement name="list-entry">
+    <ui:Label text="Label" display-tooltip-when-elided="true" name="character-name" />
+</ui:VisualElement>
+</ui:UXML>
+
+
+--- create-listview-runtime-ui/Scripts/CharacterListEntryController.cs ---
+using UnityEngine.UIElements;
+
+public class CharacterListEntryController
+{
+    Label m_NameLabel;
+
+    // This function retrieves a reference to the
+    // character name label inside the UI element.
+    public void SetVisualElement(VisualElement visualElement)
+    {
+        m_NameLabel = visualElement.Q<Label>("character-name");
+    }
+
+    // This function receives the character whose name this list
+    // element is supposed to display. Since the elements list
+    // in a `ListView` are pooled and reused, it's necessary to
+    // have a `Set` function to change which character's data to display.
+    public void SetCharacterData(CharacterData characterData)
+    {
+        m_NameLabel.text = characterData.CharacterName;
+    }
+}
+
+--- create-listview-runtime-ui/Scripts/CharacterData.cs ---
+using UnityEngine;
+
+public enum ECharacterClass
+{
+    Knight, Ranger, Wizard
+}
+
+[CreateAssetMenu]
+public class CharacterData : ScriptableObject
+{
+    public string CharacterName;
+    public ECharacterClass Class;
+    public Sprite PortraitImage;
+}
+
+--- create-listview-runtime-ui/Scripts/MainView.cs ---
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class MainView : MonoBehaviour
+{
+    [SerializeField]
+    VisualTreeAsset m_ListEntryTemplate;
+
+    void OnEnable()
+    {
+        // The UXML is already instantiated by the UIDocument component
+        var uiDocument = GetComponent<UIDocument>();
+
+        // Initialize the character list controller
+        var characterListController = new CharacterListController();
+        characterListController.InitializeCharacterList(uiDocument.rootVisualElement, m_ListEntryTemplate);
+    }
+}
+
+--- create-listview-runtime-ui/Scripts/CharacterListController.cs ---
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class CharacterListController
+{
+    // UXML template for list entries
+    VisualTreeAsset m_ListEntryTemplate;
+
+    // UI element references
+    ListView m_CharacterList;
+    Label m_CharClassLabel;
+    Label m_CharNameLabel;
+    VisualElement m_CharPortrait;
+
+    List<CharacterData> m_AllCharacters;
+
+    public void InitializeCharacterList(VisualElement root, VisualTreeAsset listElementTemplate)
+    {
+        EnumerateAllCharacters();
+
+        // Store a reference to the template for the list entries
+        m_ListEntryTemplate = listElementTemplate;
+
+        // Store a reference to the character list element
+        m_CharacterList = root.Q<ListView>("character-list");
+
+        // Store references to the selected character info elements
+        m_CharClassLabel = root.Q<Label>("character-class");
+        m_CharNameLabel = root.Q<Label>("character-name");
+        m_CharPortrait = root.Q<VisualElement>("character-portrait");
+
+        FillCharacterList();
+
+        // Register to get a callback when an item is selected
+        m_CharacterList.selectionChanged += OnCharacterSelected;
+    }
+
+    void EnumerateAllCharacters()
+    {
+        m_AllCharacters = new List<CharacterData>();
+        m_AllCharacters.AddRange(Resources.LoadAll<CharacterData>("Characters"));
+    }
+
+    void FillCharacterList()
+    {
+        // Set up a make item function for a list entry
+        m_CharacterList.makeItem = () =>
+        {
+            // Instantiate the UXML template for the entry
+            var newListEntry = m_ListEntryTemplate.Instantiate();
+
+            // Instantiate a controller for the data
+            var newListEntryLogic = new CharacterListEntryController();
+
+            // Assign the controller script to the visual element
+            newListEntry.userData = newListEntryLogic;
+
+            // Initialize the controller script
+            newListEntryLogic.SetVisualElement(newListEntry);
+
+            // Return the root of the instantiated visual tree
+            return newListEntry;
+        };
+
+        // Set up bind function for a specific list entry
+        m_CharacterList.bindItem = (item, index) =>
+        {
+            (item.userData as CharacterListEntryController)?.SetCharacterData(m_AllCharacters[index]);
+        };
+
+        // Set a fixed item height matching the height of the item provided in makeItem.
+        // For dynamic height, see the virtualizationMethod property.
+        m_CharacterList.fixedItemHeight = 45;
+
+        // Set the actual item's source list/array
+        m_CharacterList.itemsSource = m_AllCharacters;
+    }
+
+    void OnCharacterSelected(IEnumerable<object> selectedItems)
+    {
+        // Get the currently selected item directly from the ListView
+        var selectedCharacter = m_CharacterList.selectedItem as CharacterData;
+
+        // Handle none-selection (Escape to deselect everything)
+        if (selectedCharacter == null)
+        {
+            // Clear
+            m_CharClassLabel.text = "";
+            m_CharNameLabel.text = "";
+            m_CharPortrait.style.backgroundImage = null;
+
+            return;
+        }
+
+        // Fill in character details
+        m_CharClassLabel.text = selectedCharacter.Class.ToString();
+        m_CharNameLabel.text = selectedCharacter.CharacterName;
+        m_CharPortrait.style.backgroundImage = new StyleBackground(selectedCharacter.PortraitImage);
+    }
+}
+
+--- create-listviews-treeviews/PlanetsListView.cs ---
+using UnityEditor;
+using UnityEngine.UIElements;
+
+public class PlanetsListView : PlanetsWindow
+{
+    [MenuItem("Planets/Standard List")]
+    static void Summon()
+    {
+        GetWindow<PlanetsListView>("Standard Planet List");
+    }
+
+    void CreateGUI()
+    {
+        uxmlAsset.CloneTree(rootVisualElement);
+        var listView = rootVisualElement.Q<ListView>();
+
+        // Set ListView.itemsSource to populate the data in the list.
+        listView.itemsSource = planets;
+
+        // Set ListView.makeItem to initialize each entry in the list.
+        listView.makeItem = () => new Label();
+
+        // Set ListView.bindItem to bind an initialized entry to a data item.
+        listView.bindItem = (VisualElement element, int index) =>
+            (element as Label).text = planets[index].name;
+    }
+}
+
+--- create-listviews-treeviews/PlanetsMultiColumnListView.cs ---
+using UnityEditor;
+using UnityEngine.UIElements;
+
+public class PlanetsMultiColumnListView : PlanetsWindow
+{
+    [MenuItem("Planets/Multicolumn List")]
+    static void Summon()
+    {
+        GetWindow<PlanetsMultiColumnListView>("Multicolumn Planet List");
+    }
+
+    void CreateGUI()
+    {
+        uxmlAsset.CloneTree(rootVisualElement);
+        var listView = rootVisualElement.Q<MultiColumnListView>();
+
+        // Set MultiColumnListView.itemsSource to populate the data in the list.
+        listView.itemsSource = planets;
+
+        // For each column, set Column.makeCell to initialize each cell in the column.
+        // You can index the columns array with names or numerical indices.
+        listView.columns["name"].makeCell = () => new Label();
+        listView.columns["populated"].makeCell = () => new Toggle();
+
+        // For each column, set Column.bindCell to bind an initialized cell to a data item.
+        listView.columns["name"].bindCell = (VisualElement element, int index) =>
+            (element as Label).text = planets[index].name;
+        listView.columns["populated"].bindCell = (VisualElement element, int index) =>
+            (element as Toggle).value = planets[index].populated;
+    }
+}
+
+--- create-listviews-treeviews/PlanetsMultiColumnTreeView.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:MultiColumnTreeView fixed-item-height="20">
+        <!-- Columns and Column aren't Visual Elements or controls; they are considered attributes of MultiColumnListView. -->
+        <ui:Columns>
+            <ui:Column name="name" title="Name" width="120" />
+            <ui:Column name="populated" title="Populated?" width="80" />
+        </ui:Columns>
+    </ui:MultiColumnTreeView>
+</ui:UXML>
+
+
+--- create-listviews-treeviews/PlanetsWindow.cs ---
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+using UnityEngine.UIElements;
+
+// Base class for all windows that display planet information.
+public class PlanetsWindow : EditorWindow
+{
+    [SerializeField]
+    protected VisualTreeAsset uxmlAsset;
+
+    // Nested interface that may be either a single planet or a group of planets.
+    protected interface IPlanetOrGroup
+    {
+        public string name
+        {
+            get;
+        }
+
+        public bool populated
+        {
+            get;
+        }
+    }
+
+    // Nested class that represents a planet.
+    protected class Planet : IPlanetOrGroup
+    {
+        public string name
+        {
+            get;
+        }
+
+        public bool populated
+        {
+            get;
+        }
+
+        public Planet(string name, bool populated = false)
+        {
+            this.name = name;
+            this.populated = populated;
+        }
+    }
+
+    // Nested class that represents a group of planets.
+    protected class PlanetGroup : IPlanetOrGroup
+    {
+        public string name
+        {
+            get;
+        }
+
+        public bool populated
+        {
+            get
+            {
+                var anyPlanetPopulated = false;
+                foreach (Planet planet in planets)
+                {
+                    anyPlanetPopulated = anyPlanetPopulated || planet.populated;
+                }
+                return anyPlanetPopulated;
+            }
+        }
+
+        public readonly IReadOnlyList<Planet> planets;
+
+        public PlanetGroup(string name, IReadOnlyList<Planet> planets)
+        {
+            this.name = name;
+            this.planets = planets;
+        }
+    }
+
+    // Data about planets in our solar system.
+    protected static readonly List<PlanetGroup> planetGroups = new List<PlanetGroup>
+    {
+        new PlanetGroup("Inner Planets", new List<Planet>
+        {
+            new Planet("Mercury"),
+            new Planet("Venus"),
+            new Planet("Earth", true),
+            new Planet("Mars")
+        }),
+        new PlanetGroup("Outer Planets", new List<Planet>
+        {
+            new Planet("Jupiter"),
+            new Planet("Saturn"),
+            new Planet("Uranus"),
+            new Planet("Neptune")
+        })
+    };
+
+    // Expresses planet data as just a list of the planets themselves. Needed for ListView and MultiColumnListView.
+    protected static List<Planet> planets
+    {
+        get
+        {
+            var retVal = new List<Planet>(8);
+            foreach (var group in planetGroups)
+            {
+                retVal.AddRange(group.planets);
+            }
+            return retVal;
+        }
+    }
+
+    // Expresses planet data as a list of TreeViewItemData objects. Needed for TreeView and MultiColumnTreeView.
+    protected static IList<TreeViewItemData<IPlanetOrGroup>> treeRoots
+    {
+        get
+        {
+            int id = 0;
+            var roots = new List<TreeViewItemData<IPlanetOrGroup>>(planetGroups.Count);
+            foreach (var group in planetGroups)
+            {
+                var planetsInGroup = new List<TreeViewItemData<IPlanetOrGroup>>(group.planets.Count);
+                foreach (var planet in group.planets)
+                {
+                    planetsInGroup.Add(new TreeViewItemData<IPlanetOrGroup>(id++, planet));
+                }
+
+                roots.Add(new TreeViewItemData<IPlanetOrGroup>(id++, group, planetsInGroup));
+            }
+            return roots;
+        }
+    }
+}
+
+--- create-listviews-treeviews/PlanetsMultiColumnListView.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:MultiColumnListView fixed-item-height="20">
+        <!-- Columns and Column aren't Visual Elements or controls; they are considered attributes of MultiColumnListView. -->
+        <ui:Columns>
+            <ui:Column name="name" title="Name" width="80" />
+            <ui:Column name="populated" title="Populated?" width="80" />
+        </ui:Columns>
+    </ui:MultiColumnListView>
+</ui:UXML>
+
+--- create-listviews-treeviews/PlanetsListView.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:ListView fixed-item-height="20" />
+</ui:UXML>
+
+
+--- create-listviews-treeviews/PlanetsMultiColumnTreeView.cs ---
+using UnityEditor;
+using UnityEngine.UIElements;
+
+public class PlanetsMultiColumnTreeView : PlanetsWindow
+{
+    [MenuItem("Planets/Multicolumn Tree")]
+    static void Summon()
+    {
+        GetWindow<PlanetsMultiColumnTreeView>("Multicolumn Planet Tree");
+    }
+
+    void CreateGUI()
+    {
+        uxmlAsset.CloneTree(rootVisualElement);
+        var treeView = rootVisualElement.Q<MultiColumnTreeView>();
+
+        // Call MultiColumnTreeView.SetRootItems() to populate the data in the tree.
+        treeView.SetRootItems(treeRoots);
+
+        // For each column, set Column.makeCell to initialize each node in the tree.
+        // You can index the columns array with names or numerical indices.
+        treeView.columns["name"].makeCell = () => new Label();
+        treeView.columns["populated"].makeCell = () => new Toggle();
+
+        // For each column, set Column.bindCell to bind an initialized node to a data item.
+        treeView.columns["name"].bindCell = (VisualElement element, int index) =>
+            (element as Label).text = treeView.GetItemDataForIndex<IPlanetOrGroup>(index).name;
+        treeView.columns["populated"].bindCell = (VisualElement element, int index) =>
+            (element as Toggle).value = treeView.GetItemDataForIndex<IPlanetOrGroup>(index).populated;
+    }
+}
+
+--- create-listviews-treeviews/PlanetsTreeView.cs ---
+using UnityEditor;
+using UnityEngine.UIElements;
+
+public class PlanetsTreeView : PlanetsWindow
+{
+    [MenuItem("Planets/Standard Tree")]
+    static void Summon()
+    {
+        GetWindow<PlanetsTreeView>("Standard Planet Tree");
+    }
+
+    void CreateGUI()
+    {
+        uxmlAsset.CloneTree(rootVisualElement);
+        var treeView = rootVisualElement.Q<TreeView>();
+
+        // Call TreeView.SetRootItems() to populate the data in the tree.
+        treeView.SetRootItems(treeRoots);
+
+        // Set TreeView.makeItem to initialize each node in the tree.
+        treeView.makeItem = () => new Label();
+
+        // Set TreeView.bindItem to bind an initialized node to a data item.
+        treeView.bindItem = (VisualElement element, int index) =>
+            (element as Label).text = treeView.GetItemDataForIndex<IPlanetOrGroup>(index).name;
+    }
+}
+
+--- create-listviews-treeviews/PlanetsTreeView.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:TreeView fixed-item-height="20" />
+</ui:UXML>
+
+--- runtime-binding-listview/GameSwitchListAsset.cs ---
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
+
+namespace UIExamples.RuntimeBindingListView
+{
+    [CreateAssetMenu(fileName = "GameSwitchListAsset.asset", menuName = "GameSwitchListAsset")]
+    public class GameSwitchListAsset : ScriptableObject
+    {
+        public List<GameSwitch> switches = new();
+
+        public void Reset()
+        {
+            switches = new List<GameSwitch>{
+                new() { name = "Use Local Server", enabled = false },
+                new() { name = "Show Debug Menu", enabled = false },
+                new() { name = "Show FPS Counter", enabled = true },
+            };
+        }
+
+        public bool IsSwitchEnabled(string switchName) => switches.Find(s => s.name == switchName).enabled;
+
+        [Serializable]
+        public struct GameSwitch
+        {
+            public bool enabled;
+            public string name;
+        }
+    }
+}
+
+
+--- runtime-binding-listview/UIListView.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:ListView binding-source-selection-mode="AutoAssign" item-template="ListViewItem.uxml" data-source="GameSwitchListAsset.asset" show-foldout-header="true" virtualization-method="DynamicHeight" show-border="false" reorderable="true" horizontal-scrolling="false" selection-type="Single" reorder-mode="Animated" show-add-remove-footer="true">
+        <Bindings>
+            <ui:DataBinding property="itemsSource" data-source-path="switches"/>
+        </Bindings>
+    </ui:ListView>
+</ui:UXML>
+
+
+--- runtime-binding-listview/GameSwitchListAsset.asset ---
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9febeb0ff03ef41c1b57f385c9595122, type: 3}
+  m_Name: GameSwitchListAsset
+  m_EditorClassIdentifier: DocsExampleUIToolkit::GameSwitchListAsset
+  switches:
+  - enabled: 0
+    name: Use Local Server
+  - enabled: 0
+    name: Show Debug Menu
+  - enabled: 1
+    name: Show FPS Counter
+  - enabled: 1
+    name: Show FPS Counter
+
+
+--- runtime-binding-listview/ListViewItem.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="" style="flex-direction: row;">
+        <ui:Toggle>
+            <Bindings>
+                <ui:DataBinding property="value" data-source-path="enabled" binding-mode="TwoWay"/>
+            </Bindings>
+        </ui:Toggle>
+        <ui:TextField placeholder-text="filler text">
+            <Bindings>
+                <ui:DataBinding property="value" data-source-path="name" binding-mode="TwoWay"/>
+            </Bindings>
+        </ui:TextField>
+    </ui:VisualElement>
+</ui:UXML>
+
+
+--- bind-to-list/GameSwitchListAsset.cs ---
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "GameSwitchListAsset.asset", menuName = "GameSwitchListAsset")]
+public class GameSwitchListAsset : ScriptableObject
+{
+    public List<GameSwitch> switches = new();
+
+    public void Reset()
+    {
+        switches = new List<GameSwitch>{
+            new() { name = "Use Local Server", enabled = false },
+            new() { name = "Show Debug Menu", enabled = false },
+            new() { name = "Show FPS Counter", enabled = true },
+        };
+    }
+
+    public bool IsSwitchEnabled(string switchName) => switches.Find(s => s.name == switchName).enabled;
+
+    [Serializable]
+    public struct GameSwitch
+    {
+        public bool enabled;
+        public string name;
+    }
+}
+
+
+--- bind-to-list/game_switch.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:Box style="flex-direction: row;">
+        <ui:Toggle binding-path="enabled"/>
+        <ui:TextField binding-path="name" readonly="false" style="flex-grow: 1;"/>
+    </ui:Box>
+</ui:UXML>
+
+
+--- bind-to-list/game_switch_list_editor.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:ListView virtualization-method="DynamicHeight" reorder-mode="Simple" binding-path="switches" show-add-remove-footer="true" show-foldout-header="true" header-title="" reorderable="true" item-template="game_switch.uxml" allow-add="true">
+    </ui:ListView>
+</ui:UXML>
+
+
+--- bind-to-list/Editor/GameSwitchListEditor.cs ---
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+using UnityEditor.UIElements;
+
+public class ListViewBindingExample : EditorWindow
+{
+    [SerializeField]
+    private VisualTreeAsset m_VisualTreeAsset = default;
+
+    [SerializeField]
+    private GameSwitchListAsset gameSwitchList;
+
+    [MenuItem("UI Toolkit Examples/ListView SerializedObject Binding Example")]
+    public static void ShowExample()
+    {
+        ListViewBindingExample wnd = GetWindow<ListViewBindingExample>();
+        wnd.titleContent = new GUIContent("ListView Binding SerializedObject Example");
+    }
+
+    public void CreateGUI()
+    {
+        VisualElement root = rootVisualElement;
+        m_VisualTreeAsset.CloneTree(root);
+
+        var listView = root.Q<ListView>();
+        if (listView != null && gameSwitchList != null)
+        {
+            // Set the items source.
+            listView.itemsSource = gameSwitchList.switches;
+            // Bind the ListView to the GameSwitchListAsset serialized object.
+            listView.Bind(new SerializedObject(gameSwitchList));
+        }
+    }
+}
+
+
+--- bind-to-list-without-listview/TexturePackAsset.cs ---
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace UIToolkitExamples.BindToListWithoutListview
+{
+    [CreateAssetMenu(menuName = "UIToolkitExamples/TexturePackAsset")]
+    public class TexturePackAsset : ScriptableObject
+    {
+        public List<Texture2D> textures;
+
+        public void Reset()
+        {
+            textures = new() { null, null, null, null };
+        }
+    }
+}
+
+--- bind-to-list-without-listview/Editor/texture_pack_editor.uxml ---
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns="UnityEngine.UIElements" example="UIToolkitExamples" editor-extension-mode="True">
+    <ui:ScrollView>
+        <ui:VisualElement class="preview-container" style="flex-wrap: wrap; flex-direction: row; justify-content: space-around;" />
+    </ui:ScrollView>
+    <ui:Button name="add-button" text="Add" />
+</ui:UXML>
+
+--- bind-to-list-without-listview/Editor/TexturePackEditor.cs ---
+using UnityEditor;
+using UnityEditor.UIElements;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+namespace UIToolkitExamples.BindToListWithoutListview
+{
+    [CustomEditor(typeof(TexturePackAsset))]
+    public class TexturePackEditor : Editor
+    {
+        [SerializeField]
+        VisualTreeAsset m_VisualTreeAsset;
+
+        public override VisualElement CreateInspectorGUI()
+        {
+            var editor = m_VisualTreeAsset.CloneTree();
+
+            var container = editor.Q(className: "preview-container");
+
+            SetupList(container);
+
+            // Watch the array size to handle the list being changed
+            var propertyForSize = serializedObject.FindProperty(nameof(TexturePackAsset.textures) + ".Array");
+            propertyForSize.Next(true); // Expand to obtain array size
+            editor.TrackPropertyValue(propertyForSize, prop => SetupList(container));
+
+            editor.Q<Button>("add-button").RegisterCallback<ClickEvent>(OnClick);
+
+            return editor;
+        }
+
+        void SetupList(VisualElement container)
+        {
+            var property = serializedObject.FindProperty(nameof(TexturePackAsset.textures) + ".Array");
+
+            var endProperty = property.GetEndProperty();
+
+            property.NextVisible(true); // Expand the first child.
+
+            var childIndex = 0;
+
+            // Iterate each property under the array and populate the container with preview elements
+            do
+            {
+                // Stop if we've reached the end of the array
+                if (SerializedProperty.EqualContents(property, endProperty))
+                    break;
+
+                // Skip the array size property
+                if (property.propertyType == SerializedPropertyType.ArraySize)
+                    continue;
+
+                TexturePreviewElement element;
+
+                // Find an existing element or create one
+                if (childIndex < container.childCount)
+                {
+                    element = (TexturePreviewElement)container[childIndex];
+                }
+                else
+                {
+                    element = new TexturePreviewElement();
+                    container.Add(element);
+                }
+
+                element.BindProperty(property);
+
+                ++childIndex;
+            }
+            while (property.NextVisible(false));   // Never expand children.
+
+            // Remove excess elements if the array is now smaller
+            while (childIndex < container.childCount)
+            {
+                container.RemoveAt(container.childCount - 1);
+            }
+        }
+
+        void OnClick(ClickEvent evt)
+        {
+            var property = serializedObject.FindProperty(nameof(TexturePackAsset.textures));
+            property.arraySize += 1;
+            serializedObject.ApplyModifiedProperties();
+        }
+    }
+}
+
+--- bind-to-list-without-listview/Editor/TexturePreviewElement.cs ---
+using System;
+using UnityEditor.UIElements;
+using UnityEngine;
+using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
+
+namespace UIToolkitExamples.BindToListWithoutListview
+{
+    public class TexturePreviewElement : BindableElement, INotifyValueChanged<Object>
+    {
+        public new class UxmlTraits : BindableElement.UxmlTraits { }
+        public new class UxmlFactory : UxmlFactory<TexturePreviewElement, UxmlTraits> { }
+
+        public static readonly string ussClassName = "texture-preview-element";
+
+        Image m_Preview;
+        ObjectField m_ObjectField;
+        Texture2D m_Value;
+
+        public TexturePreviewElement()
+        {
+            AddToClassList(ussClassName);
+
+            // Create a preview image.
+            m_Preview = new Image();
+            Add(m_Preview);
+
+            // Create an ObjectField, set its object type, and register a callback when its value changes.
+            m_ObjectField = new ObjectField();
+            m_ObjectField.objectType = typeof(Texture2D);
+            m_ObjectField.RegisterValueChangedCallback(OnObjectFieldValueChanged);
+            Add(m_ObjectField);
+
+            styleSheets.Add(Resources.Load<StyleSheet>("texture_preview_element"));
+        }
+
+        void OnObjectFieldValueChanged(ChangeEvent<Object> evt)
+        {
+            value = evt.newValue;
+        }
+
+        public void SetValueWithoutNotify(Object newValue)
+        {
+            if (newValue == null || newValue is Texture2D)
+            {
+                // Update the preview Image and update the ObjectField.
+                m_Value = newValue as Texture2D;
+                m_Preview.image = m_Value;
+                // Notice that this line calls the ObjectField's SetValueWithoutNotify() method instead of just setting
+                // m_ObjectField.value. This is very important; you don't want m_ObjectField to send a ChangeEvent.
+                m_ObjectField.SetValueWithoutNotify(m_Value);
+            }
+            else throw new ArgumentException($"Expected object of type {typeof(Texture2D)}");
+        }
+
+        public Object value
+        {
+            get => m_Value;
+            // The setter is called when the user changes the value of the ObjectField, which calls
+            // OnObjectFieldValueChanged(), which calls this.
+            set
+            {
+                if (value == this.value)
+                    return;
+
+                var previous = this.value;
+                SetValueWithoutNotify(value);
+
+                using (var evt = ChangeEvent<Object>.GetPooled(previous, value))
+                {
+                    evt.target = this;
+                    SendEvent(evt);
+                }
+            }
+        }
+    }
+}
+
+--- bind-to-list-without-listview/Editor/Resources/texture_preview_element.uss ---
+.texture-preview-element {
+    width: 200px;
+    height: 200px;
+}
+
+.texture-preview-element > .unity-image {
+    flex-grow: 1;
+}
+
+--- ListViewExample/Editor/ListViewExample.cs ---
+using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UIElements;
+
+public class ListViewExample : EditorWindow
+{
+    // Gradient used for the HP color indicator.
+    private Gradient hpGradient;
+    private GradientColorKey[] hpColorKey;
+    private GradientAlphaKey[] hpAlphaKey;
+
+    // ListView is kept for easy reference.
+    private ListView listView;
+
+    // List of CharacterInfo items, bound to the ListView.
+    private List<CharacterInfo> items;
+    [MenuItem("Window/ListView Custom Item")]
+
+    public static void OpenWindow()
+    {
+        GetWindow<ListViewExample>().Show();
+    }
+
+    private void OnEnable()
+    {
+        SetGradient();
+
+        // Create and populate the list of CharacterInfo objects.
+        const int itemCount = 50;
+        items = new List<CharacterInfo>(itemCount);
+        for(int i = 1; i <= itemCount; i++)
+        {
+            CharacterInfo character = new CharacterInfo {name = $"Character {i}", maxHp = 100};
+            character.currentHp = character.maxHp;
+            items.Add(character);
+        }
+
+        // The ListView calls this to add visible items to the scroller.
+        Func<VisualElement> makeItem = () =>
+        {
+            var characterInfoVisualElement = new CharacterInfoVisualElement();
+            var slider = characterInfoVisualElement.Q<SliderInt>(name: "hp");
+            slider.RegisterValueChangedCallback(evt =>
+            {
+                var hpColor = characterInfoVisualElement.Q<VisualElement>("hpColor");
+                var i = (int)slider.userData;
+                var characterInfo = items[i];
+                characterInfo.currentHp = evt.newValue;
+                SetHp(slider, hpColor, characterInfo);
+            });
+            return characterInfoVisualElement;
+        };
+
+        // The ListView calls this if a new item becomes visible when the item first appears on the screen,
+        // when a user scrolls, or when the dimensions of the scroller are changed.
+        Action<VisualElement, int> bindItem = (e, i) => BindItem(e as CharacterInfoVisualElement, i);
+
+        // Height used by the ListView to determine the total height of items in the list.
+        int itemHeight = 55;
+
+        // Use the constructor with initial values to create the ListView.
+        listView = new ListView(items, itemHeight, makeItem, bindItem);
+        listView.reorderable = false;
+        listView.style.flexGrow = 1f; // Fills the window, at least until the toggle below.
+        listView.showBorder = true;
+        rootVisualElement.Add(listView);
+
+        // Add a toggle to switch the reorderable property of the ListView.
+        var reorderToggle = new Toggle("Reorderable");
+        reorderToggle.style.marginTop = 10f;
+        reorderToggle.value = false;
+        reorderToggle.RegisterValueChangedCallback(evt => listView.reorderable = evt.newValue);
+        rootVisualElement.Add(reorderToggle);
+    }
+
+    // Sets up the gradient.
+    private void SetGradient()
+    {
+        hpGradient = new Gradient();
+
+        // HP at 0%: Red. At 10%: Dark orange. At 40%: Yellow. At 100%: Green.
+        hpColorKey = new GradientColorKey[4];
+        hpColorKey[0] = new GradientColorKey(Color.red, 0f);
+        hpColorKey[1] = new GradientColorKey(new Color(1f, 0.55f, 0f), 0.1f); // Dark orange
+        hpColorKey[2] = new GradientColorKey(Color.yellow, 0.4f);
+        hpColorKey[3] = new GradientColorKey(Color.green, 1f);
+
+        // Alpha is always full.
+        hpAlphaKey = new GradientAlphaKey[2];
+        hpAlphaKey[0] = new GradientAlphaKey(1f, 0f);
+        hpAlphaKey[1] = new GradientAlphaKey(1f, 1f);
+        hpGradient.SetKeys(hpColorKey, hpAlphaKey);
+    }
+
+    // Bind the data (characterInfo) to the display (elem).
+    private void BindItem(CharacterInfoVisualElement elem, int i)
+    {
+        var label = elem.Q<Label>(name: "nameLabel");
+        var slider = elem.Q<SliderInt>(name: "hp");
+        var hpColor = elem.Q<VisualElement>("hpColor");
+        slider.userData = i;
+        CharacterInfo characterInfo = items[i];
+        label.text = characterInfo.name;
+        SetHp(slider, hpColor, characterInfo);
+    }
+
+    private void SetHp(SliderInt slider, VisualElement colorIndicator, CharacterInfo characterInfo)
+    {
+        slider.highValue = characterInfo.maxHp;
+        slider.SetValueWithoutNotify(characterInfo.currentHp);
+        float ratio = (float)characterInfo.currentHp / characterInfo.maxHp;
+        colorIndicator.style.backgroundColor = hpGradient.Evaluate(ratio);
+    }
+
+    // This class inherits from VisualElement to display and modify data to and from a CharacterInfo.
+    public class CharacterInfoVisualElement : VisualElement
+    {
+        // Use Constructor when the ListView uses makeItem and returns a VisualElement to be
+        // bound to a CharacterInfo data class.
+        public CharacterInfoVisualElement()
+        {
+            var root = new VisualElement();
+
+            // The code below to style the ListView is for demo purpose. It's better to use a USS file
+            // to style a visual element.
+            root.style.paddingTop = 3f;
+            root.style.paddingRight = 0f;
+            root.style.paddingBottom = 15f;
+            root.style.paddingLeft = 3f;
+            root.style.borderBottomColor = Color.gray;
+            root.style.borderBottomWidth = 1f;
+            var nameLabel = new Label() {name = "nameLabel"};
+            nameLabel.style.fontSize = 14f;
+            var hpContainer = new VisualElement();
+            hpContainer.style.flexDirection = FlexDirection.Row;
+            hpContainer.style.paddingLeft = 15f;
+            hpContainer.style.paddingRight = 15f;
+            hpContainer.Add(new Label("HP:"));
+            var hpSlider = new SliderInt {name = "hp", lowValue = 0, highValue = 100};
+            hpSlider.style.flexGrow = 1f;
+            hpContainer.Add(hpSlider);
+            var hpColor = new VisualElement();
+            hpColor.name = "hpColor";
+            hpColor.style.height = 15f;
+            hpColor.style.width = 15f;
+            hpColor.style.marginRight = 5f;
+            hpColor.style.marginBottom = 5f;
+            hpColor.style.marginLeft = 5f;
+            hpColor.style.backgroundColor = Color.black;
+            hpContainer.Add(hpColor);
+            root.Add(nameLabel);
+            root.Add(hpContainer);
+            Add(root);
+        }
+    }
+
+    // Basic data class used for a character, with a name and HP data. Use a list of CharacterInfo as
+    // a data source for the ListView. The CharacterInfo can be bound to CharacterInfoVisualElement when needed.
+    [Serializable]
+    public class CharacterInfo
+    {
+        public string name;
+        public int maxHp;
+        public int currentHp;
+    }
+}
