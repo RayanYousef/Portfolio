@@ -1,0 +1,40 @@
+name: Discord PR Merge Notification
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+
+jobs:
+  notify:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord Notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          # Escape special characters for JSON
+          TITLE=$(echo '${{ github.event.pull_request.title }}' | sed 's/"/\\"/g')
+          BODY=$(echo '${{ github.event.pull_request.body }}' | sed 's/"/\\"/g' | sed ':a;N;$!ba;s/\n/\\n/g')
+          AUTHOR="${{ github.event.pull_request.user.login }}"
+          PR_URL="${{ github.event.pull_request.html_url }}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          MERGED_BY="${{ github.event.pull_request.merged_by.login }}"
+
+          curl -H "Content-Type: application/json" \
+            -d "{
+              \"embeds\": [{
+                \"title\": \"PR #${PR_NUMBER} merged into main\",
+                \"url\": \"${PR_URL}\",
+                \"color\": 5763719,
+                \"fields\": [
+                  { \"name\": \"Title\", \"value\": \"${TITLE}\", \"inline\": false },
+                  { \"name\": \"Author\", \"value\": \"${AUTHOR}\", \"inline\": true },
+                  { \"name\": \"Merged by\", \"value\": \"${MERGED_BY}\", \"inline\": true }
+                ],
+                \"description\": \"${BODY}\",
+                \"footer\": { \"text\": \"Portfolio Unity\" }
+              }]
+            }" \
+            "$DISCORD_WEBHOOK"
