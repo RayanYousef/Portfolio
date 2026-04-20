@@ -2,6 +2,9 @@ import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ReactPlayer from 'react-player';
 import { Github, ExternalLink, ArrowLeft } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
 import projectsData from '@content/projects.json';
 import type { Project } from '../types/index';
 
@@ -72,15 +75,16 @@ const ProjectDetails = () => {
                                     title={project.title}
                                 ></iframe>
                             ) : (
+                                // @ts-ignore
                                 <ReactPlayer
-                                    {...({
+                                    {...{
                                         url: videoUrl,
                                         width: "100%",
                                         height: "100%",
                                         controls: true,
                                         playing: true,
-                                        muted: true,
-                                    })}
+                                        muted: true
+                                    }}
                                 />
                             )}
                         </div>
@@ -94,7 +98,7 @@ const ProjectDetails = () => {
                 </div>
 
                 {/* Links */}
-                <div className="flex gap-6">
+                <div className="flex gap-6 mb-16">
                     {project.githubLink && project.githubLink !== "#" && (
                         <a
                             href={project.githubLink}
@@ -118,6 +122,24 @@ const ProjectDetails = () => {
                         </a>
                     )}
                 </div>
+
+                {/* Markdown Content */}
+                {project.readme && (
+                    <div className="glass-panel p-8 rounded-2xl mb-12">
+                        <article className="prose prose-invert prose-lg max-w-none
+                            prose-headings:text-neon-cyan prose-headings:font-orbitron
+                            prose-a:text-neon-pink prose-a:no-underline hover:prose-a:underline
+                            prose-strong:text-white prose-code:text-neon-cyan
+                            prose-pre:bg-black/50 prose-pre:border prose-pre:border-white/10">
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw]}
+                            >
+                                {project.readme}
+                            </ReactMarkdown>
+                        </article>
+                    </div>
+                )}
             </motion.div>
         </div>
     );
